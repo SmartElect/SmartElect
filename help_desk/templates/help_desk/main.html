@@ -1,0 +1,26 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block assistance %}
+
+  <div class="milk">
+    {% if in_progress %}
+      <label>{% trans "Calls in progress" %}</label>
+      <ol>
+        {% for case in in_progress %}
+          <li><a href="{{ case.get_operator_url }}">{{ case }}</a></li>
+        {% endfor %}
+      </ol>
+      <div class="spacer"></div>
+    {% else %}
+      <label>{% trans "Press the start new call button to begin caller assistance." %}</label>
+      <div class="spacer"></div>
+    {% endif %}
+    {% if perms.help_desk.add_case %}
+      <div class="btn-group">
+        <a href="{% url 'start_case' %}"><button class="btn btn-primary">{% trans "New call received" %}</button></a>
+      </div>
+    {% endif %}
+  </div>
+
+{% endblock assistance %}

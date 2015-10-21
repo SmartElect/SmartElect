@@ -1,0 +1,116 @@
+{% extends "vr_dashboard/base.html" %}
+{% load humanize i18n staticfiles vr_dashboard_tags %}
+
+{% block right_chart %}
+  <div class="chart-container half">
+    <div class="cushion">
+      <h2>{% trans "Total Registrations" %}</h2>
+      <div class="milk">
+        <table>
+          <tbody>
+            <tr>
+              <td>{% trans "Total" %}</td>
+              <td>{{ global_info.total|intcomma }}</td>
+            </tr>
+            <tr>
+              <td>{% trans "Yesterday" %}</td>
+              <td>{{ global_info.yesterday|intcomma }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="gender-breakdown-chart" class="chart small">
+          <svg style="height: 144px"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock right_chart %}
+
+{% block content %}
+  <div class="full plum">
+    <div class="page-width cushion">
+      <h2>{% trans "Weekly Stats" %}</h2>
+      <table id="comparison_data" class="last_week milk">
+        <thead>
+          <tr>
+            <th colspan='1'></th>
+            <th colspan='{{ last_seven_actual }}'>{% trans "Last 7 Days" %}</th>
+            <th colspan='{{ num_weeks }}'>{% trans "Weekly" %}</th>
+            <th colspan='1'>{% trans "CDA" %}</th>
+            <th colspan='2'>{% trans "Cumulative Totals" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{% trans "Office" %}</th>
+            {% for i in last_seven_indexes %}
+              <th>{% lookup last_seven i %}</th>
+            {% endfor %}
+            {% for i in num_weeks_range %}
+              <th>{% lookup last_four_weeks i 0 %}<br> {% trans "to" context "interval" %}<br> {% lookup last_four_weeks i 1 %}</th>
+            {% endfor %}
+            <th></th>
+            <th class='pct-col'>% {% trans "Female" %}</th>
+            <th>{% trans "Total" %}</th>
+          </tr>
+
+          {% for o in office_info %}
+            <tr>
+              <td class='label'>{{ o.id }} {{ o.name }}</td>
+              {% for i in last_seven_indexes %}
+                {% if forloop.last %}
+                  <td class='end-column' style='background-color: {% lookup o.last_seven_colors i %}'>{% lookup o.last_seven i 'intcomma' %}</td>
+                {% else %}
+                  <td style='background-color: {% lookup o.last_seven_colors i %}'>{% lookup o.last_seven i 'intcomma' %}</td>
+                {% endif %}
+              {% endfor %}
+              {% for i in num_weeks_range %}
+                <td>{% lookup o.last_four_weeks i 'intcomma' %}</td>
+              {% endfor %}
+              <td>{{ o.pre_cda|intcomma }}</td>
+              <td class='end-column' style='background-color: {{ o.pct_female_color }}'>{{ o.pct_female_fmt }}</td>
+              <td style='background-color: {{ o.total_color }}'>{{ o.total|intcomma }}</td>
+            </tr>
+          {% endfor %}
+
+          <tr class='sum-row selected'>
+            <td class='label'>{% trans "Total" %}</td>
+            {% for i in last_seven_indexes %}
+              {% if forloop.last %}
+                <td class='end-column' style='background-color: {% lookup global_info.last_seven_colors i %}'>{% lookup global_info.last_seven i 'intcomma' %}</td>
+              {% else %}
+                <td style='background-color: {% lookup global_info.last_seven_colors i %}'>{% lookup global_info.last_seven i 'intcomma' %}</td>
+              {% endif %}
+            {% endfor %}
+            {% for i in num_weeks_range %}
+              <td>{% lookup global_info.last_four_weeks i 'intcomma' %}</td>
+            {% endfor %}
+            <td>{{ global_info.pre_cda|intcomma }}</td>
+            <td class='end-column' style='background-color: #F7B0CC'>{{ global_info.pct_female_fmt }}</td>
+            <td style='background-color: #80C6FF'>{{ global_info.total|intcomma }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% static 'js/chart-interaction.js' %}"></script>
+  <script>
+   {% gen_data_points request 'newRegs' nr 'lv' %}
+   var genderData = [
+       {
+           "x": '{% trans "Male" %}: {{ global_info.pct_male_fmt }}',
+           "y" : {{ global_info.male }}
+       },
+       {
+           "x": '{% trans "Female" %}: {{ global_info.pct_female_fmt }}',
+           "y" : {{ global_info.female }}
+       }
+   ];
+   vrDashboardCharts.addWeeklyCharts(newRegs, genderData);
+   setupSlider();
+  </script>
+{% endblock extra_js %}

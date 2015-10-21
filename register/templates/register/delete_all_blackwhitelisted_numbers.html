@@ -1,0 +1,56 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}
+  {% if list_type == 'black' %}
+    {% trans "Delete All Blacklisted Numbers" %}
+  {% else  %}
+    {% trans "Delete All Whitelisted Numbers" %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1 class="page-width cushion">
+    {% if list_type == 'black' %}
+      {% trans "Delete All Blacklisted Numbers" %}
+    {% else  %}
+      {% trans "Delete All Whitelisted Numbers" %}
+    {% endif %}
+  </h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      {% if object_count %}
+        <p>
+          {% if list_type == 'black' %}
+            {% blocktrans trimmed with object_count=object_count %}
+              Are you sure you want to delete all {{ object_count }} Blacklisted numbers?
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed with object_count=object_count %}
+              Are you sure you want to delete all {{ object_count }} Whitelisted numbers?
+            {% endblocktrans %}
+          {% endif %}
+        </p>
+
+        <div class="spacer"></div>
+
+        <form class="two-thirds" method="POST">
+          {% csrf_token %}
+
+          <button name="ok" class="warning">{% trans "Delete All" %}</button>
+          <button name="cancel" class="inverse right">{% trans "Cancel" %}</button>
+        </form>
+
+      {% else %}
+        <p>
+          {% if list_type == 'black' %}
+            {% trans "There are currently no Blacklisted numbers." %}
+          {% else %}
+            {% trans "There are currently no Whitelisted numbers." %}
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}

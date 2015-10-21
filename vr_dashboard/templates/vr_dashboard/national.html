@@ -1,0 +1,64 @@
+{% extends 'vr_dashboard/base.html' %}
+{% load humanize i18n staticfiles vr_dashboard_tags %}
+{% block content %}
+  <div class="full plum">
+    <div class="page-width cushion">
+      <h2>{% trans "National Stats" %}</h2>
+      <table id="comparison_data" class="milk">
+        <thead>
+          <tr>
+            <th></th>
+            <th colspan='3'>{% trans "Cumulative Totals" %}</th>
+            <th colspan='3'>{{ yesterday }} {% trans "Total" %}</th>
+            <th colspan='5'>{% trans "Age Totals" %}</th>
+          </tr>
+          <tr>
+            <th class="left">{% trans groups.0.name %}</th>
+            <th>{% trans "Male" %}</th>
+            <th>{% trans "Female" %}</th>
+            <th>{% trans "Total" %}</th>
+            <th>{% trans "Male" %}</th>
+            <th>{% trans "Female" %}</th>
+            <th>{% trans "Total" %}</th>
+            {% for ages in by_age %}
+              <th>{{ ages.0 }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for g in groups %}
+            <tr>
+              <td class='end-column label left'>
+                <span class="swatch"></span>
+                {% trans g.name %}
+              </td>
+              <td style='background-color: {{ g.m_color }}'>{{ g.m|intcomma }}</td>
+              <td style='background-color: {{ g.f_color }}'>{{ g.f|intcomma }}</td>
+              <td class="end-column" style="background-color: {{ g.t_color }};">{{ g.t|intcomma }}</td>
+              <td style='background-color: {{ g.m_yesterday_color }}'>{{ g.m_yesterday|intcomma }}</td>
+              <td style='background-color: {{ g.f_yesterday_color }}'>{{ g.f_yesterday|intcomma }}</td>
+              <td class="end-column" style="background-color: {{ g.t_yesterday_color }}">{{ g.t_yesterday|intcomma }}</td>
+              {% for ages in by_age %}
+                {% if forloop.last %}
+                  <td class="end-column">{{ ages.1|intcomma }}</td>
+                {% else %}
+                  <td>{{ ages.1|intcomma }}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock content %}
+{% block extra_js %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% static 'js/chart-interaction.js' %}"></script>
+  <script>
+   {% gen_data_points request 'newRegs' nr_by_country 'lv' %}
+   {% gen_data_points request 'cumRegs' cr_by_country 'xy' %}
+   vrDashboardCharts.addNormalCharts(newRegs, cumRegs);
+   setupSlider();
+  </script>
+{% endblock extra_js %}

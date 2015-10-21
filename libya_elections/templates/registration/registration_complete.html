@@ -1,0 +1,9 @@
+{% extends "registration/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Check your email account' %}{% endblock %}
+{% block page_title %}{% trans 'Check your email account' %}{% endblock %}
+
+{% block registration_content %}
+  <p>{% trans "You will receive an email and will have to click a link in that email to complete your registration." %}</p>
+{% endblock %}

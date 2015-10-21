@@ -1,0 +1,40 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=verbose_name %}Read {{ name }}{% endblocktrans %}{% endblock title %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+  <h1>{% blocktrans with name=verbose_name %}Read {{ name }}{% endblocktrans %}</h1>
+  </div>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <div class="two-thirds">
+        {% block read_fields %}
+          {% for label, value in read_fields %}
+            <label>{{ label }}:</label>
+            <div class="read-value">{{ value }}</div>
+          {% endfor %}
+        {% endblock %}
+
+        <div class="spacer"></div>
+
+        {% block actions %}
+          {% if may_edit %}
+            <a class="button success" href="{% url bread.edit_url_name object.pk %}">{% trans "Edit" %}</a>
+          {% endif %}
+          {% if may_delete %}
+            <a class="button warning right" href="{% url bread.delete_url_name view.object.pk %}">{% trans "Delete" %}</a>
+          {% endif %}
+          {% if may_browse %}
+            <a class="button inverse right" href="{% url bread.browse_url_name %}">{% trans "Cancel" %}</a>
+          {% endif %}
+          {% if back_url %}
+            <a class="button inverse right" href="{{ back_url }}">{% trans "Back" %}</a>
+          {% endif %}
+        {% endblock actions %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% load i18n %}
+<form method="GET">
+  <div class="blueberry cushion-ends">
+    <div class="page-width float-layout">
+      <div class="half cushion">
+        <label>{% trans "Search records" %}</label>
+        <input type="search" name="q" value="{{ q }}">
+      </div>
+      <div class="half cushion">
+        <label>{% trans "Search in:" %}</label>
+        <p>{% blocktrans trimmed %}operator name, username, or email,
+        field staff name, phone number, or staff ID,
+        citizen name, national ID, or registry number,
+          or registration center name or number.{% endblocktrans %}</p>
+      </div>
+      <div class="clear"></div>
+
+      {% for field in form %}
+        <div class="sixth">
+          <div class="cushion">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
+              {{ field.errors }}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      <div class="sixth">
+        <div class="cushion">
+          <label class="collapsing">&nbsp;</label>
+          <input class="full" type="submit" value="{% trans "Apply Filters" %}">
+        </div>
+      </div>
+
+    </div>
+    <div class="clear"></div>
+  </div>

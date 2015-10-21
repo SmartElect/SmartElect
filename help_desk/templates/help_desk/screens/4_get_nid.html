@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<p>{% trans "Say to the caller" %}:</p>
+{% if case.field_staff %}
+  <blockquote>{% trans "Please provide the citizen's National Identification Number." %}</blockquote>
+{% else %}
+  <blockquote>{% trans "Please provide your National Identification Number." %}</blockquote>
+{% endif %}

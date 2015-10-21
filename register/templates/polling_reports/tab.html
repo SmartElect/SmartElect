@@ -1,0 +1,9 @@
+{% url 'browse_staffphones' as staffphone_url %}
+{% url 'browse_whitelistednumbers' as whitelistednumber_url %}
+{% url 'browse_blacklistednumbers' as blacklistednumber_url %}
+
+<nav class="tabs">
+  {% include 'includes/tablink.html' with url=staffphone_url linktext=_("Staff Phones") %}
+  {% include 'includes/tablink.html' with url=whitelistednumber_url linktext=_("Whitelisted Numbers") %}
+  {% include 'includes/tablink.html' with url=blacklistednumber_url linktext=_("Blacklisted Numbers") %}
+</nav>

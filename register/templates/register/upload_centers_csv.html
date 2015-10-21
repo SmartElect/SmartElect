@@ -1,0 +1,42 @@
+{% extends 'libya_site/staff.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<h1 class="page-width cushion">{% trans "Upload new registration centers" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <form class="two-thirds" method="post" action="{% url 'upload-centers-csv' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="id_registry_number">{{ form.csv.label }}:</label>
+        {{ form.csv }}
+        {% if form.csv.errors %}
+          {{ form.csv.errors }}
+        {% endif %}
+
+        <div class="helptext">
+          {% url 'download-centers-csv' as download_csv_url %}
+          {% blocktrans trimmed %}
+            <p>CSV File Requirements</p>
+            <ul>
+              <li>Please ensure the file is saved in UTF-8 encoding as a CSV file.</li>
+              <li>You must include column headers in the file.</li>
+              <li>The file must include all of the following columns in this order:
+                <pre>{{ csv_columns }}</pre>
+              </li>
+              <li>Please double-check your file before uploading.</li>
+              <li>Download the <a href="{{ download_csv_url }}">current file of registration centers</a>.</li>
+            </ul>
+          {% endblocktrans %}
+        </div>
+
+        <div class="spacer"></div>
+
+        <button class="success" type="submit">{% trans 'Upload' %}</button>
+        <a class="button inverse right" href="{% url 'browse_registrationcenters' %}">{% trans "Cancel" %}</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

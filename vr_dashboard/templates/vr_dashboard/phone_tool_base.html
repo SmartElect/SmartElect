@@ -1,0 +1,32 @@
+{% extends "libya_site/staff.html" %}
+{% load i18n staticfiles %}
+
+{% block title %}{% trans "Phone and Message Tool" %}{% endblock %}
+{% block charts %}
+  <div class="page-width cushion-ends">
+
+    <h1 class="left">{% trans "Phone and Message Tool" %}</h1>
+
+
+    <div class="clear"></div>
+  </div>
+
+{% endblock %}
+
+{% block content %}
+  {% block main_content %}
+  {% endblock %}
+
+  {% block bottom_buttons %}
+    <div class="page-width cushion">
+      {% if not form %}
+        <a href="{% url 'vr_dashboard:phone-message-tool' %}">
+          <button type="submit">{% trans "Enter Another Phone or Center ID #" %}</button>
+        </a>
+      {% endif %}
+      <a class="right" href="{% url 'vr_dashboard:election-day' %}">
+        <button type="submit" class="inverse">{% trans "Return to Polling Centers Monitoring" %}</button>
+      </a>
+    </div>
+  {% endblock bottom_buttons %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style media="all" type="text/css">
+#header {
+    background: rgb(57, 109, 167);
+}
+#branding h1 {
+    color: #ffffff;
+}
+</style>
+{% endblock %}
+
+{% block title %} {% trans 'Libya Votes Administration' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{% trans 'Libya Votes Administration' %}</a></h1>
+{% endblock %}
+
+{% block userlinks %}
+    {% if user.is_staff %}
+        <a href="{% url 'staff' %}">{% trans "Staff Home" %}</a> /
+    {% endif %}
+    {% url 'django-admindocs-docroot' as docsroot %}
+    {% if docsroot %}
+        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+    {% endif %}
+    {% if user.has_usable_password %}
+    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+    {% endif %}
+    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

@@ -1,0 +1,21 @@
+{% load i18n libya_tags %}
+
+<div class="float-layout banana">
+  <div class="third cushion">
+    <label>{% trans 'Staff ID' %}</label>
+    <p>{{ case.field_staff.staff_id }}</p>
+  </div>
+  <div class="third cushion">
+    <label>{% trans 'Staff Name' %}</label>
+    <p>{{ case.field_staff.name }}</p>
+  </div>
+  <div class="third cushion">
+    <label>{% trans 'Phone Number' %}</label>
+    <p>{{ case.field_staff.phone_number|format_phone_number }}</p>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="spacer"></div>
+
+<p>{% trans "Is the caller using the phone number seen above?" %}</p>

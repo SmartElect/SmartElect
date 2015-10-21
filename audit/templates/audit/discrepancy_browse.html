@@ -1,0 +1,6 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block top_buttons %}
+  <a class="button success right" href="{% url 'browse_subscriptions' %}">{% trans "Change email alert subscriptions" %}</a>
+{% endblock %}

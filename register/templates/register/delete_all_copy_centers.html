@@ -1,0 +1,48 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete All Copy Centres" %}{% endblock %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Delete All Copy Centres" %}</h1>
+
+  <div class="milk">
+    <div class="page-width">
+      <div class="two-thirds cushion">
+      {% if copy_centers %}
+        {% with n_copy_centers=copy_centers|length %}
+          <p>
+            {% blocktrans trimmed %}
+              All {{ n_copy_centers }} copy centres in the database are shown below.
+              Are you sure you want to delete them?
+            {% endblocktrans %}
+          </p>
+
+          <div class="spacer"></div>
+
+          <h2>{% trans "Copy Centres That Will Be Deleted" %}</h2>
+          <table>
+            {% for center in copy_centers %}
+              <tr>
+                <td>{{ center.center_id }}</td>
+                <td>{{ center.name }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+
+          <div class="spacer"></div>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <button name="ok" class="warning">{% trans "Delete All Copy Centres" %}</button>
+            <button name="cancel" class="inverse right">{% trans "Cancel" %}</button>
+          </form>
+
+        {% endwith %}
+      {% else %}
+        <p>{% trans "There are currently no copy centres defined." %}</p>
+      {% endif %}
+      </div>
+    </div>
+{% endblock content %}

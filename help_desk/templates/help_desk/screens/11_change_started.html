@@ -1,0 +1,28 @@
+{% load i18n %}
+
+<p>{% trans "Tell the caller" %}:</p>
+<blockquote>
+  {% if case.field_staff %}
+    {% trans "The citizen has twelve hours, starting now, to change their registration using any phone." %}
+  {% else %}
+    {% trans "You have twelve hours, starting now, to change your registration using any phone." %}
+  {% endif %}
+</blockquote>
+<p>
+  {% trans "The procedure: SMS 'NID#PC' to 10010" %}
+</p>
+<p>
+  {% trans "Please advise the citizen to use their own phone (not a staff or relative’s phone)." %}
+</p>
+
+<div class="spacer"></div>
+
+<form method="POST">
+  {% csrf_token %}
+  <p>
+    {% trans "If the citizen wants to check whether another phone number can still be used for registrations, enter it here" %}:
+    <input type="number" name="check_number">
+    {% comment %}Translators: The button with this label checks if a phone number can be used for registrations{% endcomment %}
+    <button type="submit">{% trans "Check number" %}</button>
+  </p>
+</form>

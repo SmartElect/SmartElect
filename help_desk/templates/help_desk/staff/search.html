@@ -1,0 +1,78 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Manage Help Desk Staff" %}{% endblock %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Search for users" %}</h1>
+
+  <form method="GET">
+    <div class="blueberry cushion-ends">
+      <div class="page-width float-layout">
+        <div class="half cushion">
+          <label>{% trans "Search users" %}</label>
+          <input type="search" name="q" value="{{ q }}">
+        </div>
+        <div class="half cushion">
+          <label>{% trans "Search in:" %}</label>
+          <p>{% trans "Name, Email, or Username" %}</p>
+        </div>
+        <div class="clear"></div>
+        <div class="fifth">
+          <div class="cushion">
+            <label class="collapsing">&nbsp;</label>
+            <input class="full" type="submit" value="{% trans "Search" %}">
+          </div>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </form>
+  <div class="milk">
+    <div class="page-width cushion">
+
+      {% if object_list %}
+        <p>{% trans "Click on any user in the results to grant them Help Desk permissions." %}</p>
+
+        <div class="spacer"></div>
+
+        {% if paginator %}
+          {% include "includes/pagination.html" %}
+        {% endif %}
+
+        <h2>{% trans "Search results" %}</h2>
+
+        <table class="page-width">
+          <thead>
+            <tr>
+              <th colspan="2">{% trans "User" %}</th>
+              <th>{% trans "Groups" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in object_list %}
+              <tr>
+                <td>
+                  <a href="{% url 'staff_update' user.pk %}">{{ user }}</a>
+                </td>
+                <td>
+                  {{ user.get_full_name }}
+                </td>
+                <td>
+                  {% for group in user.groups.all %}
+                    {{ group.name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% if paginator %}
+          {% include 'includes/pagination.html' %}
+        {% endif %}
+      {% endif %}
+
+      <a class="button" href="{% url 'staff_list' %}">{% trans "Return to staff list" %}</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% for message in messages %}
+  <div class="messages{% if message.tags %} {{ message.tags }}{% endif %}">
+    <div class="page-width cushion-sides">
+     {{ message }}
+    </div>
+  </div>
+{% endfor %}

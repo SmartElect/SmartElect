@@ -1,0 +1,35 @@
+{% extends 'help_desk/reports/base.html' %}
+{% load i18n %}
+
+{% block tabs %}
+  {% include 'help_desk/reports/tab.html' %}
+{% endblock tabs %}
+
+{% block table_head %}
+  <thead>
+    <tr>
+      <th>{{ key_name }}</th>
+      {% for name in outcome_names %}
+        <th>{{ name }}</th>
+      {% endfor %}
+      <th>{{ last_column_header }}</th>
+    </tr>
+  </thead>
+{% endblock %}
+
+{% block table_rows %}
+  <tbody>
+    {% for summary in object_list %}
+      <tr>
+        <th class='firstcol'>{{ summary.key_value }}</th>
+        {% for value in summary.stats %}
+          <td>
+            {% if value %}
+              {{ value }}
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block actions %}
+  {{ block.super }}
+ <a class="button inverse right" href="{% url 'browse_discrepancies' %}">{% trans "Back to SMS discrepancies" %}</a>
+{% endblock actions %}

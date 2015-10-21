@@ -1,0 +1,18 @@
+{% if is_paginated %}
+  <div class="page-width cushion-ends">
+    <ul class="paginate right">
+      {% for page_url, target in paginator_links %}
+        {% if page_url %}
+          <li><a href="{{ page_url }}">{{ target }}</a></li>
+        {% else %}
+          {% if target %}
+            <li>{{ target }}</li>
+          {% else %}
+            <li>&hellip;</li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div class="clear"></div>
+  </div>
+{% endif %}

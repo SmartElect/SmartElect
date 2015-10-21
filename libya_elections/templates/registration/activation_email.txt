@@ -1,0 +1,10 @@
+{% load i18n %}{% url 'registration_activate' activation_key as activation_url %}{% blocktrans with site.domain as site_domain %}
+This is an automatic email from the Libyan High National Election
+Commission's online voter check.
+
+Please click on the link below to verify your email address:
+https://{{ site_domain }}{{ activation_url }}
+
+Sincerely,
+The Libyan High National Election Commission
+{% endblocktrans %}

@@ -1,0 +1,137 @@
+{% load i18n libya_tags %}
+
+<h2>{% trans "Case" %}</h2>
+
+<label>{% trans "Operator:" %}</label>
+<div class="read-value">{{ case.operator.get_full_name|default:case.operator.username }}</div>
+
+<label>{% trans "Case number:" %}</label>
+<div class="read-value">{{ case.pk }}</div>
+
+<label>{% trans "Start time:" %}</label>
+<div class="read-value">{{ case.formatted_start_time }}</div>
+
+{% if case.end_time %}
+  <label>{% trans "End time:" %}</label>
+  <div class="read-value">{{ case.formatted_end_time }}</div>
+{% endif %}
+
+{% if case.call_outcome %}
+  <label>{% trans "Outcome:" %}</label>
+  <div class="read-value">{{ case.get_call_outcome_display }}</div>
+{% endif %}
+
+{% if case.end_time %}
+  <label>{% trans "Review status:" %}</label>
+  <div class="read-value">{{ case.get_review_classification_display }}</div>
+
+  {% if case.reason_marked %}
+    <label>{% trans "Reason for review:" %}</label>
+    <div class="read-value">{{ case.get_reason_marked_display }}</div>
+  {% endif %}
+
+  {% if case.recommended_action %}
+    <label>{% trans "Recommended action:" %}</label>
+    <div class="read-value">{{ case.get_recommended_action_display }}</div>
+  {% endif %}
+{% endif %}
+
+{% if case.field_staff %}
+  <h2>{% trans "Field staff" %}</h2>
+
+  <label>{% trans "Name:" %}</label>
+  <div class="read-value">{{ case.field_staff.name }}</div>
+
+  <label>{% trans "Staff ID:" %}</label>
+  <div class="read-value">{{ case.field_staff.staff_id }}</div>
+
+  <label>{% trans "Phone number:" %}</label>
+  <div class="read-value">{{ case.field_staff.phone_number|format_phone_number }}</div>
+{% endif %}
+
+{% if case.citizen %}
+  <h2>{% trans "Citizen" %}</h2>
+
+  <label>{% trans "Name:" %}</label>
+  <div class="read-value">{{ case.citizen }}</div>
+
+  <label>{% trans "National ID:" %}</label>
+  <div class="read-value">{{ case.citizen.national_id }}</div>
+
+  <label>{% trans "Birth date:" %}</label>
+  <div class="read-value">{{ case.citizen.formatted_birth_date }}</div>
+
+  <label>{% trans "Gender:" %}</label>
+  <div class="read-value">{{ case.citizen.get_gender_display }}</div>
+
+  <label>{% trans "Family Book Record Number:" %}</label>
+  <div class="read-value">{{ case.citizen.fbr_number }}</div>
+
+  <label>{% trans "Mother:" %}</label>
+  <div class="read-value">{{ case.citizen.mother_name }}</div>
+
+  {% if case.citizen.blocked %}
+    <h2>{% trans "Blocked" %}</h2>
+
+    <label>{% trans "Blocked:" %}</label>
+    <div class="read-value">{% trans "The citizen is blocked from registering or voting." %}</div>
+  {% else %}
+    {% if case.registration %}
+      <h2>{% trans "Registration" %}</h2>
+
+      <label>{% trans "Center:" %}</label>
+      <div class="read-value">{{ case.registration.registration_center }}</div>
+
+      <label>{% trans "Office area:" %}</label>
+      <div class="read-value">{{ case.registration.registration_center.office_name }}</div>
+
+      <label>{% trans "Phone number:" %}</label>
+      <div class="read-value">{{ case.registration.sms.from_number|format_phone_number }}</div>
+
+      {% if case.registration.unlocked %}
+        <label>{% trans "Unlocked until:" %}</label>
+        <div class="read-value">{{ case.registration.unlocked_until }}</div>
+      {% else %}
+        <label>{% trans "Changes remaining:" %}</label>
+        <div class="read-value">{{ case.registration.remaining_changes }}</div>
+        {% if case.changes_increased %}
+          <label class="collapsing">&nbsp;</label>
+          <div class="read-value">{% trans "Changes have been increased" %}</div>
+        {% endif %}{# case.changes_increased #}
+      {% endif %}{# unlocked #}
+
+    {% endif %}{# case.registration #}
+  {% endif %}{# not blocked #}
+{% endif %}{# citizen #}
+
+{% if case.updates.all %}
+  <a name="updates"><h2>{% trans "Updates" %}</h2></a>
+
+  {% for update in case.updates.all %}
+    <div>
+      <label>{% trans "Timestamp" %}</label>
+      <div class="read-value">{{ update.formatted_timestamp }}</div>
+
+      <label>{% trans "User" %}</label>
+      <div class="read-value">{{ update.user.get_full_name|default:update.user.username }}</div>
+
+      <label>{% trans "Type of Update" %}</label>
+      <div class="read-value">{{ update.get_kind_display }}</div>
+
+      {% if update.kind == 'mark' %}
+        <div class="read-value">{{ update.get_reason_marked_display }}</div>
+      {% elif update.kind == 'recommend' %}
+        <div class="read-value">{{ update.get_recommended_action_display }}</div>
+      {% else %}
+        &nbsp;
+      {% endif %}
+
+      {% if update.comment %}
+        <label>{% trans "Comment" %}</label>
+        <div class="read-value">{{ update.comment }}</div>
+      {% endif %}
+    </div>
+    <div class="spacer"></div>
+
+  {% endfor %}
+{% endif %}

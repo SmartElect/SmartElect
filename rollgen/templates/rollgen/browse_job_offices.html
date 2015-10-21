@@ -1,0 +1,53 @@
+{% extends 'rollgen/base.html' %}
+
+{% load i18n %}
+{% load rollgen_tags %}
+
+{% block rollgen_content %}
+  <div id='browse_job_offices'>
+    <div class="page-width cushion-sides">
+      <div>
+        <div id='header_nav' class='right'>
+          <a class="button transparent" href='{% url 'rollgen:overview' %}'>{% trans 'Return to Overview' %}</a>
+        </div>
+      <h1>{% trans "Voter Rolls > Job" %}</h1>
+      </div>
+      <div class='clear'>&nbsp;</div>
+      {% block tabs %}
+        {% include 'rollgen/tab.html' %}
+      {% endblock tabs %}
+    </div>
+
+    <div class="milk">
+      <div class='banana banana_header'>
+        <div class="page-width cushion-sides">
+          {{ job.dirname }}
+        </div>
+      </div>
+      <div class="page-width cushion">
+
+        <table id='offices'>
+          <thead>
+            <tr>
+              <th>{% trans 'Office Number' %}</th>
+              <th>{% trans 'Browse Office' %}</th>
+              <th>{% trans 'Download Zip File' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for office in offices %}
+              {% url 'rollgen:browse_office_view' job.dirname office.id as url_office %}
+              <tr>
+                <td><a href='{{ url_office }}'>{{ office.id }}</a></td>
+                <td><a href='{{ url_office }}'>{{ office.name }}</a></td>
+                <td>
+                  <a href='{{ office.zip_file_url }}'>{% trans 'Download' %}</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock rollgen_content %}

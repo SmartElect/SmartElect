@@ -1,0 +1,42 @@
+{% extends 'vr_dashboard/polling_base.html' %}
+{% load humanize i18n staticfiles %}
+{% block content %}
+  <section class="milk">
+    <div class="page-width cushion">
+      <span id='loading'>
+        {% trans "Loading..." %}
+      </span>
+      <table class='js-sortable election-day-center' style='display:none;'>
+        <thead>
+        <tr>
+          <th>{% trans "Polling Center" %}</th>
+          <th>{% trans "Code" %}</th>
+          <th>{% trans "Copied Polling Center" %}</th>
+          <th class="formatted-count">{% trans "Total Registrations" %}</th>
+          <th>{% trans "Office" %}</th>
+          <th>{% trans "Active" %}</th>
+          <th>{% trans "Opened" %}</th>
+          <th class="formatted-count">{% trans "Period" %} 1<br>{% trans "Reported" %}</th>
+          <th class="formatted-count">{% trans "Period" %} 2<br>{% trans "Reported" %}</th>
+          <th class="formatted-count">{% trans "Period" %} 3<br>{% trans "Reported" %}</th>
+          <th class="formatted-count">{% trans "Period" %} 4<br>{% trans "Reported" %}</th>
+          <th>{% trans "Closed" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ centers|safe }}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock content %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}"/>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'js/application/base.js' %}"></script>
+{% endblock %}

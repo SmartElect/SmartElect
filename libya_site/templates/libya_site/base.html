@@ -1,0 +1,80 @@
+{% load i18n staticfiles %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% trans "LibyaVotes Home" %}{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='//fonts.googleapis.com/css?family=Fira+Sans:300,400,500' rel='stylesheet' type='text/css'>
+
+    {% block extra_css %}{% endblock %}
+
+    {# This file stores project specific CSS #}
+    <link href="{% static 'css/site.css' %}" rel="stylesheet">
+
+  </head>
+
+  <body id="{% block body_id %}{% endblock %}">
+
+    {# hidden form for changing language - https://docs.djangoproject.com/en/dev/topics/i18n/translation/#the-set-language-redirect-view #}
+    <form id="libya-set-language" action="{% url 'set_language' %}" method="post">
+      {% csrf_token %}
+      <input name="language" id="language-code" type="hidden"/>
+    </form>
+
+    <header>
+      <div class="page-width">
+        <nav class="cushion-sides">
+          <div class="menu">
+            {% if user.is_staff %}
+              <a href="{% url 'staff' %}"{% if staff_page %} class="selected"{% endif %}>{% trans "Staff" %}</a>
+            {% endif %}
+            <a href="{% url 'vr_dashboard:national' %}"{% if registration_stats_page %} class="selected"{% endif %}>{% trans "Registration Statistics" %}</a>
+            <a href="{% url 'check_registration' %}"{% if check_registration_page %} class="selected"{% endif %}>{% trans "Check Registration" %}</a>
+          </div>
+          <div class="logo"></div>
+          <div class="user">
+            {% if user.is_authenticated %}
+              <img class="icon" src="{% static 'img/user.png' %}">
+              <span class="username">{{ user.username }}</span>
+              | <a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a>
+            {% else %}
+              <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+            {% endif %}
+            | <a href="#" id="set-language-en">English</a>
+            | <a href="#" id="set-language-ar">العربية</a>
+          </div>
+          <div class="clear"></div>
+        </nav>
+      </div>
+      <div class="subnav">
+        <div class="page-width">
+          <nav>
+            {% block subnav %}{% endblock %}
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    {% block messages %}
+      {% include 'includes/messages.html' %}
+    {% endblock %}
+
+    {% block status_messages %}{% endblock %}
+    {% block charts %}{% endblock %}
+    <div id="content">
+      {% block content %}{% endblock %}
+      {% block page_footer %}{% endblock %}
+    </div>
+
+    {# JavaScript #}
+    <script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/set_language.js' %}"></script>
+    <script src="{% static 'js/URI.js' %}"></script>
+    <script src="{% static 'js/bread.js' %}"></script>
+
+    {# place project specific Javascript in this file #}
+    <script src="{% static 'js/project.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,72 @@
+{% extends 'vr_dashboard/base.html' %}
+{% load humanize i18n %}
+{% block content %}
+  <div class="full plum">
+    <div class="page-width cushion">
+      <h2>{% trans "SMS Stats" %}</h2>
+      <div class="milk">
+        <table>
+          <thead>
+          <tr>
+            <th>{% trans "Stat" %}</th>
+            <th>{{ sms_stats.last_date }}</th>
+            <th>{% trans "Last 7 Days" %}</th>
+            <th>{% trans "Total" %}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{% trans "Incoming" %}</td>
+            <td>{{ sms_stats.last|intcomma }}</td>
+            <td>{{ sms_stats.total_last_7|intcomma }}</td>
+            <td>{{ sms_stats.total|intcomma }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>{% trans "Phones with Registrations from Multiple Family Books" %}</h2>
+      <div class="milk">
+        <table>
+          <tbody>
+          <tr>
+            <td>{{ raw_stats.phone_multiple_family_book|intcomma }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>{% trans "Phones Attempting Duplicate Registrations" %}</h2>
+      <div class="milk">
+        <table>
+          <tbody>
+          <tr>
+            <td>{{ raw_stats.phone_duplicate_registrations|intcomma }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>{% trans "Message Stats" %}</h2>
+      <div class="milk">
+        <table>
+          <thead>
+          <tr>
+            <th>{% trans "Stat" %}</th>
+            <th>{{ sms_stats.last_date }}</th>
+            <th>{% trans "Last 7 Days" %}</th>
+            <th>{% trans "Total" %}</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for stats in message_stats_by_type %}
+            <tr>
+              <td>{{ stats.translated_sms_type }}</td>
+              <td>{{ stats.last|intcomma }}</td>
+              <td>{{ stats.total_last_7|intcomma }}</td>
+              <td>{{ stats.total|intcomma }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

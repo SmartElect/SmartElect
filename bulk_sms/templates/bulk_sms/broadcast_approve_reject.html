@@ -1,0 +1,20 @@
+{% extends 'bread/label_value_read.html' %}
+{% load i18n %}
+
+{% block actions %}
+
+  <form method="POST" action="{{ approve_reject_url }}">
+    {% csrf_token %}
+    {% if show_approve %}
+      <input class="button" type="submit" value="{% trans 'Approve' %}" name="approve" />
+    {% endif %}
+    {% if show_reject %}
+      <input class="button warning" type="submit" value="{% trans 'Reject' %}" name="reject" />
+    {% endif %}
+    {% if may_delete %}
+      <a class="button warning" href="{% url bread.delete_url_name view.object.pk %}">{% trans "Delete" %}</a>
+    {% endif %}
+    <a class="button inverse right" href="{% url bread.browse_url_name %}">{% trans "Back to list" %}</a>
+  </form>
+
+{% endblock actions %}

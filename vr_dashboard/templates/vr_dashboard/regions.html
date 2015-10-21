@@ -1,0 +1,95 @@
+{% extends 'vr_dashboard/base.html' %}
+{% load humanize i18n staticfiles vr_dashboard_tags %}
+{% block content %}
+  <div class="full plum">
+    <div class="page-width cushion">
+      <h2>{% trans "Region Stats" %}</h2>
+      <h4>{% trans "Click on a row below to see it in the chart." %}</h4>
+      <table id="comparison_data" class="milk">
+        <thead>
+          <tr>
+            <th></th>
+            <th colspan="3">{% trans "Cumulative Totals" %}</th>
+            <th colspan="3">{{ yesterday }} {% trans "Total" %}</th>
+            <th colspan="5">{% trans "Age Totals" %}</th>
+          </tr>
+          <tr>
+            <th class="left">{% if regions_page %}{% trans "Region" %}{% else %}{% trans "Subconstituencies" %}{% endif %}</th>
+            <th>{% trans "Male" %}</th>
+            <th>{% trans "Female" %}</th>
+            <th>{% trans "Total" %}</th>
+            <th>{% trans "Male" %}</th>
+            <th>{% trans "Female" %}</th>
+            <th>{% trans "Total" %}</th>
+            {% for ages in age_groupings %}
+              <th>{{ ages }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in regions %}
+            <tr>
+              <td class="end-column label left">
+                <span class="swatch"></span>
+                {{ r.display_name }}
+              </td>
+              <td style="background-color: {{ r.m_color }}">{{ r.m|intcomma }}</td>
+              <td style="background-color: {{ r.f_color }}">{{ r.f|intcomma }}</td>
+              <td class="end-column" style="background-color: {{ r.t_color }}">{{ r.t|intcomma }}</td>
+              <td style="background-color: {{ r.m_yesterday_color }}">{{ r.m_yesterday|intcomma }}</td>
+              <td style="background-color: {{ r.f_yesterday_color }}">{{ r.f_yesterday|intcomma }}</td>
+              <td class="end-column" style="background-color: {{ r.t_yesterday_color }}">
+                {{ r.t_yesterday|intcomma }}
+              </td>
+              {% for age in age_groupings %}
+                {% if forloop.last %}
+                  <td class="end-column">{% lookup stats r.name age 'intcomma' %}</td>
+                {% else %}
+                  <td>{% lookup stats r.name age 'intcomma' %}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          <tr class="sum-row selected">
+            <td class="end-column label left">
+              <span class="swatch"></span>
+              {% trans "Total" %}
+            </td>
+            <td style="background-color: {{ totals.m_color }}">{{ totals.m|intcomma }}</td>
+            <td style="background-color: {{ totals.f_color }}">{{ totals.f|intcomma }}</td>
+            <td class="end-column" style="background-color: {{ totals.t_color }}">
+              {{ totals.t|intcomma }}
+            </td>
+            <td style="background-color: {{ totals.m_yesterday_color }}">
+              {{ totals.m_yesterday|intcomma }}
+            </td>
+            <td style="background-color: {{ totals.f_yesterday_color }}">
+              {{ totals.f_yesterday|intcomma }}
+            </td>
+            <td class="end-column" style="background-color: {{ totals.t_yesterday_color }}">
+              {{ totals.t_yesterday|intcomma }}
+            </td>
+
+            {% for age in age_groupings %}
+              {% if forloop.last %}
+                <td class="end-column">{% lookup stats 'total' age 'intcomma' %}</td>
+              {% else %}
+                <td>{% lookup stats 'total' age 'intcomma' %}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock content %}
+{% block extra_js %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% static 'js/chart-interaction.js' %}"></script>
+  <script>
+   {% gen_data_points request 'newRegs' nr 'lv' %}
+   {% gen_data_points request 'cumRegs' cr 'xy' %}
+   vrDashboardCharts.addNormalCharts(newRegs, cumRegs);
+   setupSlider();
+  </script>
+{% endblock extra_js %}

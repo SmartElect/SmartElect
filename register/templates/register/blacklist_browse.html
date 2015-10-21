@@ -1,0 +1,24 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block top_buttons %}
+  <div class="right">
+    {% if may_add %}
+      <a class="button transparent" href="{% url 'blacklisted-numbers-upload' %}">{% trans "Upload CSV" %}</a>
+    {% endif %}
+    <a class="button transparent" href="{% url 'blacklisted-numbers-download' %}">{% trans "Download CSV" %}</a>
+    {% if may_add %}
+      <a class="button success" href="{% url bread.add_url_name %}">{% trans "Add" %}</a>
+    {% endif %}
+  </div>
+{% endblock top_buttons %}
+
+{% block tabs %}
+  {% include 'polling_reports/tab.html' %}
+{% endblock tabs %}
+
+{% block actions %}
+  {% if may_delete %}
+    <a class="button warning right" href="{% url 'blacklisted-numbers-delete' %}">{% trans "Delete all Blacklisted Numbers" %}</a>
+  {% endif %}
+{% endblock actions %}

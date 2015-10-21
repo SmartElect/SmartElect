@@ -1,0 +1,26 @@
+{% extends 'rollgen/base.html' %}
+
+{% load i18n %}
+{% load rollgen_tags %}
+
+{% block rollgen_content %}
+  <div id='job_failed_view'>
+
+    <div class="page-width cushion-sides">
+      <div id='header_nav' class='right'>
+        <a class="button transparent" href='{% url 'rollgen:overview' %}'>{% trans 'Return to Overview' %}</a>
+      </div>
+
+      <h1>{% trans "Voter Rolls > Job " %}</h1>
+      <div class='banana banana_header'>
+        {{ job.dirname }}
+      </div>
+
+      <p class='messages error'>{% trans "This job failed. Error information follows." %}</p>
+
+      <p>
+        {{ job.fail_message }}
+      </p>
+    </div>
+  </div>
+{% endblock rollgen_content %}

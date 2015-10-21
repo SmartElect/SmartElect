@@ -1,0 +1,8 @@
+{# If we're on 'url', then add 'selected' class, otherwise show a link #}
+<a
+  {% if url == request.path|urlencode %}
+    class="selected"
+  {% else %}
+    href="{{ url }}"
+  {% endif %}>{{ linktext }}
+</a>

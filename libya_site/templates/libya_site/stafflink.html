@@ -1,0 +1,7 @@
+<li>
+  {% if permission %}
+    <a href="{% url url %}">{% if not finished %}({% endif %}{{ linktext }}{% if not finished %}){% endif %}</a>
+  {% else %}
+    <a class="inactive">{{ linktext }}</a>
+  {% endif %}
+</li>

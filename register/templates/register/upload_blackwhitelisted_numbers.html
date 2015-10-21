@@ -1,0 +1,46 @@
+{% extends 'bread/edit.html' %}
+
+{% load i18n %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+    {% if list_type == 'black' %}
+      <h1>{% trans "Upload blacklisted numbers" %}</h1>
+    {% else %}
+      <h1>{% trans "Upload whitelisted numbers" %}</h1>
+    {% endif %}
+  </div>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <form class="two-thirds" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          {{ form.non_field_errors }}
+        {% endif %}
+
+        {% with form.import_file as field %}
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
+          <span class="helptext">{{ field.help_text|safe }}</span>
+        {% endwith %}
+
+        <div class="spacer"></div>
+
+        <input type="submit" class="success" value="{% trans 'Upload' %}"/>
+
+        <a class="button inverse right"
+           {% if list_type == 'black' %}
+           href="{% url 'browse_blacklistednumbers' %}"
+           {% else %}
+           href="{% url 'browse_whitelistednumbers' %}"
+           {% endif %}
+           >{% trans "Back to list" %}</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

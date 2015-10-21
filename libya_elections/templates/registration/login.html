@@ -1,0 +1,48 @@
+{% extends "registration/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Welcome" %}{% endblock %}
+{% block page_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block messages %}{% endblock %}
+
+{% block registration_content %}
+  {% include "includes/messages.html" %}
+
+  <p>{% trans "To check your voter registration information, you need an account. If you have an account, please log in below. To create a new account, click the button below." %}</p>
+
+	<div class="spacer"></div>
+
+  <form method="post" action="{% url 'auth_login' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
+
+    <div class="control-group">
+      {{ form.username.label_tag }}
+      {{ form.username }}
+    </div>
+
+    <div class="control-group">
+      {{ form.password.label_tag }}
+      {{ form.password }}
+    </div>
+
+    {% if form.errors %}
+      <div class="messages error">
+        {% trans "Your username and password didn't match. Please try again." %}
+      </div>
+    {% endif %}
+
+    <div class="spacer"></div>
+
+    <button class="success" type="submit">{% trans "Log in" %}</button>
+
+    {% url 'auth_password_reset' as password_reset_url %}
+    <a class="button transparent" href="{{ password_reset_url }}">{% trans 'Forgotten your username or password?' %}</a>
+
+    <div class="spacer"></div>
+
+    {% url 'registration_register' as register_link %}
+    <a href="{{ register_link }}" class="button">{% trans "Need to create an account?" %}</a>
+  </form>
+{% endblock registration_content %}

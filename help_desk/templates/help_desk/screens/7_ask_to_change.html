@@ -1,0 +1,37 @@
+{% load i18n libya_tags %}
+
+<p>{% trans "The citizen's registration information" %}:</p>
+
+<div class="float-layout banana">
+  <div class="third cushion">
+    <label>{% trans "Registration Center" %}</label>
+    <p>
+      {{ case.citizen.registration.registration_center.center_id }}
+      {{ case.citizen.registration.registration_center.name }}
+    </p>
+  </div>
+
+  <div class="third cushion">
+    <label>{% trans "Office" %}</label>
+    <p>
+      {{ case.citizen.registration.registration_center.office_name }}
+    </p>
+  </div>
+
+  <div class="third cushion">
+    <label>{% trans "Phone number associated with citizen's registration" %}</label>
+    <p>
+      {{ case.citizen.registration.sms.from_number|format_phone_number }}
+    </p>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="spacer"></div>
+
+<p>{% trans "Say to the caller" %}:</p>
+{% if case.field_staff %}
+  <blockquote>{% trans "Does the citizen wish to change their centre or update the phone number associated with their registration?" %}</blockquote>
+{% else %}
+  <blockquote>{% trans "Do you wish to change your centre or update the phone number assoicated with your registration?" %}</blockquote>
+{% endif %}

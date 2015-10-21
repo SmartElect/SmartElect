@@ -1,0 +1,66 @@
+/*** charts ***/
+
+svg{
+	width:100%;
+}
+
+svg text {
+	font-size: 66%;
+	font-weight:500;
+	fill:#0096d9;
+
+}
+
+.nvd3 g.nv-groups rect.nv-bar {
+  stroke: none;
+  stroke-width: 0;
+  fill-opacity: 1.0;
+}
+
+.nvd3 g.nv-groups rect.nv-bar:hover {
+  fill: #0096d9 !important;
+}
+
+.nvd3 g.nv-x g.nv-axis{
+	transform:translate(-0.66em, 0.5em);
+}
+
+html[dir="rtl"] .nvd3 g.nv-x g.nv-axis{
+	transform:translate(-0.66em, 2em);
+}
+
+html[dir="rtl"] .nvd3 g.nv-y text{
+	text-anchor:start !important;
+}
+
+.nvd3 g.nv-y line{
+	stroke-width:1px;
+	stroke:rgba(0,0,0,0.2);
+}
+
+.nvtooltip{
+	margin-top:4.6em;
+	width:9em;
+	border:solid 1px #0096d9;
+	padding:1em;
+	border-radius:6px;
+	background-color:rgba(255,255,255,0.9);
+	font-size:60%;
+}
+
+#comparison_data tbody tr:hover{
+	background-color:#f1f2ff;
+	cursor:pointer;
+}
+
+#cumulative-registrations-chart path.nv-line {
+	fill:none;
+}
+
+#cumulative-registrations-chart circle.nv-point {
+	fill-opacity:1;
+}
+
+.nvtooltip{
+	pointer-events: none;
+}

@@ -1,0 +1,28 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=verbose_name %}Delete {{ name }}{% endblocktrans %}{% endblock title %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+  <h1>{% blocktrans with name=verbose_name %}Delete {{ name }}{% endblocktrans %}</h1>
+  </div>
+
+  <div class="milk">
+    <div class="page-width">
+      <div class="collapsing sixth"></div>
+
+      <div class="two-thirds cushion">
+        {% blocktrans with name=view.object %}Really delete {{ name }}?{% endblocktrans %}
+        <form method="POST">
+          {% csrf_token %}
+          <div class="spacer"></div>
+          <button class="warning" type="submit">{% trans 'Delete' %}</button>
+          <a class="button inverse right" href="{% url bread.browse_url_name %}">{% trans "Cancel" %}</a>
+        </form>
+      </div>
+
+      <div class="collapsing sixth"></div>
+    </div>
+  </div>
+{% endblock %}

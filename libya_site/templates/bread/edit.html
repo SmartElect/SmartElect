@@ -1,0 +1,55 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=verbose_name %}Edit {{ name }}{% endblocktrans %}{% endblock title %}
+
+{% block messages %}
+{{ block.super }}
+  {% if form.errors %}
+  <div class="messages error">
+    <div class="page-width cushion-sides">
+      {% trans "Please correct the errors in the form below." %}
+    </div>
+  </div>
+  {% endif %}
+{% endblock messages %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+    <h1>{% blocktrans with name=verbose_name %}Edit {{ name }}{% endblocktrans %}</h1>
+  </div>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <form class="two-thirds" method="POST"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+          {% endif %}
+
+          {% block form_fields %}
+            {% for field in form.hidden_fields %}
+              {{ field }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+              {{ field.label_tag }}
+              {{ field }}
+              {% if field.errors %}
+                  {{ field.errors }}
+              {% endif %}
+            {% endfor %}
+          {% endblock form_fields %}
+
+          <div class="spacer"></div>
+
+          {% block actions %}
+            <button class="success" type="submit">{% trans 'Submit' %}</button>
+            {% if may_delete and view.object.pk %}
+              <a class="button warning right" href="{% url bread.delete_url_name view.object.pk %}">{% trans "Delete" %}</a>
+            {% endif %}
+            <a class="button inverse right" href="{% url bread.browse_url_name %}">{% trans "Cancel" %}</a>
+          {% endblock actions %}
+      </form>
+    </div>
+  </div>
+{% endblock %}

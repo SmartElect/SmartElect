@@ -1,0 +1,6 @@
+<nav class="tabs">
+  {% url 'rollgen:browse_job_offices' dirname=job.dirname as url_offices %}
+  {% url 'rollgen:browse_job_centers' dirname=job.dirname as url_centers %}
+  {% include 'includes/tablink.html' with url=url_offices linktext=_("Offices") %}
+  {% include 'includes/tablink.html' with url=url_centers linktext=_("Centres") %}
+</nav>

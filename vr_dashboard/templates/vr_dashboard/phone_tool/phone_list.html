@@ -1,0 +1,32 @@
+{% extends 'vr_dashboard/phone_tool_base.html' %}
+{% load humanize i18n libya_tags static vr_dashboard_tags %}
+{% block main_content %}
+  <section class="milk">
+    <div class="page-width cushion">
+      <h2>{% trans "Phones for center" %} {{ center_id }}</h2>
+
+      <br/>
+
+      <table>
+        <tr>
+          <th>{% trans "Phone Number" %}</th>
+          <th>{% trans "Whitelist Status" %}</th>
+        </tr>
+        {% for phone in phones %}
+          <tr>
+            <td>{{ phone.phone_number|format_phone_number }}
+              <a href="{% url 'vr_dashboard:phone-history' %}?phone={{ phone.phone_number }}">
+                {% trans "History" %}</a></td>
+            {% if phone.whitelist %}
+              <td>{% trans "Yes" %}</td>
+            {% else %}
+              <td>{% trans "No" %}
+                {% include 'vr_dashboard/phone_tool/includes/whitelist_form.html' with phone_number=phone.phone_number mode="phone-list" %}
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </section>
+{% endblock main_content %}

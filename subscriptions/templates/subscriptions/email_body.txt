@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load firstof from future %}
+
+{% blocktrans %}
+The HNEC Voter Registration Audit System has identified the following issues
+which require review. Details of these issues are summarized below.
+Please click on an issue to view it in the Audit System.
+{% endblocktrans %}
+
+{% for discrepancy in discrepancies %}
+    {% if discrepancy.sms %}
+        {% with sms=discrepancy.trail.sms %}
+            {# discrepancy for an outgoing message and there is not vumi log for it. #}
+            <a href="https://{{ domain }}{{ discrepancy.get_absolute_url }}">
+                {{ sms.formatted_creation_date }} {{ sms.get_direction_display }} {{ sms.get_msg_type_display }}
+                {{ sms.to_addr }}
+            </a>
+        {% endwith %}
+    {% else %}
+        {% with log=discrepancy.trail.vumi %}
+            {# discrepancy for an incoming message and there is not sms record for it. #}
+            <a href="https://{{ domain }}{{ discrepancy.get_absolute_url }}">
+                {% firstof log.logged_date '' %} {{ log.get_direction_display }}  {{ log.from_addr }}
+            </a>
+        {% endwith %}
+    {% endif %}
+{% endfor %}

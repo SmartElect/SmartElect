@@ -1,0 +1,21 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Manage Help Desk Staff" %}{% endblock %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Create Help Desk Staff User" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+    <form class="two-thirds" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="spacer"></div>
+
+      <button class="success" type="submit" name="submit">{% trans "Submit" %}</button>
+      <a class="button inverse right" href="{% url 'staff_list' %}">{% trans "Cancel" %}</a>
+    </form>
+  </div>
+{% endblock %}

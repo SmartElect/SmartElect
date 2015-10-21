@@ -1,0 +1,86 @@
+{% extends "libya_site/staff.html" %}
+{% load django_tables2 i18n staticfiles %}
+
+{% block title %}{% trans 'Message Tester' %}{% endblock %}
+
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    <div class="page-width cushion-sides">
+      <h1>{% trans 'Message Tester' %}</h1>
+
+      <div class="float-layout">
+        {% csrf_token %}
+        {% for field in form %}
+          {# skip lesser used 'bulk upload field and instead show it at the end of the page #}
+          {% if field.name != 'bulk' and field.name != 'text' %}
+            <div class="sixth">
+              <div class="cushion">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                  {{ field.errors }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {# give message text the rest of the line #}
+        <div class="half">
+          <div class="cushion">
+            {% with field=form.text %}
+              {{ field.label_tag }}
+              {{ field }}
+              {% if field.errors %}
+                {{ field.errors }}
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+
+        <div class="sixth">
+          <div class="cushion">
+            <label class="collapsing">&nbsp;</label>
+            <button type="submit" class="full success" id="send-btn" name="send-btn">Send</button>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+
+    <div class="milk">
+      <div class="page-width cushion">
+        {% if messages_table.rows %}
+          {% render_table messages_table %}
+
+          <div class="spacer"></div>
+
+          <button type="submit" id="clear-btn" name="clear-btn">{% trans 'Clear messages from this phone' %}</button>
+          <button type="submit" class="warning" id="clear-all-btn" name="clear-all-btn">{% trans 'Clear all messages' %}</button>
+        {% else %}
+          {% trans "You haven't sent or received any test messages yet." %}
+        {% endif %}
+      </div>
+    </div>
+
+    <h3 class="page-width cushion">{% trans 'Bulk Upload' %}</h3>
+    <div class="cushion-ends milk">
+      <div class="page-width float-layout">
+        <div class="helptext">{{ form.bulk.help_text|safe }}</div>
+        <div class="half cushion">
+          {{ form.bulk }}
+          {% if form.bulk.errors %}
+            {{ form.bulk.errors }}
+          {% endif %}
+        </div>
+        <div class="sixth">
+          <div class="cushion">
+            <button type="submit" class="full" name="send-btn">{% trans 'Upload and Send' %}</button>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </form>
+{% endblock %}

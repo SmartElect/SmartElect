@@ -1,0 +1,9 @@
+{% extends 'bread/label_value_read.html' %}
+{% load i18n %}
+
+{% block read_fields %}
+  {% for field in form %}
+    {{ field.label_tag }}
+    <div class="read-value">{{ field.value }}</div>
+  {% endfor %}
+{% endblock read_fields %}

@@ -1,0 +1,34 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete All Staff Phones" %}{% endblock %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Delete All Staff Phones" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      {% if object_count %}
+        <p>
+          {% blocktrans trimmed with object_count=object_count %}
+            Are you sure you want to delete all {{ object_count }} Staff Phones?
+          {% endblocktrans %}
+        </p>
+
+        <div class="spacer"></div>
+
+        <form class="two-thirds" method="POST">
+          {% csrf_token %}
+
+          <button name="ok" class="warning">{% trans "Delete All" %}</button>
+          <button name="cancel" class="inverse right">{% trans "Cancel" %}</button>
+        </form>
+
+      {% else %}
+        <p>
+          {% trans "There are currently no Staff Phones." %}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}

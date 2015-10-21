@@ -1,0 +1,152 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n bread_tags %}
+
+{% block title %}{% trans verbose_name_plural|title %}{% endblock title %}
+
+{% block messages %}
+  {# For bread browse pages, messages are placed in bread_messages #}
+{% endblock messages %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+    {% block content_title %}
+      <h1 class="left">{% trans verbose_name_plural|title %}</h1>
+    {% endblock %}
+
+    <div class="cushion-ends">
+      {% block top_buttons %}
+        {% if may_add %}
+          <a class="button success right" href="{% url bread.add_url_name %}">{% trans "Add" %}</a>
+        {% endif %}
+      {% endblock top_buttons %}
+    </div>
+    <div class="clear"></div>
+
+    {% block tabs %}
+    {% endblock tabs %}
+  </div>
+
+  {% block bread_messages %}
+    {% include 'includes/messages.html' %}
+  {% endblock bread_messages %}
+
+  {% if has_filter or has_search %}
+    {% block filters %}
+      <form method="GET">
+        <div class="blueberry cushion-ends">
+          <div class="page-width float-layout">
+            {% if has_search %}
+              <div class="two-fifths cushion">
+                <label>{% blocktrans with names=verbose_name_plural %}Search {{ names }}{% endblocktrans %}</label>
+                <input name="q" type="search" value="{{ q }}">
+              </div>
+              <div class="two-fifths cushion">
+                <label>{% trans "Search in:" %}</label>
+                <p>{% blocktrans %}{{ search_terms }}{% endblocktrans %}</p>
+              </div>
+            {% endif %}
+
+            {% if has_filter %}
+              <div class="clear"></div>
+              {% if filter.form.non_field_errors %}
+                <div class="control-group">
+                  {% for err in filter.form.non_field_errors %}
+                    {{ err }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% for field in filter.form %}
+                <div class="fifth">
+                  <div class="cushion">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                      {{ field.errors }}
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+            <div class="fifth">
+              <div class="cushion">
+                <label class="collapsing">&nbsp;</label>
+                <input class="full" type="submit" value="{% trans 'Search' %}">
+              </div>
+            </div>
+
+          </div>
+          <div class="clear"></div>
+        </div>
+      </form>
+    {% endblock filters %}
+  {% endif %}
+
+  <div class="milk">
+    <div class="page-width cushion">
+
+      {% block top_pagination %}
+        {% include "includes/pagination.html" %}
+      {% endblock top_pagination %}
+
+      <table class="page-width">
+        {% if columns %}
+          <thead>
+            <tr>
+              {% for label, field_name in columns %}
+                <th class="col_header {{ field_name }}">{{ label }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+        {% endif %}
+        <tbody>
+          {% for object in view.object_list %}
+            <tr>
+              {% if columns %}
+                {% for label, field_name in columns %}
+                  <td class="{{ field_name }}">
+                    {% if may_read %}
+                      <a href="{% url bread.read_url_name object.pk %}">{{ object|getter:field_name }}</a>
+                    {% else %}
+                      {{ object|getter:field_name }}
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              {% else %}
+                <td>
+                  {% if may_read %}
+                    <a href="{% url bread.read_url_name object.pk %}">{{ object }}</a>
+                  {% else %}
+                    {{ object }}
+                  {% endif %}
+                </td>
+              {% endif %}
+              {% if may_edit %}
+                <td>
+                  <a href="{% url bread.edit_url_name object.pk %}">{% trans "Edit" %}</a>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% block bottom_pagination %}
+        {% include "includes/pagination.html" %}
+      {% endblock bottom_pagination %}
+
+      <div class="spacer"></div>
+
+      {% block actions %}
+      {% endblock actions %}
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+{{ block.super }}
+  <script>
+    var o_field = "{{o}}",
+        valid_sorting_columns = JSON.parse("{{ valid_sorting_columns_json }}");
+  </script>
+{% endblock %}
