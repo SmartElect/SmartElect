@@ -1,6 +1,9 @@
 SmartElect
 ==========
 
+.. image:: https://travis-ci.org/SmartElect/SmartElect.svg?branch=develop
+           :target: https://travis-ci.org/SmartElect/SmartElect
+
 Below you will find basic setup and deployment instructions for the SmartElect
 project. To begin you should have the following applications installed on your
 local development system:
