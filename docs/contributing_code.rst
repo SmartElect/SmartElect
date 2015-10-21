@@ -13,13 +13,13 @@ Get the Source
 
 You can clone the repository from Github::
 
-    git clone git://github.com/FIXME/FIXME.git
+    git clone git://github.com/SmartElect/SmartElect.git
 
 However this checkout will be read-only. If you want to contribute code you should
 create a fork and clone your fork. You can then add the main repository as a remote::
 
-    git clone git@github.com:<your-username>/FIXME.git
-    git remote add upstream git://github.com/FIXME/FIXME.git
+    git clone git@github.com:<your-username>/SmartElect.git
+    git remote add upstream git://github.com/SmartElect/SmartElect.git
     git fetch upstream
 
 
@@ -63,7 +63,8 @@ style, clarity, correctness, in addition to making sure that it solves the inten
 belongs in this project. It may be a long discussion or it might just be a simple thank you.
 
 Not every request will be merged but you should not take it personally if your change is not
-accepted. At some level, the code review process is subjective. Here are some tips to increase the chances of your change being incorporated.
+accepted. At some level, the code review process is subjective. Here are some tips to increase the
+chances of your change being incorporated.
 
 - Address a known issue. Preference is given to a request that fixes a currently open issue.
 - Include documentation and tests when appropriate. New features should be tested and documented.
