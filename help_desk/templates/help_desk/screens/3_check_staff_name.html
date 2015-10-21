@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<p>{% trans 'Say to the caller' %}:</p>
+<blockquote>{% trans 'Please provide your full name.' %}</blockquote>
+
+<div class="float-layout banana">
+  <div class="half cushion">
+    <label>{% trans 'Staff ID' %}</label>
+    <p>{{ case.field_staff.staff_id }}</p>
+  </div>
+  <div class="half cushion">
+    <label>{% trans 'Staff Name' %}</label>
+    <p>{{ case.field_staff.name }}</p>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="spacer"></div>
+
+<p>{% trans "Give the caller three attempts to provide correct name as seen above." %}</p>

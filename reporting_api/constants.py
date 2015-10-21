@@ -1,0 +1,13 @@
+# constants for report keys to keep the spelling in check
+COUNTRY = 'country'
+INACTIVE_FOR_ELECTION = 'inactive_for_election'
+MESSAGE_CARRIER = 'carrier_id'
+MESSAGE_DIRECTION = 'direction'
+MESSAGE_TYPE = 'msg_type'
+OFFICE = 'office_id'
+POLLING_CENTER_CODE = 'polling_center_code'
+POLLING_CENTER_COPY_OF = 'copy_of_polling_center'
+POLLING_CENTER_TYPE = 'polling_center_type'
+REGION = 'region'
+SUBCONSTITUENCY_ID = 'subconstituency_id'
+PRELIMINARY_VOTE_COUNTS = 'prelim_counts'

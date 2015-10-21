@@ -1,0 +1,68 @@
+{% extends 'vr_dashboard/polling_base.html' %}
+{% load humanize i18n vr_dashboard_tags %}
+{% block content %}
+  <div class="banana cushion-ends">
+    <div class="page-width float-layout notice">
+
+      <div class='third cushion'>
+        {{ last_updated_msg }}
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <section class="milk">
+    <div class="page-width cushion">
+
+      <h2>{% trans "Overall" %}</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th></th>
+          {% for option in vote_options %}
+            <th>{{ option }}</th>
+          {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class='end-column label'>{% trans country_name %}</td>
+          {% gen_prelim_count_cells vote_options country_prelim_counts %}
+        </tr>
+        </tbody>
+      </table>
+
+      <h2>{% trans "Offices" %}</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th>{% trans "Office" %}</th>
+          {% for option in vote_options %}
+            <th>{{ option }}</th>
+          {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for office in offices %}
+          <tr>
+            <td class='end-column label'>
+              {{ office.office_id }}
+              {% if LANGUAGE_CODE == 'ar' %}
+                {{ office.arabic_name }}
+              {% else %}
+                {{ office.english_name }}
+              {% endif %}
+            </td>
+            {% gen_prelim_count_cells vote_options office %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock content %}
+
+{% block page_footer_csv_links %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<p>{% trans "Say to the caller" %}:</p>
+{% if case.field_staff %}
+  <blockquote>{% trans "To help us verify identification, please provide the citizen's name and birthdate." %}</blockquote>
+{% else %}
+  <blockquote>{% trans "To help us verify identification, please provide your name and birthdate." %}</blockquote>
+{% endif %}
+
+<div class="float-layout banana">
+  <div class="fifth cushion">
+    <label>{% trans "Citizen ID" %}</label>
+    <p>{{case.citizen.national_id}}</p>
+  </div>
+  <div class="fifth cushion">
+    <label>{% trans "Citizen Name" %}</label>
+    <p>{{case.citizen}}</p>
+  </div>
+  <div class="fifth cushion">
+    <label>{% trans "Birthdate" %}</label>
+    <p>{{case.citizen.formatted_birth_date}}</p>
+  </div>
+  <div class="fifth cushion">
+    <label>{% trans "Family Book Record Number" %}</label>
+    <p>{{case.citizen.fbr_number}}</p>
+  </div>
+  <div class="fifth cushion">
+    <label>{% trans "Mother's Name" %}</label>
+    <p>{{case.citizen.mother_name}}</p>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="spacer"></div>
+
+<p>{% trans "Does the caller's information match the citizen's above?" %}</p>
+
+<p>{% trans "You may also use the Mother's Name or the Family Book Record Number to verify the citizen's identification." %}</p>

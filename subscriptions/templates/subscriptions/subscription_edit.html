@@ -1,0 +1,18 @@
+{% extends 'bread/edit.html' %}
+{% load staticfiles %}
+
+{% block extra_css %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/jquery/jquery-ui.css' %}" type="text/css">
+  <link href="{% static 'selectable/css/dj.selectable.css' %}" type="text/css" media="all" rel="stylesheet">
+  <style>
+    label.requiredField { font-weight: bold; }
+    span.asteriskField { display: none; }
+  </style>
+{% endblock extra_css %}
+
+{% block extra_js %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/jquery/jquery-ui.js' %}"></script>
+<script type="text/javascript" src="{% static 'selectable/js/jquery.dj.selectable.js' %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,11 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block actions %}
+{{block.super}}
+{% if changeset %}
+<a class="button inverse" href="{% url 'read_changeset' changeset.pk %}">{% trans "Back to changeset" %}</a>
+{% else %}
+<a class="button inverse" href="{% url 'browse_changesets' %}">{% trans "Back to changesets" %}</a>
+{% endif %}
+{% endblock actions %}

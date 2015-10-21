@@ -1,0 +1,25 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Update Help Desk Staff" %}{% endblock %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Update Help Desk Staff" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <form class="two-thirds" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="spacer"></div>
+
+        <button class="success" type="submit">{% trans "Submit" %}</button>
+        <a class="button inverse right" href="{% url 'staff_list' %}">{% trans "Cancel" %}</a>
+        {% if perms.help_desk.change_staff_password %}
+          <a class="button" href="{% url 'staff_set_password' object.pk %}">{% trans "Set password" %}</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+{% endblock %}

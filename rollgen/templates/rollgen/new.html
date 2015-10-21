@@ -1,0 +1,108 @@
+{% extends 'rollgen/base.html' %}
+
+{% load i18n rollgen_tags %}
+
+{% block title %}{% trans "Voter Rolls - New" %}{% endblock title %}
+
+
+{% block rollgen_content %}
+  <div id='new'>
+    <div class="page-width cushion-sides">
+      <h1>{% trans "Voter Rolls > Create New Voter Roll" %}</h1>
+    </div>
+
+    <div class="milk">
+      <div class="page-width cushion">
+
+        <form class="two-thirds" action="" method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          {# job name #}
+          <h4 class='input_heading'>{{ form.name.label }}</h4>
+          <div>{{ form.name }}</div>
+          <div class='helptext'>{{ form.name.help_text }}</div>
+          {% if form.name.errors %}
+            {{ form.name.errors }}
+          {% endif %}
+
+          {# phase #}
+          <h4 class='input_heading'>{{ form.phase.label }}</h4>
+          <div>{{ form.phase }}</div>
+          <div class='helptext'>{{ form.phase.help_text }}</div>
+          {% if form.phase.errors %}
+            {{ form.phase.errors }}
+          {% endif %}
+
+          {# options #}
+          <h4 class='input_heading'>{% trans 'Options' %}</h4>
+          <table id='options'>
+            <tbody>
+              <tr>
+                <td class='milk checkbox'>{{ form.forgive_no_office }}</td>
+                <td class='milk'>{{ form.forgive_no_office.label }}</td>
+                <td class='milk checkbox'>{{ form.forgive_no_voters }}</td>
+                <td class='milk'>{{ form.forgive_no_voters.label }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          {# centers #}
+          <h4 class='input_heading'>{% trans 'Centres' %}</h4>
+          <div id='center_selection'>
+            {% if form.center_selection_type.errors %}
+              {{ form.center_selection_type.errors }}
+            {% endif %}
+
+            {% for radio in form.center_selection_type %}
+              <div>
+                {% if forloop.counter0 == 0 %}
+                  {# all centers #}
+                    {{ radio }}
+
+                {% elif forloop.counter0 == 1 %}
+                  {# centers in constituencies #}
+                  {{ radio }}
+                  {{ form.constituencies }}
+                  {% if form.constituencies.errors %}
+                    {{ form.constituencies.errors }}
+                  {% endif %}
+
+                {% elif forloop.counter0 == 2 %}
+                  {# centers in offices #}
+                  {{ radio }}
+                  {{ form.offices }}
+                  {% if form.offices.errors %}
+                    {{ form.offices.errors }}
+                  {% endif %}
+
+                {% elif forloop.counter0 == 3 %}
+                  {# centers selected in a picklist #}
+                  {{ radio }}
+                  {{ form.center_select_list }}
+                  {% if form.center_select_list.errors %}
+                    {{ form.center_select_list.errors }}
+                  {% endif %}
+
+                {% elif forloop.counter0 == 4 %}
+                  {# centers specified in a comma-delimited list #}
+                  {{ radio }}
+                  {{ form.center_text_list }}
+                  {% if form.center_text_list.errors %}
+                    {{ form.center_text_list.errors }}
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class='spacer'>&nbsp;</div>
+
+          <button class="success left" type="submit">{% trans "Start" %}</button>
+          <a href='{% url 'rollgen:overview' %}' class="button inverse right">{% trans "Cancel" %}</a>
+          <div class="clear"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock rollgen_content %}

@@ -1,0 +1,74 @@
+{% extends 'vr_dashboard/base.html' %}
+{% load humanize i18n staticfiles vr_dashboard_tags %}
+{% block content %}
+  <div class="full plum">
+    <div class="page-width cushion">
+      <h2>{% trans "Office Stats" %}</h2>
+      <h4>{% trans "Click on a row below to see it in the chart." %}</h4>
+      <div class="milk">
+        <table id="comparison_data">
+          <thead>
+            <tr>
+              <th></th>
+              <th class='right-border' colspan='4'>{% trans "Cumulative Totals" %}</th>
+              <th class='right-border' colspan='4'>{{ yesterday }} {% trans "Total" %}</th>
+            </tr>
+            <tr>
+              <th class="left">{% trans "Office" %}</th>
+              <th>{% trans "Male" %}</th>
+              <th>{% trans "Female" %}</th>
+              <th>{% trans "Total" %}</th>
+              <th class='pct-col end-column'>% {% trans "Female" %}</th>
+              <th>{% trans "Male" %}</th>
+              <th>{% trans "Female" %}</th>
+              <th>{% trans "Total" %}</th>
+              <th class='pct-col end-column'>% {% trans "Female" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in groups %}
+              <tr>
+                <td class='end-column label left'>
+                  <span class="swatch"></span>
+                  {{ g.id }} {{ g.name }}
+                </td>
+                <td style="background-color: {{ g.m_color }}">{{ g.m|intcomma }}</td>
+                <td style='background-color: {{ g.f_color }}'>{{ g.f|intcomma }}</td>
+                <td style='background-color: {{ g.t_color }}'>{{ g.t|intcomma }}</td>
+                <td class='end-column'>{{ g.pct_f }}</td>
+                <td style='background-color: {{ g.m_yesterday_color }}'>{{ g.m_yesterday|intcomma }}</td>
+                <td style='background-color: {{ g.f_yesterday_color }}'>{{ g.f_yesterday|intcomma }}</td>
+                <td style='background-color: {{ g.t_yesterday_color }}'>{{ g.t_yesterday|intcomma }}</td>
+                <td class='end-column'>{{ g.pct_f_yesterday }}</td>
+              </tr>
+            {% endfor %}
+            <tr class="sum-row selected">
+              <td class='end-column label left'>
+                <span class="swatch"></span>
+                {% trans "Total" %}
+              </td>
+              <td style='background-color: {{ totals.m_color }}'>{{ totals.m|intcomma }}</td>
+              <td style='background-color: {{ totals.f_color }}'>{{ totals.f|intcomma }}</td>
+              <td style='background-color: {{ totals.t_color }}'>{{ totals.t|intcomma }}</td>
+              <td class='end-column'>{{ totals.pct_f}}</td>
+              <td style='background-color: {{ totals.m_yesterday_color }}'>{{ totals.m_yesterday|intcomma }}</td>
+              <td style='background-color: {{ totals.f_yesterday_color }}'>{{ totals.f_yesterday|intcomma }}</td>
+              <td style='background-color: {{ totals.t_yesterday_color }}'>{{ totals.t_yesterday|intcomma }}</td>
+              <td class='end-column'>{{ totals.pct_f_yesterday }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block extra_js %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% static 'js/chart-interaction.js' %}"></script>
+  <script>
+   {% gen_data_points request 'newRegs' nr 'lv' %}
+   {% gen_data_points request 'cumRegs' cr 'xy' %}
+   vrDashboardCharts.addNormalCharts(newRegs, cumRegs);
+   setupSlider();
+  </script>
+{% endblock extra_js %}

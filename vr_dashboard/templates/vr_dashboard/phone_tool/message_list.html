@@ -1,0 +1,65 @@
+{% extends 'vr_dashboard/phone_tool_base.html' %}
+{% load humanize i18n libya_tags static vr_dashboard_tags %}
+{% block main_content %}
+  <div class="banana cushion-ends">
+    <div class="page-width float-layout notice">
+      <div class="third cushion">
+        <p><strong>{{ phone_number|format_phone_number }}</strong></p>
+        <ul>
+        {% if phone %}
+          <li>{% trans "Center" %} {{ phone.registration_center.center_id }}</li>
+        {% else %}
+          <li>{% trans "This phone is not linked to a center." %}</li>
+        {% endif %}
+        </ul>
+      </div>
+      <div class="third cushion">
+        <ul>
+        {% if whitelist %}
+          <li>{% trans "This phone is whitelisted." %}</li>
+        {% else %}
+          <li>{% trans "This phone is not whitelisted." %}</li>
+          <li>{% include 'vr_dashboard/phone_tool/includes/whitelist_form.html' with mode="message-list" %}</li>
+        {% endif %}
+        </ul>
+      </div>
+      <div class="third cushion">
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <section class="milk">
+    <div class="page-width cushion">
+      <h2>{% trans "Phone History" %}</h2>
+
+      {% if sms_messages %}
+        <table>
+          <tr>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "To or From" %}</th>
+            <th>{% trans "Message Type" %}</th>
+            <th>{% trans "Message" %}</th>
+          </tr>
+          {% for sms_message in sms_messages %}
+            <tr>
+              <td>{{ sms_message.formatted_creation_date }}</td>
+              {% if sms_message.from_number == phone_number %}
+                <td>&gt;{{ sms_message.to_number|format_phone_number }}</td>
+              {% else %}
+                <td>&lt;{{ sms_message.from_number|format_phone_number }}</td>
+              {% endif %}
+              {% if sms_message.msg_type_string %}
+                <td>{{ sms_message.msg_type_string }}</td>
+              {% else %}
+                <td>{{ sms_message.msg_type }}</td>
+              {% endif %}
+              <td>{{ sms_message.message }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        {% trans "No messages have been sent to or received from this phone." %}
+      {% endif %}
+    </div>
+  </section>
+{% endblock main_content %}

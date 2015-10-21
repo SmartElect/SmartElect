@@ -1,0 +1,7 @@
+[run]
+branch = true
+omit = */tests/*, */*migrations/*, */settings/*, strip_control_chars.py, */wsgi.py
+source = .
+
+[report]
+show_missing = true

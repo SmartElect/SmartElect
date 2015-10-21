@@ -1,0 +1,42 @@
+{% extends "registration/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'LibyaVotes: Register an account' %}{% endblock %}
+{% block page_title %}{% trans "Fill in this form to create an account" %}{% endblock %}
+
+{% block registration_content %}
+  <form method="post" action="{% url 'registration_register' %}">
+    {% csrf_token %}
+
+    {{ form.username.label_tag }}
+    {{ form.username }}
+
+    {% if form.username.errors %}
+      {{ form.username.errors }}
+    {% endif %}
+
+    {{ form.email.label_tag }}
+    {{ form.email }}
+
+    {% if form.email.errors %}
+      {{ form.email.errors }}
+    {% endif %}
+
+    {{ form.password1.label_tag }}
+    {{ form.password1 }}
+
+    {% if form.password1.errors %}
+      {{ form.password1.errors }}
+    {% endif %}
+
+    {{ form.password2.label_tag }}
+    {{ form.password2 }}
+
+    {% if form.password2.errors %}
+      {{ form.password2.errors }}
+    {% endif %}
+
+    <div class="spacer"></div>
+    <input class="half" type="submit" value="{% trans 'Submit' %}">
+  </form>
+{% endblock registration_content %}

@@ -1,0 +1,63 @@
+{% extends 'rollgen/base.html' %}
+
+{% load i18n %}
+{% load rollgen_tags %}
+
+{% block rollgen_content %}
+  <div id='browse_office'>
+
+    <div class="page-width cushion-sides">
+      <div id='header_nav' class='right'>
+        <a class="button transparent" href='{% url 'rollgen:browse_job_offices' job.dirname %}'>{% trans 'Return to Job' %}</a>
+      </div>
+
+      <h1>{% trans "Voter Rolls > Job > View Office" %}</h1>
+    </div>
+    <div class='banana banana_header'>
+      <div class="page-width cushion-sides">
+        {{ office.name }}
+      </div>
+    </div>
+
+     <div class="milk">
+      {% if files %}
+        <table class="page-width">
+          <col id='filename'>
+          <col id='filesize'>
+          <thead>
+            <tr>
+              <th>{% trans 'File Name' %}</th>
+              <th>{% trans 'Size' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for file in files %}
+              <tr>
+                {% if file.first_instance_of_this_center %}
+                  {# first instance gets an anchor so the job view can link to it #}
+                  <td id='{{ file.center_id|center_anchor }}'>
+                {% else %}
+                  <td>
+                {% endif %}
+                  <a href="{% url 'rollgen:serve_pdf' job.dirname office.id file.name %}">
+                    {{ file.name }}
+                  </a>
+                </td>
+                <td>
+                  {% blocktrans trimmed with n_pages=file.n_pages count n_pages=file.n_pages %}
+                    {{ n_pages }} page
+                  {% plural %}
+                    {{ n_pages }} pages
+                  {% endblocktrans %}, {{ file.n_bytes|filesizeformat }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        {# This can only happen during the polling phase. #}
+        <p>{% trans "There are no files for this office." %}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock rollgen_content %}

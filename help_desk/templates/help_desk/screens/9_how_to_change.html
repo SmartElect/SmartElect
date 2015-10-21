@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<div class="banana">
+  <div class="cushion">
+    <label>{% trans "Changes Remaining" %}</label>
+    <p>{{ case.registration.remaining_changes }}</p>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<p>{% trans "Tell the caller how to change their registration." %}</p>

@@ -1,0 +1,7 @@
+{% url 'report_cases' as cases_url %}
+{% url 'report_stats' as stats_url %}
+
+<nav class="tabs">
+  {% include 'includes/tablink.html' with url=cases_url linktext=_("Individual cases") %}
+  {% include 'includes/tablink.html' with url=stats_url linktext=_("Statistics") %}
+</nav>

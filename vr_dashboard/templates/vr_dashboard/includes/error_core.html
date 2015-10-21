@@ -1,0 +1,11 @@
+{% load i18n %}
+  <section class="milk">
+    <div class="page-width cushion">
+      {% if heading %}
+        <h1>{{ heading }}</h1>
+      {% else %}
+        <h1>{% trans "Error" %}</h1>
+      {% endif %}
+      <p>{{ error_msg }}</p>
+    </div>
+  </section>

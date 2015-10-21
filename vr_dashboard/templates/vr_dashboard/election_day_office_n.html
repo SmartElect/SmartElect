@@ -1,0 +1,73 @@
+{% extends 'vr_dashboard/polling_base.html' %}
+{% load humanize i18n %}
+{% block content %}
+  <div class="banana cushion-ends">
+    <div class="page-width float-layout notice">
+
+      <div class="third cushion">
+        <h3>{% trans "Office" %} {{ office_id }} - {{ office_name }}</h3>
+
+        <p>
+          <a href='{% url 'vr_dashboard:election-day' %}'>
+            {% trans "Return to Overview" %}
+          </a>
+        </p>
+      </div>
+
+      <div class="third cushion">
+        <p><em>{{ headline.as_of_datetime }}</em></p>
+        <ul>
+          <li>{{ headline.open_centers|safe }}</li>
+          <li>{{ headline.unopen_centers|safe }}</li>
+        </ul>
+      </div>
+
+      <div class="third cushion">
+        <ul>
+          <li>{{ headline.period1|safe }}</li>
+          <li>{{ headline.period2|safe }}</li>
+          <li>{{ headline.period3|safe }}</li>
+          <li>{{ headline.period4|safe }}</li>
+        </ul>
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <section class="milk">
+    <div class="page-width cushion">
+      <table class='centers_table'>
+        <thead>
+        <tr>
+          <th>{% trans "Polling Center" %}</th>
+          <th>{% trans "Code" %}</th>
+          <th>{% trans "Opened" %}</th>
+          <th>{% trans "Reported Period" %} 1</th>
+          <th>{% trans "Reported Period" %} 2</th>
+          <th>{% trans "Reported Period" %} 3</th>
+          <th>{% trans "Reported Period" %} 4</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in office_centers_table %}
+          <tr {% if row.tr_class %}class="{{ row.tr_class }}"{% endif %}>
+            <td>
+              <a href='{% url 'vr_dashboard:election-day-center-n' row.polling_center_code %}'>{{ row.name }}</a>
+            </td>
+            <td>{{ row.polling_center_code }}</td>
+            {% if row.opened_today %}
+              <td>{{ row.opened_today }}</td>{% elif row.inactive_for_election %}
+              <td class="inactive-center-flag">{% trans "Inactive" %}</td>{% else %}
+              <td>-</td>{% endif %}
+            <td class="{{ row.reported_period_1 }}">{{ row.reported_period_1_printable }}</td>
+            <td class="{{ row.reported_period_2 }}">{{ row.reported_period_2_printable }}</td>
+            <td class="{{ row.reported_period_3 }}">{{ row.reported_period_3_printable }}</td>
+            <td class="{{ row.reported_period_4 }}">{{ row.reported_period_4_printable }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock content %}

@@ -1,0 +1,755 @@
+*{
+    position:relative;
+    box-sizing:border-box;
+    margin:0;
+    border:0;
+    padding:0;
+    outline:none;
+    color:inherit;
+    font-size:inherit;
+    font-family:inherit;
+    font-weight:inherit;
+}
+
+html,body{
+    height:100%;
+}
+
+body{
+    background-color:#ecf0f1;
+    color:#525252;
+    font-family: "Fira Sans", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-size:14pt;
+    direction:ltr;
+}
+
+.page-width{
+    max-width:1050px;
+    margin:0 auto;
+}
+
+.float-layout > *{
+    float:left;
+    width:100%;
+}
+html[dir="rtl"] .float-layout > *{ float:right; }
+.right { float:right; }
+html[dir="rtl"] .right { float:left; }
+.left { float:left; }
+html[dir="rtl"] .left { float:right; }
+
+.collapsing{
+    width:0;
+    height:1em;
+}
+
+.full{ width: 100%; }
+
+@media (min-width: 700px) {
+    .half{ width:50%; }
+    .third{ width:33.333333%; }
+    .two-thirds{ width:66.666666%; }
+    .quarter { width:25%; }
+    .three-quarters { width:75%; }
+    .fifth { width:20%; }
+    .two-fifths { width:40%; }
+    .three-fifths { width:60%; }
+    .four-fifths { width:80%; }
+    .sixth { width:16.66666666%; }
+    .five-sixths { width:83.33333333%; }
+}
+
+.clear,
+html[dir="rtl"] .clear{ float:none; clear:both; }
+.spacer{ height:30px; }
+.hidden{ display:none; }
+.cushion{ padding:15px; }
+.cushion-ends{ padding: 15px 0; }
+.cushion-sides,
+hr{ padding: 0 15px; }
+
+.table-layout { display:table; width:100%; }
+.table-layout > * { display:table-row; }
+.table-layout > * > * { display:table-cell; }
+
+::selection { background-color: #c2b3aa; }
+::-moz-selection { background-color: #c2b3aa; }
+
+
+a{
+    color:#0096d9;
+    text-decoration: none;
+}
+a:hover{
+    opacity: 1.0;
+}
+
+header{
+    background-color:#444;
+    color:white;
+    line-height:52px;
+}
+
+nav{ font-size:80%; }
+nav .menu{ float:left; }
+nav .user{
+    float:right;
+    margin: 0 15px;
+    height: 52px;
+}
+nav a{
+    display:inline-block;
+    padding:0 0.75em;
+    color:white;
+}
+nav a.selected{
+    background-color:#525252;
+}
+nav .inactive{
+    color: #ccc;
+}
+nav .inactive:hover {
+    text-decoration: none;
+}
+
+.user a{
+    font-weight:500;
+    font-size:75%;
+}
+
+.user .username{
+    font-weight: 500;
+    font-size: 75%;
+    display: inline-block;
+    margin: 0 7.5px;
+    color: #94a9ad;
+}
+
+.subnav{
+    background-color:#525252;
+    font-size:90%;
+    line-height:30px;
+}
+
+.subnav a.selected{
+    background-color: #d0d0d0;
+}
+
+.logo{
+    float:right;
+    width:146px;
+    height:52px;
+    background-image:url(../img/hnec-logo-white.png);
+    background-position:50% 50%;
+    background-size:auto 37px;
+    background-repeat: no-repeat;
+
+}
+
+h1{
+    font-size:140%;
+    line-height:1.50em;
+    font-weight: 500;
+    padding-top: 15px;
+    padding-bottom: 25px;
+}
+
+h2{
+    background-color:#0096d9;
+}
+
+
+h3 {
+    font-size: 120%;
+    font-weight: 500;
+}
+
+h4 {
+    vertical-align: middle;
+    text-align: center;
+    background-color: white;
+    font-size:70%;
+    font-weight:400;
+    line-height:2.4em;
+}
+
+.notice {
+    font-weight: 400;
+    font-size: .75em;
+}
+
+.read-value,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="date"],
+select,
+textarea,
+input[type="text"][data-selectable-type="text"],
+input[type="button"],
+input[type="submit"],
+button,
+.button{
+    border-radius: 6px;
+}
+
+label{
+    clear:both;
+    font-size:70%;
+    font-weight: 400;
+}
+
+label.inline{
+    clear:none;
+}
+label.inline + *{
+    width:auto;
+}
+label.inline + * + label.inline:before{
+    display:block;
+    content:'';
+    clear:both;
+}
+
+.read-value,
+input[type="text"],
+input[type="file"],
+input[type="number"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+input[type="text"][data-selectable-type="text"],
+select,
+textarea{
+    border:0;
+    padding:0 0.5em;
+    width:100%;
+    background-color:white;
+    line-height:1.8em;
+    color:#444;
+    font-weight:300;
+    margin-bottom:0.5em;
+}
+input[type="text"][data-selectable-type="text"]{
+    background-image: none;
+}
+
+/* Force read-value's height to be 33px, even if empty */
+.read-value {
+    min-height: 33px;
+}
+
+/* Make MessageText's textareas short so translators can easily see both versions on the screen */
+.messagetext textarea {
+    height: 8em;
+}
+
+.helptext {
+    font-size: 70%;
+    font-weight: 300;
+    margin: 0em 2em 2em 2em;
+    display: block;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="text"][data-selectable-type="text"]:focus
+select:focus,
+textarea:focus{
+    box-shadow: inset 0 0 4px #c2b3aa;
+}
+
+input[type="button"],
+input[type="submit"],
+button,
+.button{
+    border:0;
+    margin-right: 0.4em;
+    padding:0 1.5em;
+    display:inline-block;
+    background-color:#ff8a3c;
+    color:white;
+    cursor:pointer;
+    opacity: 0.88;
+}
+
+button:hover {
+    opacity: 1.0;
+}
+
+input[type="submit"].success,
+a.success,
+button.success{ background-color:#0096D9; }
+
+input[type="submit"].warning,
+a.warning,
+button.warning{ background-color:#e4484b; }
+
+input[type="submit"].inverse,
+a.inverse,
+button.inverse{ background-color:#666; }
+
+button.transparent{
+    background:transparent;
+    color:#0096d9;
+}
+button.transparent.warning{ color:#e4484b; }
+button.transparent.inverse{ color:#666; }
+button.transparent:hover{
+    text-decoration:underline;
+}
+
+a.transparent{
+    background:transparent;
+    border:solid transparent 1px;
+    color:#0096d9;
+    font-size:0.75em;
+}
+
+table{
+    font-size:70%;
+    width:100%;
+    border-spacing:0;
+    background-color:white;
+}
+
+thead{
+    font-weight:300;
+    text-transform: uppercase;
+}
+
+th,td {
+    padding:0.5em;
+    text-align: left;
+}
+html[dir='rtl'] th,
+html[dir='rtl'] td {
+    text-align: right;
+}
+
+/* Some fields should always align right */
+.citizen,
+.first_name,
+.family_name,
+.father_name,
+.grandfather_name,
+.last_name,
+.mother_name {
+    text-align: right;
+}
+
+th.firstcol {
+    min-width: 100px;
+}
+
+th.sortable.unsorted::after {
+    content: "\00A0▲▼";
+    opacity: 0.3;
+}
+table th.sortable a{ color:#525252; }
+table th.sortable a:hover{
+    color:#0096d9;
+}
+table th.sortable.sort_asc::after {
+    content: "\00A0(" attr(sort_column)  "▲)";
+}
+table th.sortable.sort_desc::after {
+    content: "\00A0(" attr(sort_column)  "▼)";
+}
+
+thead tr:first-child, th{
+    font-weight:500;
+}
+
+tbody tr:nth-child(odd){
+    background-color:#f2f2ed;
+}
+
+/* alternate style representation for use with dataTables in election-day-center */
+table.election-day-center tr.datatables-odd-rows{
+    background-color:#f2f2ed !important; // overridden by dataTables CSS otherwise
+}
+
+table.election-day-center tr.datatables-even-rows{
+    // placeholder
+}
+
+table.election-day-center thead th{
+    font-size: 12px; /* otherwise the table exceeds max-width */
+    font-weight:500 !important;
+}
+
+.dataTables_wrapper .dataTables_filter {
+  float: left;
+  text-align: left;
+}
+
+html[dir='rtl'] .dataTables_filter {
+  float: right;
+  text-align: right;
+  clear: both;
+}
+
+.swatch{
+    display:inline-block;
+    border:solid 2px #ecf0f1;
+    width:1.4em;
+    height:1.4em;
+    vertical-align: middle;
+}
+
+.swatch:after{
+    display:block;
+    color:white;
+}
+
+.selected .swatch:after{
+    content:'✓';
+}
+
+.kumquat{
+    background-color:#ff8b3d;
+    width:15%;
+    padding: 60px 10px;
+    vertical-align: middle;
+}
+
+h2,
+.kumquat,
+button,
+.button,
+input[type="button"],
+input[type="submit"],
+select{
+    font-size:70%;
+    font-weight:400;
+    line-height:2.4em;
+}
+
+input[type="submit"].submit-as-link{
+    font-weight:300;
+    background:none;
+    border:none;
+    color:#0096d9;
+    display:inline;
+    font-size:13px;
+}
+
+input[type="submit"].submit-as-link:hover{
+    text-decoration:underline;
+}
+
+form.inline-whitelist-form{
+    display:inline;
+}
+
+select{
+    height:1.8em;
+}
+select[multiple]{
+    height:12em;
+}
+
+h2,
+.kumquat{
+    color:white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+strong{
+    font-weight: 500;
+}
+
+span.emphasized-data{
+    font-weight:500;
+}
+
+p.help-text{
+    font-size:75%;
+}
+
+ul{
+    list-style:none;
+}
+
+ol{
+    padding:0 1.5em;
+}
+
+.milk{
+    background-color:white;
+}
+.read-value,
+.milk input[type="search"],
+.milk input[type="text"],
+.milk input[type="password"],
+.milk input[type="date"],
+.milk input[type="email"],
+.milk input[type="number"],
+.milk select,
+.milk textarea{
+    background-color:#f2f2ed;
+}
+
+.banana{
+    background-color:#fff78e;
+}
+
+.blueberry{
+    background-color:#0096d9;
+    color:white;
+}
+
+.blueberry input[type="search"],
+.blueberry input[type="text"],
+.blueberry select,
+.blueberry textarea{
+    background-color:#d9f1ff;
+    color:#525252;
+}
+
+.blueberry select{
+    height:2.4em;
+}
+.blueberry select[multiple]{
+    font-size:75%;
+    height:2.4em;
+}
+.blueberry select[multiple]:focus{
+    height:12em;
+    position:absolute;
+    left:0;
+    z-index:2;
+}
+
+.blueberry input[type="button"],
+.blueberry input[type="submit"],
+.blueberry button{
+    background-color:#006796;
+}
+
+.plum{
+    background-color:#a6d5ff;
+}
+
+.centered{
+    position:absolute;
+    top:50%;
+    left:50%;
+    -webkit-transform:translate(-50%,-50%);
+    transform:translate(-50%,-50%);
+}
+
+.text-centered{
+    text-align: center;
+}
+
+.icon{
+    vertical-align: middle;
+    height: 18px;
+}
+
+footer{
+    height:8em;
+}
+
+#content > *:last-child {
+    padding-bottom:8em;
+}
+
+/*** rtl ***/
+
+html[dir="rtl"] body{
+    direction:rtl;
+}
+
+.phone-number {
+    /* Properly formatted phone numbers will be mangled by RTL display, so we need to display them LTR */
+    direction: ltr;
+    display:inline-block;
+}
+
+.errorlist,
+.messages{
+    font-size: 80%;
+    font-weight:400;
+    padding:15px;
+}
+.success { background-color:#d9f1ff; }
+.debug { background-color:black; color:lime; font-family:monospace; }
+.info { background-color:#fff78e; }
+.errorlist,
+.error { background-color:#ffe0e2; color:#e14a4e; }
+.warning { background-color:#ffe3cc; }
+
+/* election_day_office_n.html */
+td.has_not_reported, td.inactive-center-flag {
+    background-color:#ffe0e2;
+    color:#e14a4e;
+    font-weight: 500;
+}
+
+#timeline a{
+    display:block;
+    text-align:center;
+}
+
+#timeline a:hover{
+    background-color:#f1f2ff;
+}
+
+#timeline .selected a{
+    background-color:#0096d9;
+    color:white;
+}
+
+.staff-menu{
+    padding:15px 0;
+    font-size: 80%;
+    line-height:0.75em;
+}
+
+.staff-menu .display-column{
+    width:20%;
+}
+
+.staff-menu li{
+    margin-top:0.75em;
+}
+
+.staff-menu li:first-child{
+    margin:0 0.75em;
+    color:#58beff;
+    font-weight:500;
+}
+
+.staff-menu a[href="#"]{
+    opacity:0.25;
+}
+
+blockquote {
+    color:#444;
+    font-size:150%;
+    margin-bottom:0.5em;
+}
+blockquote:before{
+    content:'“';
+}
+blockquote:after{
+    content:'”';
+}
+
+.tabs a{
+    padding: 5px 30px;
+    font-size: 0.8em;
+    line-height: 2em;
+    color:#809296;
+    background-color:#e4e8e9;
+}
+
+.tabs a.selected:after{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: 50%;
+    bottom: -10px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    -webkit-transform: translate(-50%, -50%) rotate(45deg);
+    background-color: #525252;
+    z-index: 2;
+}
+
+a.selected{
+    color:white;
+}
+
+.block{ display:block; }
+
+
+.paginate a {
+    border-radius: 2px;
+    padding: 5px 8px;
+    text-decoration: none;
+    color: #007BBD;
+    letter-spacing: .1em;
+    background-color: #D9F1FF;
+}
+
+.paginate a:hover,
+.paginate a:focus {
+    text-decoration: underline;
+}
+
+.paginate li {
+    display: inline-block;
+    font-size: .65em;
+    font-weight: 400;
+}
+
+div.dataTables_paginate a.paginate_button {
+    background-color: #D9F1FF;
+    font-size: .65em;
+    font-weight: 400;
+    border-radius: 2px;
+    padding: 5px 8px;
+}
+
+
+/* rollgen starts here */
+.rollgen #overview table td { padding: .5em; }
+.rollgen #overview table col#job { width: 20%; }
+.rollgen #overview table col#status {   width: 20%; }
+.rollgen #overview table col#phase { width: 5%; }
+.rollgen #overview table col#content_counts { width: 10%; }
+/* .rollgen #overview col#centers gets whatever space remains */
+
+.rollgen #new form .input_heading {
+    border-top: 1px solid #ddd;
+    margin-top: 1em;
+    padding-top: .5em;
+}
+
+.rollgen #new form .input_heading:first-of-type { border: none; }
+
+.rollgen #new form #options td { text-align: left; }
+.rollgen #new form #options .checkbox {
+    text-align: center;
+    width: 2em;
+}
+
+.rollgen #header_nav {
+    padding-top: 1em;
+    /* Since this is a floating element, other elements can appear on top of it in which case
+       the link inside the header_nav won't be clickable. I force it to the top with z-index. */
+    z-index: 99;
+}
+
+.rollgen .banana_header {
+    margin: 0;
+    padding: 2em;
+}
+
+.rollgen #browse_job_centers col#center_group { width: 33%; }
+
+/* rollgen ends here */
+
+@media print {
+    /* don't show these sections when printing */
+    .blueberry,
+    #status-messages,
+    #slider-container,
+    nav,
+    header {
+        display: none;
+    }
+}

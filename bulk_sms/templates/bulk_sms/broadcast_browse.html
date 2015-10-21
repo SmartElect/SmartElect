@@ -1,0 +1,9 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block top_buttons %}
+  {% if may_add %}
+    <a class="button success right" href="{% url 'add_broadcast' %}">{% trans "Send an SMS broadcast via form entry" %}</a>
+    <a class="button transparent right" href="{% url 'upload_broadcast' %}">{% trans "Send an SMS broadcast via CSV upload" %}</a>
+  {% endif %}
+{% endblock %}

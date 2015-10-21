@@ -1,3 +1,0 @@
-# SmartElect
-
-Initial readme.

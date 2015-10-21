@@ -1,0 +1,32 @@
+{% extends 'libya_site/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="page-width float-layout">
+  <div class="collapsing sixth"></div>
+  <h1 class="two-thirds cushion">{% trans "Look up registration information" %}</h1>
+  <div class="collapsing sixth"></div>
+  <div class="clear"></div>
+</div>
+
+<div class="milk">
+  <div class="page-width float-layout">
+    <div class="collapsing sixth"></div>
+    <div class="two-thirds cushion">
+      {% if citizen %}
+        {% if center %}
+          <p>{% blocktrans trimmed with name=center.name code=center.center_id %}
+            {{ citizen }} is registered at voting center {{ name }} with code {{ code }}.
+          {% endblocktrans %}</p>
+        {% else %}
+          <p>{% blocktrans trimmed %}{{ citizen }} is not registered.{% endblocktrans %}</p>
+        {% endif %}
+      {% endif %}
+      <div class="spacer"></div>
+      <button onclick="history.go(-1);">{% trans "Back" %}</button>
+    </div>
+    <div class="collapsing sixth"></div>
+  </div>
+</div>
+
+{% endblock content %}

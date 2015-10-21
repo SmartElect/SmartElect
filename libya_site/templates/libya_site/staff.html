@@ -1,0 +1,74 @@
+{% extends "libya_site/base.html" %}
+{% load i18n %}
+{% load staff_tags %}
+
+{% block subnav %}
+  {# some default settings: #}
+  {% with finished=True permission=True %}
+    <div class="table-layout staff-menu">
+      <div>
+        <div class="fifth">
+          <ul>
+            <li>{% trans "Help Desk" %}</li>
+            {% include 'libya_site/stafflink.html' with url='help_desk_home' linktext=_('Caller Assistance') permission=perms.help_desk.add_case %}
+            {% include 'libya_site/stafflink.html' with url='report_cases' linktext=_('Call Reports') permission=perms.help_desk.read_report %}
+            {% include 'libya_site/stafflink.html' with url='staff_list' linktext=_('Help Desk Staff') permission=perms.help_desk.add_operator %}
+            {% include 'libya_site/stafflink.html' with url='browse_fieldstaff' linktext=_("Field Staff Members") permission=perms.help_desk.add_fieldstaff %}
+          </ul>
+        </div>
+        <div class="fifth">
+          <ul>
+            <li>{% trans "Election Management" %}</li>
+            {% include 'libya_site/stafflink.html' with url='browse_elections' linktext=_("Elections, Ballots, &amp; Candidates") permission=perms.voting %}
+            {% include 'libya_site/stafflink.html' with url='browse_registrationperiods' linktext=_("Registration Periods") permission=perms.registrationperiod %}
+            {% include 'libya_site/stafflink.html' with url='vr_dashboard:election-day' linktext=_("Polling Center Monitoring") %}
+            {% include 'libya_site/stafflink.html' with url='rollgen:overview' linktext=_("Voter Rolls") permission=request.user|can_rollgen %}
+          </ul>
+        </div>
+        <div class="fifth">
+          <ul>
+            <li>{% trans "Registration Management" %}</li>
+            {% include 'libya_site/stafflink.html' with url='browse_registrations' linktext=_("Registrations") permission=perms.register %}
+            {% include 'libya_site/stafflink.html' with url='browse_registrationcenters' linktext=_("Registration Centers") permission=perms.register.browse_registrationcenter %}
+            {% include 'libya_site/stafflink.html' with url='browse_citizens' linktext=_("Citizens") permission=perms.civil_registry %}
+          </ul>
+        </div>
+        <div class="fifth">
+          <ul>
+            <li>{% trans "SMS Messaging" %}</li>
+            {% include 'libya_site/stafflink.html' with url='browse_broadcasts' linktext=_("Broadcasts") permission=perms.bulk_sms %}
+            {% include 'libya_site/stafflink.html' with url='browse_staffphones' linktext=_("Staff Phones") permission=perms.polling_reports.browse_staffphone %}
+            {% include 'libya_site/stafflink.html' with url='browse_messages' linktext=_("Messages") permission=perms.register.browse_sms %}
+            {% include 'libya_site/stafflink.html' with url='browse_discrepancies' linktext=_("SMS Discrepancies") permissions=perms.audit %}
+          </ul>
+        </div>
+        <div class="fifth">
+          <ul>
+            <li>{% trans "Admin" %}</li>
+            {% include 'libya_site/stafflink.html' with url='browse_users' linktext=_("Users &amp; Permissions") %}
+            {% include 'libya_site/stafflink.html' with url='message_list' linktext=_("Translations") permission=perms.text_messages %}
+            {% if ENVIRONMENT != 'production' and user.is_superuser %}
+              {% include 'libya_site/stafflink.html' with url='httptester-index' linktext=_("Message Tester") %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endwith %}
+{% endblock %}
+
+{# "Home page" for staff with links to useful other things on the site #}
+{% block content %}
+  <div class="page-width cushion-sides">
+    <h1>{% trans "Staff Home" %}</h1>
+  </div>
+  <div class="milk">
+    <div class="page-width cushion">
+      <h3>{% trans "Welcome staff member!" %}</h3>
+
+      <p>
+        {% trans "Click a link above to administer the LibyaVotes staff site." %}
+      </p>
+    </div>
+  </div>
+{% endblock content %}

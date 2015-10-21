@@ -1,0 +1,10 @@
+.bulk-option {
+    height: 200px;
+    text-align: center;
+    margin-bottom: 10px;
+    border: 1px solid rgb(190, 190, 190);
+}
+.bulk-option h2 {
+    font-size: 24px;
+    margin-top: 70px;
+}

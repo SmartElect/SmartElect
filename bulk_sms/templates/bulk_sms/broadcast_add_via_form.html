@@ -1,0 +1,10 @@
+{% extends 'bread/edit.html' %}
+{% load i18n static %}
+
+{% block extra_js %}
+<script src="{% static 'js/broadcast.js' %}"></script>
+<script>
+ // Provide translated label to JS
+  var chars_used_label = '{% trans "Characters used:" %}';
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "libya_site/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div class="page-width float-layout">
+    <div class="collapsing sixth"></div>
+    <h1 class="two-thirds cushion">{% block page_title %}{% endblock %}</h1>
+    <div class="collapsing sixth"></div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="milk">
+    <div class="page-width float-layout">
+      <div class="collapsing sixth"></div>
+      <div class="two-thirds cushion">
+        {% block registration_content %}
+        {% endblock registration_content %}
+      </div>
+      <div class="collapsing sixth"></div>
+      <div class="clear"></div>
+    </div>
+  </div>
+{% endblock %}

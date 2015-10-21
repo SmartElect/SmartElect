@@ -1,0 +1,67 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Translations" %}{% endblock title %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+    <h1>{% trans "Translations" %}</h1>
+  </div>
+
+  <div class="warning">
+    <div class="page-width cushion">
+      {% trans "These are only the translations for SMS messages. All other translations are available at <a href='https://transifex.com'>Transifex.com</a>" %}
+    </div>
+  </div>
+
+  <div class="milk">
+    <div class="page-width float-layout">
+      <div class="fifth cushion collapsing">&nbsp;</div>
+
+      {% comment %}
+      In English, we want English on the left and Arabic on the right.
+      In Arabic, we want the same thing!  But we have to swap them around in
+      our HTML because the table gets laid out right-to-left instead of left-to-right.
+      {% endcomment %}
+
+      {% if LANGUAGE_BIDI %}
+        <h3 class="two-fifths cushion" dir="rtl">{% trans "Arabic" %}</h3>
+        <h3 class="two-fifths cushion" dir="ltr">{% trans "English" %}</h3>
+      {% else %}
+        <h3 class="two-fifths cushion" dir="ltr">{% trans "English" %}</h3>
+        <h3 class="two-fifths cushion" dir="rtl">{% trans "Arabic" %}</h3>
+      {% endif %}
+
+      {% for m in object_list %}
+        <div class="full cushion">
+          <label>{{ m.number }} {{ m.label }}</label>
+          <a class="right" href="{% url 'message_update' m.number %}">{% trans "Edit" %}</a>
+        </div>
+
+        <div class="fifth cushion collapsing">&nbsp;</div>
+        {% if LANGUAGE_BIDI %}
+          <div dir="rtl" class="two-fifths cushion">{{ m.msg_ar }}</div>
+          <div dir="ltr" class="two-fifths cushion">{{ m.msg_en }}</div>
+        {% else %}
+          <div dir="ltr" class="two-fifths cushion">{{ m.msg_en }}</div>
+          <div dir="rtl" class="two-fifths cushion">{{ m.msg_ar }}</div>
+        {% endif %}
+        <div class="clear"></div>
+
+        {% if m.enhanced_en %}
+          <div class="fifth cushion"><label>{% trans "if repeated" %}</label></div>
+          {% if LANGUAGE_BIDI %}
+            <div dir="rtl" class="two-fifths cushion">{{ m.enhanced_ar }}</div>
+            <div dir="ltr" class="two-fifths cushion">{{ m.enhanced_en }}</div>
+          {% else %}
+            <div dir="ltr" class="two-fifths cushion">{{ m.enhanced_en }}</div>
+            <div dir="rtl" class="two-fifths cushion">{{ m.enhanced_ar }}</div>
+          {% endif %}
+        {% endif %}
+
+        <div class="spacer"></div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock content %}

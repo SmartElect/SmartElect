@@ -1,0 +1,16 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block tabs %}
+  {% include 'register/tab.html' %}
+{% endblock tabs %}
+
+{% block actions %}
+  {% if may_delete %}
+    <a class="button warning right" href="{% url 'delete-all-copy-centers' %}">{% trans "Delete all Copy Centres" %}</a>
+  {% endif %}
+  {% if may_add %}
+    <a class="button transparent" href="{% url 'upload-centers-csv' %}">{% trans "Upload CSV" %}</a>
+  {% endif %}
+  <a class="button transparent" href="{% url 'download-centers-csv' %}">{% trans "Download CSV" %}</a>
+{% endblock actions %}

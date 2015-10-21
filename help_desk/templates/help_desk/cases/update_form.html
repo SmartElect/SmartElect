@@ -1,0 +1,29 @@
+{% extends 'help_desk/base.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "LibyaVotes Help Desk - Update Case" %}{% endblock title %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Help Desk Field Case" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <div class="two-thirds">
+        {% include 'help_desk/includes/case_details.html' %}
+
+        <div class="spacer"></div>
+
+        <h2>{% trans "Update Form" %}</h2>
+        <a name="form"></a>
+
+        <form action="" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" value="Update" />
+          <a class="button inverse right" href="{{ case.get_absolute_url }}#updates">{% trans "Return to case" %}</a>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}

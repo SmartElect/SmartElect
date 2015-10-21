@@ -1,0 +1,30 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Call Report" %}{% endblock title %}
+
+{% block content %}
+  <h1 class="page-width cushion">{% trans "Call Report" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      <div class="two-thirds">
+        {% include 'help_desk/includes/case_details.html' %}
+
+        <div class="spacer"></div>
+
+        {% if perms.help_desk.cancel_registration_change and case.registration_unlocked %}
+          <form action="{% url 'case_relock' pk=object.pk %}" method="post">
+            {% csrf_token %}
+            <button class="warning" type="submit">{% trans "Re-lock" %}</button>
+          </form>
+        {% endif %}
+
+        {% if perms.help_desk.add_update %}
+          <a class="button" href="{% url 'case_update' case_pk=object.pk %}#form">{% trans "Mark or comment" %}</a>
+        {% endif %}
+        <a class="button inverse right" href="{% url 'report_cases' %}">{% trans "Return to cases" %}</a>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

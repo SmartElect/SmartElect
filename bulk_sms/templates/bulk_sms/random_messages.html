@@ -1,0 +1,20 @@
+{% load i18n libya_tags %}
+
+{% if messages %}
+<table class="result_list" style="width: 100%; margin-top: 40px;">
+    <thead>
+        <tr>
+            <th scope="col" class="sortable" style="width: 2in;">{% trans "Phone Number" %}</th>
+            <th scope="col" class="sortable">{% trans "Message" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for bulk_msg in messages %}
+        <tr class="row{{ forloop.counter }}">
+            <th>{{ bulk_msg.phone_number|format_phone_number }}</th>
+            <td>{{ bulk_msg.message }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}

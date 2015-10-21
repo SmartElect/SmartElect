@@ -1,0 +1,118 @@
+{% extends 'vr_dashboard/polling_base.html' %}
+{% load humanize i18n %}
+{% load vr_dashboard_tags %}
+{% block content %}
+  <section class="milk">
+    <div class="page-width cushion">
+      <h2>{% trans "National" %}</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th>{% trans "Location" %}</th>
+          <th>{% trans "Votes" %}</th>
+          <th>{% trans "Registrations (Active)" %}</th>
+          <th>{% trans "Turnout % (Active)" %}</th>
+          <th>{% trans "Turnout % (Open)" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{% trans "Libya" %}</td>
+          <td>{{ result.national.v|intcomma }}</td>
+          <td>{{ result.national.r.active|intcomma }}</td>
+          <td>{{ result.national.v|percentagify:result.national.r.active }}</td>
+          <td>{{ result.national.v|percentagify:result.national.r.open }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h2>{% trans "By Region" %}</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th>{% trans "Location" %}</th>
+          <th>{% trans "Votes" %}</th>
+          <th>{% trans "Registrations (Active)" %}</th>
+          <th>{% trans "Turnout % (Active)" %}</th>
+          <th>{% trans "Turnout % (Open)" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for region in result.by_region.keys %}
+          {% assign_lookup result 'by_region' region 'v' as n_votes %}
+          {% assign_lookup result 'by_region' region 'r' 'active' as n_registrations_active %}
+          {% assign_lookup result 'by_region' region 'r' 'open' as n_registrations_open %}
+          <tr>
+            <td>{% lookup region_names region %}</td>
+            <td>{{ n_votes|intcomma }} </td>
+            <td>{{ n_registrations_active|intcomma }} </td>
+            <td>{{ n_votes|percentagify:n_registrations_active }} </td>
+            <td>{{ n_votes|percentagify:n_registrations_open }} </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+      <h2>{% trans "By Office" %}</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th>{% trans "Location" %}</th>
+          <th>{% trans "Votes" %}</th>
+          <th>{% trans "Registrations (Active)" %}</th>
+          <th>{% trans "Turnout % (Active)" %}</th>
+          <th>{% trans "Turnout % (Open)" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for office in result.by_office.keys %}
+          {% assign_lookup result 'by_office' office 'v' as n_votes %}
+          {% assign_lookup result 'by_office' office 'r' 'active' as n_registrations_active %}
+          {% assign_lookup result 'by_office' office 'r' 'open' as n_registrations_open %}
+          <tr>
+            <td>{{ office.id }} - {{ office.name }}</td>
+            <td>{{ n_votes|intcomma }} </td>
+            <td>{{ n_registrations_active|intcomma }} </td>
+            <td>{{ n_votes|percentagify:n_registrations_active }} </td>
+            <td>{{ n_votes|percentagify:n_registrations_open }} </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+      <h2>{% trans "By Center Type" %}</h2>
+
+      <table>
+        <thead>
+        <tr>
+          <th>{% trans "Center Type" %}</th>
+          <th>{% trans "Votes" %}</th>
+          <th>{% trans "Registrations (Active)" %}</th>
+          <th>{% trans "Turnout % (Active)" %}</th>
+          <th>{% trans "Turnout % (Open)" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for center_type in result.by_center_type.keys %}
+          {% assign_lookup result 'by_center_type' center_type 'v' as n_votes %}
+          {% assign_lookup result 'by_center_type' center_type 'r' 'active' as n_registrations_active %}
+          {% assign_lookup result 'by_center_type' center_type 'r' 'open' as n_registrations_open %}
+          <tr>
+            <td>{% lookup center_type_names center_type %}</td>
+            <td>{{ n_votes|intcomma }} </td>
+            <td>{{ n_registrations_active|intcomma }} </td>
+            <td>{{ n_votes|percentagify:n_registrations_active }} </td>
+            <td>{{ n_votes|percentagify:n_registrations_open }} </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock content %}
+
+{% block page_footer_csv_links %}
+{% endblock %}

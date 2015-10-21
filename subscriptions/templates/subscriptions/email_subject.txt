@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if not env == 'production' %}
+    {% trans '[TESTING] HNEC Voter Registration Audit System' %}
+{% else %}
+    {% trans 'HNEC Voter Registration Audit System' %}
+{% endif %}

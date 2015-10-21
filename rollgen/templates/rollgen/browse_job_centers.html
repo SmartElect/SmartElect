@@ -1,0 +1,63 @@
+{% extends 'rollgen/base.html' %}
+
+{% load i18n %}
+{% load rollgen_tags %}
+
+{% block rollgen_content %}
+  <div id='browse_job_centers'>
+    <div class="page-width cushion-sides">
+      <div id='header_nav' class='right'>
+        <a class="button transparent" href='{% url 'rollgen:overview' %}'>{% trans 'Return to Overview' %}</a>
+      </div>
+      <h1>{% trans "Voter Rolls > Job" %}</h1>
+      {% block tabs %}
+        {% include 'rollgen/tab.html' %}
+      {% endblock tabs %}
+    </div>
+
+    <div class="milk">
+      <div class='banana banana_header'>
+        <div class="page-width cushion-sides">
+          {{ job.dirname }}
+        </div>
+      </div>
+      <div class="page-width cushion">
+
+      <p>{% trans 'Click on a center to jump to the PDFs for that center.' %}</p>
+      {% if n_empty_centers %}
+        {# At least one center w/no registrants exists; explain to user why it's unclickable. #}
+        <p>
+          {% blocktrans trimmed count n_empty_centers=n_empty_centers %}
+            The center with no registrants
+            is not clickable because it has no associated documents.
+          {% plural %}
+            The {{ n_empty_centers }} centers with no registrants
+            are not clickable because they have no associated documents.
+          {% endblocktrans %}
+        </p>
+      {% endif %}
+
+        <table id='centers'>
+          <colgroup>
+            <col id='center_group'>
+            <col id='centers'>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>{% trans 'Center Group' %}</th>
+              <th>{% trans 'Centers' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, center_infos in binned_center_ids.iteritems %}
+              <tr>
+                <td>{{ key }}__</td>
+                <td>{{ center_infos|display_center_infos }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock rollgen_content %}

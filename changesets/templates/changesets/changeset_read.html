@@ -1,0 +1,55 @@
+{% extends 'bread/read.html' %}
+{% load i18n %}
+{% block title %}{{ changeset.name }}{% endblock title %}
+
+{% block read_fields %}
+{# Custom read-fields for this view #}
+
+{% for field, value, link in read_rows %}
+  {% if value != None %}
+    {% if link %}
+          <label><a href="{{ link }}">{{ field.verbose_name|capfirst }}</a></label>
+          <div class="read-value"><a href="{{ link }}">{{ value }}</a></div>
+    {% else %}
+          <label>{{ field.verbose_name|capfirst }}</label>
+          <div class="read-value">{{ value }}</div>
+    {% endif %}
+    {% if field.help_text %}
+      <div class="helptext">{{ field.help_text }}</div>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% endblock read_fields %}
+
+{% block actions %}
+  {% if may_approve or can_queue %}
+      <form method="POST" action="{% url 'approve_changeset' changeset.pk %}">
+        {% csrf_token %}
+  {% endif %}
+
+  <a class="button inverse" href="{% url bread.browse_url_name %}">{% trans "Back to list" %}</a>
+
+  {% if may_edit %}
+    <a class="button" href="{% url bread.edit_url_name object.pk %}">{% trans "Edit" %}</a>
+  {% endif %}
+
+  {% if may_approve %}
+    {% if has_approved %}
+      <button name="revoke" class="button warning">{% trans "Revoke approval" %}</button>
+    {% else %}
+      <button name="approve" class="button success">{% trans "Approve" %}</button>
+    {% endif %}
+  {% endif %}
+  {% if can_queue %}
+    <button name="queue" class="button warning">{% trans "Start" %}</button>
+  {% endif %}
+
+  {% if may_delete %}
+    <a class="button warning right" href="{% url bread.delete_url_name view.object.pk %}">{% trans "Delete" %}</a>
+  {% endif %}
+
+  {% if may_approve or can_queue %}
+    </form>
+  {% endif %}
+
+{% endblock actions %}

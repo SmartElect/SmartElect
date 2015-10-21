@@ -1,0 +1,42 @@
+{% extends 'help_desk/reports/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Call Reports" %}{% endblock title %}
+
+{% block tabs %}
+  {% include 'help_desk/reports/tab.html' %}
+{% endblock tabs %}
+
+{% block table_head %}
+  <thead>
+    <tr>
+      <th>{% trans "Case #" %}</th>
+      <th>{% trans "Start time" %}</th>
+      <th>{% trans "State" %}</th>
+      <th>{% trans "Operator" %}</th>
+      <th>{% trans "Field staff" %}</th>
+      <th>{% trans "Outcome" %}</th>
+      <th>{% trans "End time" %}</th>
+    </tr>
+  </thead>
+{% endblock %}
+
+{% block table_rows %}
+  <tbody>
+  {% for case in object_list %}
+    <tr>
+      <th><a href="{% url 'case_detail' case.pk %}">{{ case.pk }}</a></th>
+      <td>{{ case.formatted_start_time }}</td>
+      <td>{{ case.get_state }}</td>
+      <td>{{ case.operator.get_full_name|default:case.operator.username }}</td>
+      <td>{{ case.field_staff.name }}</td>
+      <td>
+        {% if case.end_time %}
+          {{ case.get_call_outcome_display }}
+        {% endif %}
+      </td>
+      <td>{{ case.formatted_end_time }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+{% endblock %}

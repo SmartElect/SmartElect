@@ -1,0 +1,103 @@
+{% extends 'vr_dashboard/polling_base.html' %}
+{% load humanize i18n %}
+{% block content %}
+  <div class="banana cushion-ends">
+
+    <div class="page-width float-layout notice">
+      <div class="third cushion">
+        <ul>
+          {% if selected_election.polling_is_over %}
+            <li>{% trans "Polling is over" %}</li>
+          {% elif selected_election.polling_is_in_progress %}
+            <li>{% trans "Polling is in progress" %}</li>
+          {% else %}
+            <li>{% trans "Polling has not started" %}</li>
+          {% endif %}
+          <li>{% trans "Work period" %}:<br/>
+            {{ selected_election.formatted_work_start_time }} &ndash; {{ selected_election.formatted_work_end_time }}
+          </li>
+          <li>{% trans "Polling period" %}:<br/>
+            {{ selected_election.formatted_polling_start_time }} &ndash; {{ selected_election.formatted_polling_end_time }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="third cushion">
+        <p><em>{{ headline.as_of_datetime }}</em></p>
+        <ul>
+          <li>{{ headline.open_centers|safe }}</li>
+          <li>{{ headline.unopen_centers|safe }}</li>
+        </ul>
+      </div>
+
+      <div class="third cushion">
+        <ul>
+          <li>{{ headline.period1|safe }}</li>
+          <li>{{ headline.period2|safe }}</li>
+          <li>{{ headline.period3|safe }}</li>
+          <li>{{ headline.period4|safe }}</li>
+        </ul>
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <section class="milk">
+    <div class="page-width cushion">
+      <table>
+        <thead>
+        <tr>
+          <th>{% trans "Office" %}</th>
+          <th>{% trans "Polling Center" %}</th>
+          <th>{% trans "Opened" %}</th>
+          <th>{% trans "Not Opened" %}</th>
+          <th>{% trans "Period" %} 1<br>{% trans "Not Reported" %}</th>
+          <th>{% trans "Period" %} 2<br>{% trans "Not Reported" %}</th>
+          <th>{% trans "Period" %} 3<br>{% trans "Not Reported" %}</th>
+          <th>{% trans "Period" %} 4<br>{% trans "Not Reported" %}</th>
+          <th>{% trans "Closed" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for office in offices %}
+          <tr>
+            <td>
+              <a href='{% url 'vr_dashboard:election-day-office-n' office.office_id %}'>{{ office.office_id }}
+                {{ office.name }}
+              </a>
+            </td>
+            <td>{{ office.polling_center_count|intcomma }}</td>
+            <td>{{ office.opened|intcomma }}
+              <small>({{ office.opened_pct }})</small>
+            </td>
+            <td>{{ office.not_opened|intcomma }}</td>
+            <td>{{ office.not_reported_1|intcomma }}</td>
+            <td>{{ office.not_reported_2|intcomma }}</td>
+            <td>{{ office.not_reported_3|intcomma }}</td>
+            <td>{{ office.not_reported_4|intcomma }}</td>
+            <td>{{ office.closed|intcomma }}
+              <small>({{ office.closed_pct }})</small>
+            </td>
+          </tr>
+        {% endfor %}
+        <tr class='sum-row'>
+          <td>{{ summary.name }}</td>
+          <td>{{ summary.by_country|intcomma }}</td>
+          <td>{{ summary.opened|intcomma }}
+            <small>({{ summary.opened_pct }})</small>
+          </td>
+          <td>{{ summary.not_opened|intcomma }}</td>
+          <td>{{ summary.not_reported_1|intcomma }}</td>
+          <td>{{ summary.not_reported_2|intcomma }}</td>
+          <td>{{ summary.not_reported_3|intcomma }}</td>
+          <td>{{ summary.not_reported_4|intcomma }}</td>
+          <td>{{ summary.closed|intcomma }}
+            <small>({{ summary.closed_pct }})</small>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock content %}

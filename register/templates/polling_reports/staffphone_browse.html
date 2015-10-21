@@ -1,0 +1,12 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+
+{% block tabs %}
+  {% include 'polling_reports/tab.html' %}
+{% endblock tabs %}
+
+{% block actions %}
+  {% if may_delete %}
+    <a class="button warning right" href="{% url 'staffphones-delete' %}">{% trans "Delete all Staff Phones" %}</a>
+  {% endif %}
+{% endblock actions %}

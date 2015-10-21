@@ -1,0 +1,48 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Message text" %}{% endblock title %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+    <h1>{% trans "Editing" %} {{ form.instance.number }} {{ form.instance.label }}</h1>
+  </div>
+
+  <div class="milk messagetext">
+    <div class="page-width cushion">
+      <h3>{{ form.instance.number }} {{ form.instance.label }}</h3>
+
+      <form class="two-thirds" method="post">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          {{ form.non_field_errors }}
+        {% endif %}
+
+        {% if object.last_updated_by %}
+          <label>{% trans "Last updated by:" %}</label>
+          <input type="text" readonly value="{{ object.last_updated_by.get_full_name|default:object.last_updated_by.get_username }}">
+        {% endif %}
+
+        <label>{% trans "Last updated at:" %}</label>
+        <input type="text" readonly value="{{ object.formatted_modification_date }}">
+
+        {% for field in form %}
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<div class="helptext">{{ field.help_text }}</div>{% endif %}
+
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
+        {% endfor %}
+
+        {% block actions %}
+          <button class="success" type="submit">{% trans 'Submit' %}</button>
+          <a class="button inverse right" href="{% url 'message_list' %}">{% trans "Cancel" %}</a>
+        {% endblock actions %}
+
+      </form>
+    </div>
+  </div>
+{% endblock content %}

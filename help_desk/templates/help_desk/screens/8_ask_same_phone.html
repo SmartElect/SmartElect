@@ -1,0 +1,31 @@
+{% load i18n libya_tags %}
+
+<div class="float-layout banana">
+  <div class="cushion">
+    <label>{% trans "Phone number associated with citizen's registration" %}</label>
+    <p>{{ case.citizen.registration.sms.from_number|format_phone_number }}</p>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="spacer"></div>
+
+<p>{% trans "Say to the caller" %}:
+  {% if case.field_staff %}
+    <blockquote>{% trans "Does the citizen want to use that same phone to make the change?" %}</blockquote>
+  {% else %}
+    <blockquote>{% trans "Do you want to use that same phone to make the change?" %}</blockquote>
+  {% endif %}
+</p>
+
+<p>{% trans "(also select no if they wish to update the phone number associated with their registration)" %}</p>
+
+{% if case.registration.phone_has_maximum_registrations %}
+  <p>
+    {% trans "Please advise the citizen" %}:
+    {% blocktrans trimmed with number=case.citizen.registration.sms.from_number|format_phone_number %}
+      Phone number {{ number }} has been used for the maximum number of registrations.
+    {% endblocktrans %}
+    {% trans "If the citizen registers from another phone, they might not be able to change their registration back to this phone." %}
+  </p>
+{% endif %}

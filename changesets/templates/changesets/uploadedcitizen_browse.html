@@ -1,0 +1,20 @@
+{% extends 'bread/browse.html' %}
+{% load i18n %}
+{% block title %}{% trans "Citizens uploaded" %}{% endblock %}
+
+{% block content_title %}
+<h1>{% blocktrans with names=verbose_name_plural %}Browse {{ names }}{% endblocktrans %}</h1>
+{% if changeset %}
+{% url 'read_changeset' changeset.pk as url %}
+<p>{% trans "These are the citizens affected by the changeset:" %}</p>
+<p><a href="{{ url }}">{{ changeset }}</a></p>
+{% endif %}
+{% endblock %}
+
+
+{% block actions %}
+{{block.super}}
+{% if changeset %}
+<a class="button inverse" href="{% url 'read_changeset' changeset.pk %}">{% trans "Back to changeset" %}</a>
+{% endif %}
+{% endblock actions %}

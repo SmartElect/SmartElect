@@ -1,0 +1,65 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Help Desk Staff" %}{% endblock %}
+
+{% block content %}
+  <div class="page-width cushion-sides">
+    <h1 class="left">{% trans "Help Desk Staff" %}</h1>
+
+    <div class="cushion-ends">
+      <a class="button success right" href="{% url 'staff_create' %}">{% trans "Create new account" %}</a>
+      <a class="button success right" href="{% url 'staff_search' %}">{% trans "Make an existing account a help desk account" %}</a>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="milk">
+    <div class="page-width cushion">
+
+      {% if paginator %}
+        {% include "includes/pagination.html" %}
+      {% endif %}
+
+      <table class="page-width">
+        <thead>
+          <tr>
+            <th>{% trans "Username" %}</th>
+            <th>{% trans "Full Name" %}</th>
+            <th>{% trans "Groups" %}</th>
+            <th>{% trans "Date Joined" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in object_list %}
+            <tr>
+              <td>
+                <a href="{% url 'staff_update' user.pk %}">{{ user.username }}</a>
+              </td>
+              <td>
+                {{ user.get_full_name }}
+              </td>
+              <td>
+                {% for group in user.groups.all %}
+                  {{ group.name }}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </td>
+              <td>
+                {{ user.date_joined|date:"d/m/Y" }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if paginator %}
+        {% include "includes/pagination.html" %}
+      {% endif %}
+
+      <div class="spacer"></div>
+
+      <a class="button inverse right" href="{% url 'help_desk_home' %}">{% trans "Return to help desk" %}</a>
+
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'help_desk/base.html' %}
+{% load i18n %}
+
+{% block assistance %}
+
+  <div class="table-layout"><div>
+    <div class="half">
+      {% if case.has_previous_screen %}
+        <button name="button_startover" form="id_form">{% trans "Start from Beginning" %}</button>
+      {% endif %}
+      {% if case.has_previous_screen %}
+        <button name="button_goback" form="id_form">{% trans "Previous Screen" %}</button>
+      {% endif %}
+    </div>
+    <div class="quarter milk">
+      {% if case.field_staff %}
+        <label>{% trans "Staff Name" %}</label>
+        <p>{{ case.field_staff.name }}{% if not field_staff_verified %} {% trans "(not validated)" %}{% endif %}</p>
+      {% elif case.citizen %}
+        <label>{% trans "Name" %}</label>
+        <p>{{ case.citizen }}{% if not case.national_id_validated %} {% trans "(not validated)" %}{% endif %}</p>
+      {% endif %}
+    </div>
+    <div class="quarter milk">
+      {% if case.field_staff  %}
+        <label>{% trans "Staff ID" %}</label>
+        <p>{{ case.field_staff.staff_id }}{% if not field_staff_verified %} {% trans "(not validated)" %}{% endif %}</p>
+      {% elif case.citizen %}
+        <label>{% trans "National ID" %}</label>
+        <p>{{ case.citizen.national_id }}{% if not case.national_id_validated %} {% trans "(not validated)" %}{% endif %}</p>
+      {% endif %}
+    </div>
+  </div></div>
+
+  <div class="spacer"></div>
+
+  {% if pre_text %}
+    <p>{{ pre_text }}</p>
+  {% endif %}
+
+  {% include text_template %}
+
+  <form method="POST" id="id_form">
+    {% csrf_token %}
+
+    {% if form %}
+      {{ form.as_p }}
+    {% endif %}
+
+    <div class="spacer"></div>
+
+    {% for button_name, text, klass in buttons %}
+      <button name="button_{{ button_name }}" class="{{ klass }}">{{ text }}</button>
+    {% endfor %}
+
+    {% if include_hangup_button %}
+      <button name="button_hungup" class="inverse right">{% trans "Caller hung up" %}</button>
+    {% endif %}
+  </form>
+
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  {# Multiple buttons on this page. Choose 'success' button if user hits enter in a text field. #}
+  <script>
+   $("#id_form input").keypress(function(e) {
+     if (e.which == 13) {
+       $("button.success").click();
+       e.preventDefault();
+     }
+   }).focus();
+  </script>
+{% endblock %}

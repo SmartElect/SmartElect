@@ -1,0 +1,41 @@
+center_book_cover: |
+  انتخاب مجلس النواب
+  كتيب القوائم الأولية للناخبين لغرض التحقق
+center_list_cover: |
+  انتخاب مجلس النواب
+  سجل الناخبين المبدئي لغرض النشر
+center_header_prefix: "انتخاب مجلس النواب:"
+center_list_header: "سجل الناخبين المبدئي لغرض النشر"
+center_book_header: "كتيب القوائم الأولية للناخبين لغرض التحقق"
+gender: "الجنس"
+male: "ذكر"
+female: "أنثى"
+unisex: "ذكر + أنثى"
+center_name: "اسم المركز"
+center_number: "رقم المركز"
+subconstituency_name: "الدائرة الفرعية"
+the_names: "الاسم"
+
+ed_list_header_prefix: "انتخاب مجلس النواب"
+ed_center_list_cover: |
+  انتخاب مجلس النواب
+  قوائم سجل الناخبين النهائية
+ed_center_list_header: "قوائم سجل الناخبين النهائية"
+ed_station_book_cover: |
+  انتخاب مجلس النواب
+  كتيب سجل الناخبين النهائي
+ed_station_book_header: "كتيب سجل الناخبين النهائي"
+ed_polling_sign_header: "انتخاب مجلس النواب"
+station_number: "محطة رقم"
+number: "م"
+first: "من"
+last: "إلى"
+names_range: "أسماء الناخبين"
+station_header: "المحطة"
+voted: "التوقيع"
+no_male_registrants: "هذا المركز لا يوجد به ذكور مسجلين."
+no_female_registrants: "هذا المركز لا توجد به نساء مسجلات."
+copy_of: "نسخة من مركز"
+copied_by_singular: "تم النسخ بواسطة مركز"
+copied_by_plural: "تم النسخ بواسطة المراكز"
+

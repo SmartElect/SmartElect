@@ -1,0 +1,24 @@
+-r base.txt
+coverage==3.6
+django-debug-toolbar==1.2.1
+fabric==1.7.0
+    paramiko==1.13.0
+        ecdsa==0.11
+    pycrypto==2.6.1
+factory_boy==2.3.1
+flake8==2.1.0
+    mccabe==0.2.1
+    pep8==1.5.0
+    pyflakes==0.8
+mock==1.0.1
+pylint==1.0.0
+    astroid==1.0.1
+    logilab-common==0.61.0
+Sphinx==1.2.2
+    Pygments==1.6
+    docutils==0.12
+transifex-client==0.10
+
+pdfminer==20140328
+lxml==3.3.5
+python-bidi==0.3.4

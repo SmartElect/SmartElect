@@ -1,0 +1,4859 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-11 17:44+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: audit/admin.py:11 bulk_sms/views.py:126 bulk_sms/views.py:158
+#: bulk_sms/views.py:174 changesets/views_changeset.py:41
+#: rollgen/templates/rollgen/overview.html:34
+msgid "Status"
+msgstr ""
+
+#: audit/admin.py:17 help_desk/models.py:247
+msgid "Resolved"
+msgstr ""
+
+#: audit/admin.py:18
+msgid "Not resolved"
+msgstr ""
+
+#: audit/models.py:20 vr_dashboard/templates/vr_dashboard/sms.html:19
+msgid "Incoming"
+msgstr ""
+
+#: audit/models.py:21
+msgid "Outgoing"
+msgstr ""
+
+#: audit/models.py:23 register/models.py:579
+msgid "uuid"
+msgstr ""
+
+#: audit/models.py:24
+msgid "logged date"
+msgstr ""
+
+#: audit/models.py:25 register/models.py:569
+msgid "direction"
+msgstr ""
+
+#: audit/models.py:26
+msgid "to address"
+msgstr ""
+
+#: audit/models.py:27
+msgid "from address"
+msgstr ""
+
+#: audit/models.py:28
+msgid "content"
+msgstr ""
+
+#: audit/models.py:29 register/models.py:580
+msgid "is audited"
+msgstr ""
+
+#: audit/models.py:30
+msgid "raw text"
+msgstr ""
+
+#: audit/models.py:45 audit/models.py:92
+msgid "vumi log"
+msgstr ""
+
+#: audit/models.py:46
+msgid "vumi logs"
+msgstr ""
+
+#: audit/models.py:49 register/models.py:589
+#, python-brace-format
+msgid "From {from_addr} to {to_addr}: {content}"
+msgstr ""
+
+#: audit/models.py:90 bulk_sms/models.py:159 register/models.py:416
+#: register/models.py:596
+msgid "sms"
+msgstr ""
+
+#: audit/models.py:95 audit/models.py:161
+msgid "sms trail"
+msgstr ""
+
+#: audit/models.py:96
+msgid "sms trails"
+msgstr ""
+
+#: audit/models.py:99
+#, python-brace-format
+msgid "Trail linking SMS ({sms}) with VumiLog ({vumi})"
+msgstr ""
+
+#: audit/models.py:130
+#, python-brace-format
+msgid ""
+"Audit complete. Message is in the <a href=\"{sms_url}\">registration</a> and "
+"<a href=\"{vumi_url}\">gateway</a> systems."
+msgstr ""
+
+#: audit/models.py:136
+#, python-brace-format
+msgid ""
+"The <a href=\"{url}\">message</a> to {number} with text \"{text}\" was sent "
+"by the registration system at {datetime} but has not been received by the "
+"gateway system."
+msgstr ""
+
+#: audit/models.py:145
+#, python-brace-format
+msgid ""
+"The <a href=\"{url}\">message</a> from {number} with text \"{text}\" was "
+"received by the gateway system at {datetime} but has not been received by "
+"the registration system."
+msgstr ""
+
+#: audit/models.py:162
+msgid "comments"
+msgstr ""
+
+#: audit/models.py:163
+msgid "resolved"
+msgstr ""
+
+#: audit/models.py:167
+msgid "Browse discrepancies"
+msgstr ""
+
+#: audit/models.py:168
+msgid "Read discrepancy"
+msgstr ""
+
+#: audit/models.py:170
+msgid "sms discrepancy"
+msgstr ""
+
+#: audit/models.py:171
+msgid "sms discrepancies"
+msgstr ""
+
+#: audit/models.py:176
+#, python-brace-format
+msgid "A discrepancy has been found for an incoming message at {datetime}."
+msgstr ""
+
+#: audit/models.py:179
+#, python-brace-format
+msgid "A discrepancy has been found for an outgoing message at {datetime}."
+msgstr ""
+
+#: audit/templates/audit/discrepancy_browse.html:5
+msgid "Change email alert subscriptions"
+msgstr ""
+
+#: audit/views.py:22 audit/views.py:76
+msgid "Direction"
+msgstr ""
+
+#: audit/views.py:23 changesets/views_changes.py:20 httptester/forms.py:9
+msgid "From"
+msgstr ""
+
+#: audit/views.py:24 changesets/views_changes.py:21
+msgid "To"
+msgstr ""
+
+#: audit/views.py:32
+msgid "source number, destination number, or message"
+msgstr ""
+
+#: audit/views.py:44
+#, python-format
+msgid "%(count)d message was audited."
+msgid_plural "%(count)d messages were audited."
+msgstr[0] ""
+msgstr[1] ""
+
+#: audit/views.py:53
+#, python-format
+msgid "There was %(count)d discrepancy found."
+msgid_plural "There were %(count)d discrepancies found."
+msgstr[0] ""
+msgstr[1] ""
+
+#: audit/views.py:77
+msgid "Message in registration system"
+msgstr ""
+
+#: audit/views.py:78
+msgid "Message to/from the mobile network operator"
+msgstr ""
+
+#: bulk_sms/forms.py:12
+msgid ""
+"The uploaded file had invalid characters. Please be sure that it is saved as "
+"UTF-8."
+msgstr ""
+
+#: bulk_sms/forms.py:28
+msgid "Name for this bulk SMS broadcast."
+msgstr ""
+
+#: bulk_sms/forms.py:30
+msgid "Describe this bulk SMS broadcast"
+msgstr ""
+
+#: bulk_sms/forms.py:83
+msgid "This field is required."
+msgstr ""
+
+#: bulk_sms/models.py:40
+msgid "Uploading"
+msgstr ""
+
+#: bulk_sms/models.py:41 bulk_sms/tests/test_broadcast.py:190
+msgid "Pending Approval"
+msgstr ""
+
+#: bulk_sms/models.py:42
+msgid "Approved"
+msgstr ""
+
+#: bulk_sms/models.py:43
+msgid "Rejected"
+msgstr ""
+
+#: bulk_sms/models.py:44
+msgid "Completed"
+msgstr ""
+
+#: bulk_sms/models.py:45
+msgid "Processing"
+msgstr ""
+
+#: bulk_sms/models.py:66 bulk_sms/models.py:158 bulk_sms/models.py:201
+msgid "batch"
+msgstr ""
+
+#: bulk_sms/models.py:67
+msgid "batches"
+msgstr ""
+
+#: bulk_sms/models.py:152 help_desk/models.py:168 polling_reports/models.py:18
+#: polling_reports/models.py:52 polling_reports/models.py:70
+#: polling_reports/models.py:91 register/models.py:640 register/models.py:659
+msgid "phone number"
+msgstr ""
+
+#: bulk_sms/models.py:153
+msgid "from shortcode"
+msgstr ""
+
+#: bulk_sms/models.py:156
+msgid "What shortcode should this appear to be from?"
+msgstr ""
+
+#: bulk_sms/models.py:157 bulk_sms/models.py:206 changesets/models.py:154
+#: register/models.py:572
+msgid "message"
+msgstr ""
+
+#: bulk_sms/models.py:164
+msgid "bulk message"
+msgstr ""
+
+#: bulk_sms/models.py:165
+msgid "bulk messages"
+msgstr ""
+
+#: bulk_sms/models.py:172
+msgid "Invalid shortcode: Valid values are: {}"
+msgstr ""
+
+#: bulk_sms/models.py:183
+msgid "Custom"
+msgstr ""
+
+#: bulk_sms/models.py:188 libya_site/templates/libya_site/base.html:29
+#: staff/views.py:89
+msgid "Staff"
+msgstr ""
+
+#: bulk_sms/models.py:189
+msgid "Registrants in a single center"
+msgstr ""
+
+#: bulk_sms/models.py:190
+msgid "Registrants in the entire voter register"
+msgstr ""
+
+#: bulk_sms/models.py:197 changesets/models.py:193
+msgid "created by"
+msgstr ""
+
+#: bulk_sms/models.py:200
+msgid "reviewed by"
+msgstr ""
+
+#: bulk_sms/models.py:202
+msgid "audience"
+msgstr ""
+
+#: bulk_sms/models.py:205 polling_reports/models.py:22
+#: polling_reports/models.py:56 polling_reports/models.py:73
+#: polling_reports/models.py:94 polling_reports/models.py:117
+#: register/models.py:334 register/models.py:415 rollgen/models.py:157
+msgid "registration center"
+msgstr ""
+
+#: bulk_sms/models.py:273
+msgid "Registrants in Center"
+msgstr ""
+
+#: bulk_sms/models.py:307
+msgid "broadcast"
+msgstr ""
+
+#: bulk_sms/models.py:308
+msgid "broadcasts"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:4
+#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:8
+msgid "Upload SMSes for Broadcast"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:23
+msgid ""
+"<p> Please upload your CSV with 12-digit phone number(s) in the first column "
+"and the message text in the second column. </p> <ul> <li>Do not include '+' "
+"or '()' in the phone number column (ie 218911234567).</li> <li>Do not "
+"include column headers.</li> <li>The CSV must be saved with UTF-8 encoding</"
+"li> </ul>"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:40
+#: register/templates/register/upload_blackwhitelisted_numbers.html:34
+#: register/templates/register/upload_centers_csv.html:37
+msgid "Upload"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:41
+#: changesets/templates/changesets/changeset_edit.html:41
+#: help_desk/templates/help_desk/staff/create.html:18
+#: help_desk/templates/help_desk/staff/set_password.html:15
+#: help_desk/templates/help_desk/staff/update.html:18
+#: libya_site/templates/bread/delete.html:21
+#: libya_site/templates/bread/edit.html:50
+#: libya_site/templates/bread/label_value_read.html:31
+#: register/templates/polling_reports/delete_all_staffphones.html:24
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:42
+#: register/templates/register/delete_all_copy_centers.html:39
+#: register/templates/register/upload_centers_csv.html:38
+#: rollgen/templates/rollgen/new.html:102
+#: text_messages/templates/text_messages/messagetext_form.html:42
+msgid "Cancel"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_add_via_form.html:8
+msgid "Characters used:"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:9
+#: changesets/templates/changesets/changeset_read.html:40
+msgid "Approve"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:12
+msgid "Reject"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:15
+#: bulk_sms/templatetags/broadcast_admin.py:21
+#: changesets/templates/changesets/changeset_edit.html:44
+#: changesets/templates/changesets/changeset_read.html:48
+#: libya_site/templates/bread/delete.html:20
+#: libya_site/templates/bread/edit.html:48
+#: libya_site/templates/bread/label_value_read.html:28
+#: voting/templates/voting/election_label_value_read.html:16
+msgid "Delete"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:17
+#: changesets/templates/changesets/changeset_read.html:30
+#: register/templates/register/upload_blackwhitelisted_numbers.html:42
+#: voting/templates/voting/election_label_value_read.html:14
+msgid "Back to list"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_browse.html:6
+msgid "Send an SMS broadcast via form entry"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/broadcast_browse.html:7
+msgid "Send an SMS broadcast via CSV upload"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/random_messages.html:7
+#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:13
+#: register/views.py:204 register/views.py:232
+#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:12
+msgid "Phone Number"
+msgstr ""
+
+#: bulk_sms/templates/bulk_sms/random_messages.html:8 bulk_sms/views.py:173
+#: httptester/forms.py:15
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:41
+msgid "Message"
+msgstr ""
+
+#: bulk_sms/templatetags/broadcast_admin.py:19
+msgid "Permanently delete"
+msgstr ""
+
+#: bulk_sms/utils.py:22
+#, python-brace-format
+msgid ""
+"Error found in line {line_number}: The row should only have the following "
+"columns: {columns}."
+msgstr ""
+
+#: bulk_sms/utils.py:24
+#, python-brace-format
+msgid "Unable to parse number {number} as a phone number on row {line_number}"
+msgstr ""
+
+#: bulk_sms/utils.py:25
+#, python-brace-format
+msgid "Message is blank on row {line_number}"
+msgstr ""
+
+#: bulk_sms/views.py:42
+msgid "Only a different user may review your broadcast."
+msgstr ""
+
+#: bulk_sms/views.py:59
+msgid "You have approved the broadcast."
+msgstr ""
+
+#: bulk_sms/views.py:64
+msgid "You have rejected the broadcast."
+msgstr ""
+
+#: bulk_sms/views.py:82
+msgid "Broadcast was created and is pending approval."
+msgstr ""
+
+#: bulk_sms/views.py:106
+msgid "Messages are uploading in the background"
+msgstr ""
+
+#: bulk_sms/views.py:120
+msgid "Sent To"
+msgstr ""
+
+#: bulk_sms/views.py:127 bulk_sms/views.py:175
+msgid "Remaining Time"
+msgstr ""
+
+#: bulk_sms/views.py:128
+msgid "Total Messages"
+msgstr ""
+
+#: bulk_sms/views.py:129
+msgid "Sent"
+msgstr ""
+
+#: bulk_sms/views.py:130
+msgid "Errors"
+msgstr ""
+
+#: bulk_sms/views.py:131
+msgid "Random Messages"
+msgstr ""
+
+#: bulk_sms/views.py:160
+msgid "Audience"
+msgstr ""
+
+#: bulk_sms/views.py:171 libya_elections/abstract.py:75 register/views.py:397
+msgid "creation date"
+msgstr ""
+
+#: bulk_sms/views.py:172
+msgid "Send To"
+msgstr ""
+
+#: bulk_sms/views.py:176
+msgid "Created By"
+msgstr ""
+
+#: bulk_sms/views.py:177
+msgid "Reviewed By"
+msgstr ""
+
+#: changesets/forms.py:29
+msgid "Start typing registration center name to add to list"
+msgstr ""
+
+#: changesets/forms.py:30
+msgid "Selected centers"
+msgstr ""
+
+#: changesets/forms.py:36
+msgid "Start typing registration center name to choose"
+msgstr ""
+
+#: changesets/forms.py:43
+msgid "Upload text file with one NID per line, and no headers or punctuation."
+msgstr ""
+
+#: changesets/forms.py:48
+msgid ""
+"This changeset has one or more approvals. If you change the changeset, the "
+"approvals will be revoked and the changeset will have to be approved again. "
+"If you want to do that, check here. If not, cancel, or go to another page "
+"without submitting your changes."
+msgstr ""
+
+#: changesets/forms.py:89 changesets/forms.py:92
+msgid "No other changeset selected"
+msgstr ""
+
+#: changesets/forms.py:95
+msgid "Only successful changesets can be rolled back."
+msgstr ""
+
+#: changesets/forms.py:102
+msgid "No centers selected"
+msgstr ""
+
+#: changesets/forms.py:110
+msgid "No target center selected"
+msgstr ""
+
+#: changesets/forms.py:113
+msgid "Target center is one of the centers being moved from"
+msgstr ""
+
+#: changesets/forms.py:127
+msgid "An uploaded file is required if selection method is uploaded NIDs"
+msgstr ""
+
+#: changesets/forms.py:132
+#, python-brace-format
+msgid "Stopping after {number} errors."
+msgstr ""
+
+#: changesets/forms.py:139
+#, python-brace-format
+msgid "Line {number}: Wrong length"
+msgstr ""
+
+#: changesets/forms.py:144
+#, python-brace-format
+msgid "Line {number}: Not a valid number"
+msgstr ""
+
+#: changesets/forms.py:148
+#, python-brace-format
+msgid "Line {number}: Not a valid national ID number"
+msgstr ""
+
+#: changesets/forms.py:154
+#, python-brace-format
+msgid "Line {number}: No person registered with that NID"
+msgstr ""
+
+#: changesets/forms.py:182
+#, python-brace-format
+msgid "Approval of {user} removed due to changes"
+msgstr ""
+
+#: changesets/models.py:45
+msgid "Move voters to another polling center"
+msgstr ""
+
+#: changesets/models.py:46
+msgid "Block voters"
+msgstr ""
+
+#: changesets/models.py:47
+msgid "Unblock voters"
+msgstr ""
+
+#: changesets/models.py:48
+msgid "Roll back another changeset"
+msgstr ""
+
+#: changesets/models.py:56
+msgid "Select a list of polling centers"
+msgstr ""
+
+#: changesets/models.py:57
+msgid "Upload a list of national IDs"
+msgstr ""
+
+#: changesets/models.py:58
+msgid "Select another changeset"
+msgstr ""
+
+#: changesets/models.py:71
+msgid "New - not approved"
+msgstr ""
+
+#: changesets/models.py:72
+msgid "Approved - not started"
+msgstr ""
+
+#: changesets/models.py:74
+msgid "Started - start button has been pressed but processing has not begun"
+msgstr ""
+
+#: changesets/models.py:75
+msgid "Executing - being processed"
+msgstr ""
+
+#: changesets/models.py:76
+msgid "Failed - had errors, changes were not made"
+msgstr ""
+
+#: changesets/models.py:77
+msgid "Successful - completed without errors and not rolled back"
+msgstr ""
+
+#: changesets/models.py:79
+msgid "Partially successful - rollback was not able to rollback all changes"
+msgstr ""
+
+#: changesets/models.py:80
+msgid "Rolled back - some or all changes have been rolled back"
+msgstr ""
+
+#: changesets/models.py:91 civil_registry/models.py:114
+#: help_desk/models.py:159 register/models.py:241
+msgid "name"
+msgstr ""
+
+#: changesets/models.py:93 changesets/models.py:517
+msgid "change"
+msgstr ""
+
+#: changesets/models.py:96
+msgid "how to select"
+msgstr ""
+
+#: changesets/models.py:99
+msgid ""
+"How to select affected voters. If you select another changeset, it will "
+"change the same voters who were changed in the other changeset, which might "
+"NOT be the same as using the same rules for selecting voters that the other "
+"changeset used."
+msgstr ""
+
+#: changesets/models.py:109
+msgid "other changeset"
+msgstr ""
+
+#: changesets/models.py:111
+msgid "Another changeset to select voters from or to roll back."
+msgstr ""
+
+#: changesets/models.py:123
+msgid "selected centers"
+msgstr ""
+
+#: changesets/models.py:136
+msgid "selected citizens"
+msgstr ""
+
+#: changesets/models.py:144
+msgid "target center"
+msgstr ""
+
+#: changesets/models.py:158
+msgid "Optional text message to send to affected voters after applying change"
+msgstr ""
+
+#: changesets/models.py:162
+msgid "justification"
+msgstr ""
+
+#: changesets/models.py:163
+msgid ""
+"Reason for the changes. Include references to legal justification for the "
+"changes if possible."
+msgstr ""
+
+#: changesets/models.py:169
+msgid "approvers"
+msgstr ""
+
+#: changesets/models.py:174 help_desk/models.py:193 voting/models.py:149
+#: voting/models.py:473
+msgid "start time"
+msgstr ""
+
+#: changesets/models.py:176
+msgid "When execution of the changeset started."
+msgstr ""
+
+#: changesets/models.py:178
+msgid "finish time"
+msgstr ""
+
+#: changesets/models.py:185
+msgid "queued by"
+msgstr ""
+
+#: changesets/models.py:187
+msgid "The user who queued the changeset for execution."
+msgstr ""
+
+#: changesets/models.py:198
+msgid "status"
+msgstr ""
+
+#: changesets/models.py:207
+msgid "rollback changeset"
+msgstr ""
+
+#: changesets/models.py:208
+msgid ""
+"If this changeset has been rolled back, this is the changeset that did it."
+msgstr ""
+
+#: changesets/models.py:213
+msgid "error text"
+msgstr ""
+
+#: changesets/models.py:216
+msgid "If the changes failed, this will contain the error message(s)."
+msgstr ""
+
+#: changesets/models.py:220 changesets/models.py:506
+msgid "changeset"
+msgstr ""
+
+#: changesets/models.py:221
+msgid "changesets"
+msgstr ""
+
+#: changesets/models.py:228
+msgid "Approve changeset"
+msgstr ""
+
+#: changesets/models.py:229
+msgid "Start changeset"
+msgstr ""
+
+#: changesets/models.py:230
+msgid "Browse changesets"
+msgstr ""
+
+#: changesets/models.py:231
+msgid "Read changeset"
+msgstr ""
+
+#: changesets/models.py:503
+msgid "changed"
+msgstr ""
+
+#: changesets/models.py:512 civil_registry/models.py:127
+#: help_desk/forms.py:270 help_desk/models.py:213 register/models.py:51
+#: register/models.py:413 register/models.py:567
+msgid "citizen"
+msgstr ""
+
+#: changesets/models.py:524
+msgid "from center"
+msgstr ""
+
+#: changesets/models.py:532
+msgid "to center"
+msgstr ""
+
+#: changesets/models.py:541
+msgid "change record"
+msgstr ""
+
+#: changesets/models.py:542
+msgid "change records"
+msgstr ""
+
+#: changesets/models.py:598 help_desk/models.py:30 register/admin.py:124
+#: register/views.py:705
+#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:21
+#: vr_dashboard/views/views.py:1152 vr_dashboard/views/views.py:1185
+#: vr_dashboard/views/views.py:1462
+msgid "Yes"
+msgstr ""
+
+#: changesets/models.py:598 help_desk/models.py:31 register/admin.py:125
+#: register/views.py:706
+#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:23
+#: vr_dashboard/views/views.py:1152 vr_dashboard/views/views.py:1185
+#: vr_dashboard/views/views.py:1462
+msgid "No"
+msgstr ""
+
+#: changesets/templates/changesets/changerecord_browse.html:7
+#: changesets/templates/changesets/uploadedcitizen_browse.html:18
+msgid "Back to changeset"
+msgstr ""
+
+#: changesets/templates/changesets/changerecord_browse.html:9
+msgid "Back to changesets"
+msgstr ""
+
+#: changesets/templates/changesets/changerecord_list.html:3
+msgid "Changes made"
+msgstr ""
+
+#: changesets/templates/changesets/changeset_edit.html:15
+msgid "Add changeset"
+msgstr ""
+
+#: changesets/templates/changesets/changeset_edit.html:17
+msgid "Edit changeset"
+msgstr ""
+
+#: changesets/templates/changesets/changeset_edit.html:39
+#: help_desk/models.py:37 help_desk/templates/help_desk/staff/create.html:17
+#: help_desk/templates/help_desk/staff/set_password.html:14
+#: help_desk/templates/help_desk/staff/update.html:17
+#: libya_elections/templates/registration/registration_form.html:40
+#: libya_site/templates/bread/edit.html:46
+#: libya_site/templates/libya_site/check_registration.html:50
+#: text_messages/templates/text_messages/messagetext_form.html:41
+msgid "Submit"
+msgstr ""
+
+#: changesets/templates/changesets/changeset_read.html:33
+#: libya_site/templates/bread/browse.html:126
+#: libya_site/templates/bread/label_value_read.html:25
+#: text_messages/templates/text_messages/messagetext_list.html:39
+#: voting/templates/voting/election_label_value_read.html:8
+msgid "Edit"
+msgstr ""
+
+#: changesets/templates/changesets/changeset_read.html:38
+msgid "Revoke approval"
+msgstr ""
+
+#: changesets/templates/changesets/changeset_read.html:44
+#: rollgen/templates/rollgen/new.html:101 voting/views.py:21
+msgid "Start"
+msgstr ""
+
+#: changesets/templates/changesets/uploadedcitizen_browse.html:3
+msgid "Citizens uploaded"
+msgstr ""
+
+#: changesets/templates/changesets/uploadedcitizen_browse.html:6
+#, python-format
+msgid "Browse %(names)s"
+msgstr ""
+
+#: changesets/templates/changesets/uploadedcitizen_browse.html:9
+msgid "These are the citizens affected by the changeset:"
+msgstr ""
+
+#: changesets/views_changes.py:16 changesets/views_uploadedcitizens.py:10
+#: civil_registry/views.py:93 help_desk/forms.py:78
+#: help_desk/templates/help_desk/screen.html:29 libya_site/forms.py:52
+msgid "National ID"
+msgstr ""
+
+#: changesets/views_changes.py:17 changesets/views_changeset.py:40
+#: changesets/views_uploadedcitizens.py:11
+#: help_desk/templates/help_desk/screen.html:20 register/views.py:504
+msgid "Name"
+msgstr ""
+
+#: changesets/views_changes.py:18
+msgid "Changed"
+msgstr ""
+
+#: changesets/views_changes.py:19
+msgid "Change"
+msgstr ""
+
+#: changesets/views_changeset.py:39
+msgid "Created"
+msgstr ""
+
+#: changesets/views_changeset.py:42
+msgid "Approvals"
+msgstr ""
+
+#: changesets/views_changeset.py:46
+msgid "name, message, or justification"
+msgstr ""
+
+#: changesets/views_changeset.py:138
+msgid "Number of uploaded voters"
+msgstr ""
+
+#: changesets/views_changeset.py:140
+msgid "Number of affected voters"
+msgstr ""
+
+#: changesets/views_changeset.py:148
+msgid "Number of approvals"
+msgstr ""
+
+#: changesets/views_changeset.py:203
+msgid "Changeset can no longer be edited"
+msgstr ""
+
+#: changesets/views_changeset.py:241
+msgid "This changeset may no longer be deleted."
+msgstr ""
+
+#: changesets/views_changeset.py:295
+msgid "You cannot do that after the changeset has been started."
+msgstr ""
+
+#: changesets/views_changeset.py:299
+msgid "You have already approved this changeset."
+msgstr ""
+
+#: changesets/views_changeset.py:302
+msgid "You have approved this changeset."
+msgstr ""
+
+#: changesets/views_changeset.py:304
+msgid "You are not authorized to approve this changeset."
+msgstr ""
+
+#: changesets/views_changeset.py:309
+msgid "You have revoked your approval."
+msgstr ""
+
+#: changesets/views_changeset.py:311
+msgid "You did not approve this changeset."
+msgstr ""
+
+#: changesets/views_changeset.py:317
+msgid "Changesets can only be started when they are in the approved status."
+msgstr ""
+
+#: changesets/views_changeset.py:327
+msgid "You are not authorized to start this changeset."
+msgstr ""
+
+#: civil_registry/models.py:57
+msgid "civil registry id"
+msgstr ""
+
+#: civil_registry/models.py:58 register/models.py:50
+msgid "Uniquely identifies a person, even across changes of national ID"
+msgstr ""
+
+#: civil_registry/models.py:62
+msgid "national id"
+msgstr ""
+
+#: civil_registry/models.py:63
+msgid "The citizen's 12-digit national ID number"
+msgstr ""
+
+#: civil_registry/models.py:72
+msgid "family book record number"
+msgstr ""
+
+#: civil_registry/models.py:73
+#: help_desk/templates/help_desk/screens/10_check_frn.html:5
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:24
+#: libya_site/forms.py:55
+msgid "Family Book Record Number"
+msgstr ""
+
+#: civil_registry/models.py:75
+msgid "first name"
+msgstr ""
+
+#: civil_registry/models.py:77
+msgid "father name"
+msgstr ""
+
+#: civil_registry/models.py:79
+msgid "grandfather name"
+msgstr ""
+
+#: civil_registry/models.py:81
+msgid "family name"
+msgstr ""
+
+#: civil_registry/models.py:83
+msgid "mother name"
+msgstr ""
+
+#: civil_registry/models.py:85
+msgid "birth date"
+msgstr ""
+
+#: civil_registry/models.py:87 rollgen/models.py:159
+msgid "gender"
+msgstr ""
+
+#: civil_registry/models.py:89
+msgid "address"
+msgstr ""
+
+#: civil_registry/models.py:93
+msgid "office id"
+msgstr ""
+
+#: civil_registry/models.py:94
+msgid "branch id"
+msgstr ""
+
+#: civil_registry/models.py:95
+msgid "state"
+msgstr ""
+
+#: civil_registry/models.py:98
+msgid "missing"
+msgstr ""
+
+#: civil_registry/models.py:101
+msgid "If set, this citizen was not in the last data dump."
+msgstr ""
+
+#: civil_registry/models.py:128
+msgid "citizens"
+msgstr ""
+
+#: civil_registry/views.py:94
+#: vr_dashboard/templates/vr_dashboard/base.html:140
+msgid "Gender"
+msgstr ""
+
+#: civil_registry/views.py:95 staff/views.py:87
+msgid "First name"
+msgstr ""
+
+#: civil_registry/views.py:96
+msgid "Father's name"
+msgstr ""
+
+#: civil_registry/views.py:97
+msgid "Grandfather's name"
+msgstr ""
+
+#: civil_registry/views.py:98
+msgid "Family name"
+msgstr ""
+
+#: civil_registry/views.py:99
+msgid "Mother's name"
+msgstr ""
+
+#: civil_registry/views.py:100
+msgid "Birth date"
+msgstr ""
+
+#: civil_registry/views.py:104
+msgid ""
+"National ID, FBR number, First name, Father's name, Mother's name, "
+"Grandfather's name, or Family name"
+msgstr ""
+
+#: civil_registry/views.py:123
+#: help_desk/templates/help_desk/includes/case_details.html:74
+msgid "Blocked"
+msgstr ""
+
+#: help_desk/forms.py:30
+msgid "Days of the week"
+msgstr ""
+
+#: help_desk/forms.py:31
+msgid "Hours of the day"
+msgstr ""
+
+#: help_desk/forms.py:32
+msgid "Day"
+msgstr ""
+
+#: help_desk/forms.py:33
+msgid "Week"
+msgstr ""
+
+#: help_desk/forms.py:34
+msgid "Month"
+msgstr ""
+
+#: help_desk/forms.py:35
+msgid "Year"
+msgstr ""
+
+#: help_desk/forms.py:36 help_desk/templates/help_desk/reports/cases.html:16
+msgid "Operator"
+msgstr ""
+
+#: help_desk/forms.py:37
+#: help_desk/templates/help_desk/includes/case_details.html:40
+#: help_desk/templates/help_desk/reports/cases.html:17
+msgid "Field staff"
+msgstr ""
+
+#: help_desk/forms.py:46
+msgid "Staff ID number"
+msgstr ""
+
+#: help_desk/forms.py:55
+msgid "Invalid staff ID format"
+msgstr ""
+
+#: help_desk/forms.py:63
+msgid "No active field staff with that ID"
+msgstr ""
+
+#: help_desk/forms.py:94
+msgid "That is not a valid National ID number."
+msgstr ""
+
+#: help_desk/forms.py:236
+msgid "A comment is required"
+msgstr ""
+
+#: help_desk/forms.py:260 help_desk/forms.py:268
+msgid "any"
+msgstr ""
+
+#: help_desk/forms.py:261
+msgid "in progress"
+msgstr ""
+
+#: help_desk/forms.py:262
+msgid "review required"
+msgstr ""
+
+#: help_desk/forms.py:263
+msgid "action required"
+msgstr ""
+
+#: help_desk/forms.py:264
+msgid "complete"
+msgstr ""
+
+#: help_desk/forms.py:269
+msgid "staff"
+msgstr ""
+
+#: help_desk/forms.py:273
+msgid "From date"
+msgstr ""
+
+#: help_desk/forms.py:274
+msgid "To date"
+msgstr ""
+
+#: help_desk/forms.py:275
+msgid "Call status"
+msgstr ""
+
+#: help_desk/forms.py:277
+msgid "Call made by"
+msgstr ""
+
+#: help_desk/forms.py:285
+msgid "The ending date must exceed the beginning date."
+msgstr ""
+
+#: help_desk/forms.py:295
+msgid "Data to show"
+msgstr ""
+
+#: help_desk/forms.py:297
+msgid "Number of calls"
+msgstr ""
+
+#: help_desk/forms.py:298
+msgid "Average length of calls in seconds"
+msgstr ""
+
+#: help_desk/forms.py:305
+msgid "Call outcomes"
+msgstr ""
+
+#: help_desk/models.py:28
+msgid "Previous screen"
+msgstr ""
+
+#: help_desk/models.py:29 help_desk/templates/help_desk/screen.html:9
+msgid "Start from Beginning"
+msgstr ""
+
+#: help_desk/models.py:32
+msgid "No, Caller is a Citizen"
+msgstr ""
+
+#: help_desk/models.py:33
+msgid "Name and ID match"
+msgstr ""
+
+#: help_desk/models.py:34
+msgid "Name and ID do not match"
+msgstr ""
+
+#: help_desk/models.py:35
+msgid "Continue"
+msgstr ""
+
+#: help_desk/models.py:36 help_desk/screens.py:505
+#: help_desk/templates/help_desk/screen.html:57
+msgid "Caller hung up"
+msgstr ""
+
+#: help_desk/models.py:38
+msgid "Unable to Provide"
+msgstr ""
+
+#: help_desk/models.py:39
+msgid "Done"
+msgstr ""
+
+#: help_desk/models.py:132
+msgid "Person has complained about the service."
+msgstr ""
+
+#: help_desk/models.py:133
+msgid "Accidentally unlocked."
+msgstr ""
+
+#: help_desk/models.py:134
+msgid "Person on the end of the phone changes their mind about unlocking."
+msgstr ""
+
+#: help_desk/models.py:135
+msgid "Phone call was harassing. "
+msgstr ""
+
+#: help_desk/models.py:136
+msgid "Other reason, see comments."
+msgstr ""
+
+#: help_desk/models.py:150
+msgid "Mark as seen."
+msgstr ""
+
+#: help_desk/models.py:151
+msgid "Re-lock."
+msgstr ""
+
+#: help_desk/models.py:152
+msgid "Ignore."
+msgstr ""
+
+#: help_desk/models.py:161
+msgid "staff id"
+msgstr ""
+
+#: help_desk/models.py:169
+msgid "suspended"
+msgstr ""
+
+#: help_desk/models.py:173
+msgid "field staff member"
+msgstr ""
+
+#: help_desk/models.py:174
+msgid "field staff members"
+msgstr ""
+
+#: help_desk/models.py:176
+msgid "Can browse field staff"
+msgstr ""
+
+#: help_desk/models.py:177
+msgid "Can read field staff"
+msgstr ""
+
+#: help_desk/models.py:178
+msgid "Can suspend field staff"
+msgstr ""
+
+#: help_desk/models.py:194 voting/models.py:156 voting/models.py:474
+msgid "end time"
+msgstr ""
+
+#: help_desk/models.py:196
+msgid "current screen"
+msgstr ""
+
+#: help_desk/models.py:203
+msgid "operator"
+msgstr ""
+
+#: help_desk/models.py:207
+msgid "field staff"
+msgstr ""
+
+#: help_desk/models.py:228
+msgid "changes increased"
+msgstr ""
+
+#: help_desk/models.py:232
+msgid "Registration of citizen at time of call"
+msgstr ""
+
+#: help_desk/models.py:233 register/models.py:451
+msgid "registration"
+msgstr ""
+
+#: help_desk/models.py:244
+msgid "Not marked for review"
+msgstr ""
+
+#: help_desk/models.py:245
+msgid "Marked for review"
+msgstr ""
+
+#: help_desk/models.py:246
+msgid "Recommendation made"
+msgstr ""
+
+#: help_desk/models.py:250
+msgid "review classification"
+msgstr ""
+
+#: help_desk/models.py:255 help_desk/models.py:533
+msgid "reason marked"
+msgstr ""
+
+#: help_desk/models.py:260 help_desk/models.py:537
+msgid "recommended action"
+msgstr ""
+
+#: help_desk/models.py:279
+msgid "Hung up"
+msgstr ""
+
+#: help_desk/models.py:280
+msgid "Invalid staff ID"
+msgstr ""
+
+#: help_desk/models.py:281
+msgid "Wrong staff name"
+msgstr ""
+
+#: help_desk/models.py:282
+msgid "Wrong staff phone"
+msgstr ""
+
+#: help_desk/models.py:283
+msgid "Invalid NID"
+msgstr ""
+
+#: help_desk/models.py:284
+msgid "Invalid name or birth year"
+msgstr ""
+
+#: help_desk/models.py:285
+msgid "Invalid FRN and mother's name"
+msgstr ""
+
+#: help_desk/models.py:286
+msgid "Not registered"
+msgstr ""
+
+#: help_desk/models.py:287
+msgid "No help needed"
+msgstr ""
+
+#: help_desk/models.py:288
+msgid "No change"
+msgstr ""
+
+#: help_desk/models.py:289
+msgid "Increased changes"
+msgstr ""
+
+#: help_desk/models.py:290
+msgid "Unlocked"
+msgstr ""
+
+#: help_desk/models.py:291
+msgid "Relocked"
+msgstr ""
+
+#: help_desk/models.py:294
+msgid "call outcome"
+msgstr ""
+
+#: help_desk/models.py:300 help_desk/models.py:525
+msgid "case"
+msgstr ""
+
+#: help_desk/models.py:301
+msgid "cases"
+msgstr ""
+
+#: help_desk/models.py:322
+#, python-format
+msgid "Call started %(start_time)s. Operator %(operator)s. "
+msgstr ""
+
+#: help_desk/models.py:326
+#, python-format
+msgid "Citizen is %s. "
+msgstr ""
+
+#: help_desk/models.py:328
+#, python-format
+msgid "Call ended %s. "
+msgstr ""
+
+#: help_desk/models.py:414
+msgid "Complete"
+msgstr ""
+
+#: help_desk/models.py:416 help_desk/views/report_views.py:271
+msgid "In progress"
+msgstr ""
+
+#: help_desk/models.py:489
+msgid "screen record"
+msgstr ""
+
+#: help_desk/models.py:490
+msgid "screen records"
+msgstr ""
+
+#: help_desk/models.py:518
+#: help_desk/templates/help_desk/includes/case_details.html:130
+msgid "Comment"
+msgstr ""
+
+#: help_desk/models.py:519
+msgid "Mark case for review"
+msgstr ""
+
+#: help_desk/models.py:520
+msgid "Recommend action on case"
+msgstr ""
+
+#: help_desk/models.py:521
+msgid "Cancel open re-registration period"
+msgstr ""
+
+#: help_desk/models.py:522
+msgid "Mark case as resolved"
+msgstr ""
+
+#: help_desk/models.py:527
+msgid "kind of update"
+msgstr ""
+
+#: help_desk/models.py:529 subscriptions/models.py:13
+msgid "user"
+msgstr ""
+
+#: help_desk/models.py:531
+msgid "timestamp"
+msgstr ""
+
+#: help_desk/models.py:540
+msgid "comment"
+msgstr ""
+
+#: help_desk/models.py:544
+msgid "update"
+msgstr ""
+
+#: help_desk/models.py:545
+msgid "updates"
+msgstr ""
+
+#: help_desk/screens.py:129 help_desk/screens.py:216
+msgid "Redirecting to current screen for this case."
+msgstr ""
+
+#: help_desk/screens.py:188
+msgid ""
+"The voter had no more changes allowed from that number. The allowed changes "
+"have been increased."
+msgstr ""
+
+#: help_desk/screens.py:288
+msgid "The call has ended."
+msgstr ""
+
+#: help_desk/screens.py:297
+#: libya_elections/templates/registration/login.html:4
+#: libya_elections/templates/registration/login.html:5
+msgid "Welcome"
+msgstr ""
+
+#: help_desk/screens.py:310
+msgid "Ask Staff ID"
+msgstr ""
+
+#: help_desk/screens.py:325
+msgid "Verify Staff Name"
+msgstr ""
+
+#: help_desk/screens.py:339
+msgid "Verify Staff Phone"
+msgstr ""
+
+#: help_desk/screens.py:353
+msgid "Get National ID"
+msgstr ""
+
+#: help_desk/screens.py:382
+msgid "Verify Name and Birth Year"
+msgstr ""
+
+#: help_desk/screens.py:397
+msgid "Citizen is not registered"
+msgstr ""
+
+#: help_desk/screens.py:408
+msgid "Citizen is registered"
+msgstr ""
+
+#: help_desk/screens.py:422
+msgid "Ask if can change from same phone"
+msgstr ""
+
+#: help_desk/screens.py:436
+msgid "Verify Family Book Record Number or Mother's Name"
+msgstr ""
+
+#: help_desk/screens.py:458
+msgid "How To Change Registration"
+msgstr ""
+
+#: help_desk/screens.py:475
+msgid "Period to Change Registration from another phone has started"
+msgstr ""
+
+#: help_desk/screens.py:489
+#, python-brace-format
+msgid ""
+"The phone number {phone_number} cannot be used for any more registrations."
+msgstr ""
+
+#: help_desk/screens.py:493
+#, python-brace-format
+msgid ""
+"The phone number {phone_number} can be used for {number} more registration."
+msgid_plural ""
+"The phone number {phone_number} can be used for {number} more registrations."
+msgstr[0] ""
+msgstr[1] ""
+
+#: help_desk/screens.py:516
+msgid "Citizen is blocked from voting"
+msgstr ""
+
+#: help_desk/screens.py:527
+msgid "Good Bye"
+msgstr ""
+
+#: help_desk/templates/help_desk/base.html:4
+#: help_desk/templates/help_desk/base.html:10
+#: libya_site/templates/libya_site/staff.html:13
+msgid "Caller Assistance"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/case_detail.html:4
+#: help_desk/templates/help_desk/cases/case_detail.html:7
+msgid "Call Report"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/case_detail.html:19
+msgid "Re-lock"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/case_detail.html:24
+msgid "Mark or comment"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/case_detail.html:26
+msgid "Return to cases"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/update_form.html:4
+msgid "LibyaVotes Help Desk - Update Case"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/update_form.html:7
+msgid "Help Desk Field Case"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/update_form.html:16
+msgid "Update Form"
+msgstr ""
+
+#: help_desk/templates/help_desk/cases/update_form.html:23
+msgid "Return to case"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:3
+msgid "Case"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:5
+msgid "Operator:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:8
+msgid "Case number:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:11
+msgid "Start time:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:15
+msgid "End time:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:20
+msgid "Outcome:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:25
+msgid "Review status:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:29
+msgid "Reason for review:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:34
+msgid "Recommended action:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:42
+#: help_desk/templates/help_desk/includes/case_details.html:55
+msgid "Name:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:45
+msgid "Staff ID:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:48
+#: help_desk/templates/help_desk/includes/case_details.html:88
+msgid "Phone number:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:53
+msgid "Citizen"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:58
+msgid "National ID:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:61
+msgid "Birth date:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:64
+msgid "Gender:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:67
+msgid "Family Book Record Number:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:70
+msgid "Mother:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:76
+msgid "Blocked:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:77
+#: help_desk/templates/help_desk/screens/12_blocked.html:3
+msgid "The citizen is blocked from registering or voting."
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:80
+#: register/models.py:543 vr_dashboard/templates/vr_dashboard/base.html:36
+msgid "Registration"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:82
+msgid "Center:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:85
+msgid "Office area:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:92
+msgid "Unlocked until:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:95
+msgid "Changes remaining:"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:99
+msgid "Changes have been increased"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:108
+msgid "Updates"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:112
+msgid "Timestamp"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:115
+#: help_desk/templates/help_desk/staff/search.html:48
+#: subscriptions/views.py:16 subscriptions/views.py:35
+msgid "User"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/case_details.html:118
+msgid "Type of Update"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/pagination.html:6
+#: httptester/templates/httptester/table.html:20
+msgid "Previous"
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/pagination.html:10
+#, python-format
+msgid "Page %(number)s of %(pages)s."
+msgstr ""
+
+#: help_desk/templates/help_desk/includes/pagination.html:16
+#: httptester/templates/httptester/table.html:24
+msgid "Next"
+msgstr ""
+
+#: help_desk/templates/help_desk/main.html:8
+msgid "Calls in progress"
+msgstr ""
+
+#: help_desk/templates/help_desk/main.html:16
+msgid "Press the start new call button to begin caller assistance."
+msgstr ""
+
+#: help_desk/templates/help_desk/main.html:21
+msgid "New call received"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/base.html:11
+#: help_desk/templates/help_desk/reports/cases.html:4
+#: libya_site/templates/libya_site/staff.html:14
+msgid "Call Reports"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/base.html:55
+msgid "There are no cases which match your query."
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/cases.html:13
+msgid "Case #"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/cases.html:14 voting/forms.py:38
+msgid "Start time"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/cases.html:15
+msgid "State"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/cases.html:18
+msgid "Outcome"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/cases.html:19 voting/forms.py:44
+msgid "End time"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/dashboard.html:6
+msgid "Search records"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/dashboard.html:10
+#: help_desk/templates/help_desk/staff/search.html:17
+#: libya_site/templates/bread/browse.html:44
+msgid "Search in:"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/dashboard.html:11
+msgid ""
+"operator name, username, or email, field staff name, phone number, or staff "
+"ID, citizen name, national ID, or registry number, or registration center "
+"name or number."
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/dashboard.html:32
+msgid "Apply Filters"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/tab.html:5
+msgid "Individual cases"
+msgstr ""
+
+#: help_desk/templates/help_desk/reports/tab.html:6
+msgid "Statistics"
+msgstr ""
+
+#: help_desk/templates/help_desk/screen.html:12
+msgid "Previous Screen"
+msgstr ""
+
+#: help_desk/templates/help_desk/screen.html:17
+#: help_desk/templates/help_desk/screens/3_check_staff_name.html:12
+#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:9
+msgid "Staff Name"
+msgstr ""
+
+#: help_desk/templates/help_desk/screen.html:18
+#: help_desk/templates/help_desk/screen.html:21
+#: help_desk/templates/help_desk/screen.html:27
+#: help_desk/templates/help_desk/screen.html:30
+msgid "(not validated)"
+msgstr ""
+
+#: help_desk/templates/help_desk/screen.html:26
+#: help_desk/templates/help_desk/screens/3_check_staff_name.html:8
+#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:5
+msgid "Staff ID"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/10_check_frn.html:9
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:28
+msgid "Mother's Name"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/10_check_frn.html:18
+msgid "Ask the citizen"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/10_check_frn.html:22
+msgid ""
+"Provide either the citizen's Family Book Record Number or the citizen's "
+"Mother's Name."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/10_check_frn.html:24
+msgid "Provide either your Family Book Record Number or your Mother's Name."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/10_check_frn.html:28
+msgid "Did they provide either correctly?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/11_change_started.html:3
+msgid "Tell the caller"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/11_change_started.html:6
+msgid ""
+"The citizen has twelve hours, starting now, to change their registration "
+"using any phone."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/11_change_started.html:8
+msgid ""
+"You have twelve hours, starting now, to change your registration using any "
+"phone."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/11_change_started.html:12
+msgid "The procedure: SMS 'NID#PC' to 10010"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/11_change_started.html:15
+msgid ""
+"Please advise the citizen to use their own phone (not a staff or relative’s "
+"phone)."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/11_change_started.html:23
+msgid ""
+"If the citizen wants to check whether another phone number can still be used "
+"for registrations, enter it here"
+msgstr ""
+
+#. Translators: The button with this label checks if a phone number can be used for registrations
+#: help_desk/templates/help_desk/screens/11_change_started.html:26
+msgid "Check number"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:3
+msgid "Greet the caller"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:4
+msgid ""
+"Hello, this is the HNEC Voter Registration Help Desk. I can assist you with "
+"a voter registration change."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:6
+#: help_desk/templates/help_desk/screens/2_get_staff_id.html:3
+#: help_desk/templates/help_desk/screens/3_check_staff_name.html:3
+#: help_desk/templates/help_desk/screens/4_get_nid.html:3
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:3
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:32
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:13
+#: help_desk/templates/help_desk/screens/99_good_bye.html:3
+msgid "Say to the caller"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:7
+msgid "Are you an HNEC field staff member?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/2_get_staff_id.html:4
+msgid "Please provide me with your Staff ID number."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/3_check_staff_name.html:4
+msgid "Please provide your full name."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/3_check_staff_name.html:20
+msgid "Give the caller three attempts to provide correct name as seen above."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:21
+msgid "Is the caller using the phone number seen above?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/4_get_nid.html:5
+msgid "Please provide the citizen's National Identification Number."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/4_get_nid.html:7
+msgid "Please provide your National Identification Number."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:5
+msgid ""
+"To help us verify identification, please provide the citizen's name and "
+"birthdate."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:7
+msgid ""
+"To help us verify identification, please provide your name and birthdate."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:12
+msgid "Citizen ID"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:16
+msgid "Citizen Name"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:20
+msgid "Birthdate"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:36
+msgid "Does the caller's information match the citizen's above?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:38
+msgid ""
+"You may also use the Mother's Name or the Family Book Record Number to "
+"verify the citizen's identification."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/6_not_registered.html:3
+msgid "The citizen is not registered. Tell them how to register if they want."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:3
+msgid "The citizen's registration information"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:7
+msgid "Registration Center"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:15
+#: register/views.py:511
+#: vr_dashboard/templates/vr_dashboard/election_day.html:51
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:16
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:8
+#: vr_dashboard/templates/vr_dashboard/election_day_preliminary.html:41
+#: vr_dashboard/templates/vr_dashboard/offices.html:17
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:18
+#: vr_dashboard/templates/vr_dashboard/weekly.html:45
+#: vr_dashboard/views/views.py:821 vr_dashboard/views/views.py:977
+#: vr_dashboard/views/views.py:1141
+msgid "Office"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:22
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:5
+msgid "Phone number associated with citizen's registration"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:34
+msgid ""
+"Does the citizen wish to change their centre or update the phone number "
+"associated with their registration?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/7_ask_to_change.html:36
+msgid ""
+"Do you wish to change your centre or update the phone number assoicated with "
+"your registration?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:15
+msgid "Does the citizen want to use that same phone to make the change?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:17
+msgid "Do you want to use that same phone to make the change?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:21
+msgid ""
+"(also select no if they wish to update the phone number associated with "
+"their registration)"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:25
+msgid "Please advise the citizen"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:26
+#, python-format
+msgid ""
+"Phone number %(number)s has been used for the maximum number of "
+"registrations."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:29
+msgid ""
+"If the citizen registers from another phone, they might not be able to "
+"change their registration back to this phone."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/99_good_bye.html:5
+msgid "Do you have any other questions that I can answer?"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/9_how_to_change.html:5
+msgid "Changes Remaining"
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/9_how_to_change.html:12
+msgid "Tell the caller how to change their registration."
+msgstr ""
+
+#: help_desk/templates/help_desk/screens/hung_up.html:3
+msgid "This call case was closed. Press done to return to the start."
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/create.html:4
+#: help_desk/templates/help_desk/staff/search.html:4
+msgid "Manage Help Desk Staff"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/create.html:7
+msgid "Create Help Desk Staff User"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:4
+#: help_desk/templates/help_desk/staff/list.html:8
+#: libya_site/templates/libya_site/staff.html:15
+msgid "Help Desk Staff"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:11
+msgid "Create new account"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:12
+msgid "Make an existing account a help desk account"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:27 staff/views.py:85
+msgid "Username"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:28
+msgid "Full Name"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:29
+#: help_desk/templates/help_desk/staff/search.html:49
+msgid "Groups"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:30
+msgid "Date Joined"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/list.html:61
+msgid "Return to help desk"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:7
+msgid "Search for users"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:13
+msgid "Search users"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:18
+msgid "Name, Email, or Username"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:24
+#: libya_site/templates/bread/browse.html:74
+msgid "Search"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:35
+msgid "Click on any user in the results to grant them Help Desk permissions."
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:43
+msgid "Search results"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/search.html:76
+msgid "Return to staff list"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/set_password.html:4
+msgid "Set Help Desk Staff Password"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/set_password.html:7
+#, python-format
+msgid "Setting password for user %(user)s."
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/update.html:4
+#: help_desk/templates/help_desk/staff/update.html:7
+msgid "Update Help Desk Staff"
+msgstr ""
+
+#: help_desk/templates/help_desk/staff/update.html:20
+msgid "Set password"
+msgstr ""
+
+#: help_desk/templatetags/help_desk_tags.py:59
+#: help_desk/templatetags/help_desk_tags.py:65
+#: help_desk/templatetags/help_desk_tags.py:71
+msgid "Past 12 Months"
+msgstr ""
+
+#: help_desk/templatetags/help_desk_tags.py:74
+#: help_desk/templatetags/help_desk_tags.py:79
+msgid "Years"
+msgstr ""
+
+#: help_desk/templatetags/help_desk_tags.py:87
+#: help_desk/templatetags/help_desk_tags.py:92
+msgid "Quarters (Calendar Year)"
+msgstr ""
+
+#: help_desk/views/fieldstaff_views.py:27
+msgid "Staff Id, Name, or Phone Number"
+msgstr ""
+
+#: help_desk/views/report_views.py:66 libya_elections/libya_bread.py:101
+msgid "None"
+msgstr ""
+
+#: help_desk/views/report_views.py:243
+#: vr_dashboard/templates/vr_dashboard/national.html:12
+#: vr_dashboard/templates/vr_dashboard/national.html:19
+#: vr_dashboard/templates/vr_dashboard/national.html:22
+#: vr_dashboard/templates/vr_dashboard/offices.html:14
+#: vr_dashboard/templates/vr_dashboard/offices.html:20
+#: vr_dashboard/templates/vr_dashboard/offices.html:24
+#: vr_dashboard/templates/vr_dashboard/offices.html:48
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:21
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:24
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:55
+#: vr_dashboard/templates/vr_dashboard/regions.html:13
+#: vr_dashboard/templates/vr_dashboard/regions.html:20
+#: vr_dashboard/templates/vr_dashboard/regions.html:23
+#: vr_dashboard/templates/vr_dashboard/regions.html:56
+#: vr_dashboard/templates/vr_dashboard/sms.html:14
+#: vr_dashboard/templates/vr_dashboard/sms.html:55
+#: vr_dashboard/templates/vr_dashboard/weekly.html:12
+#: vr_dashboard/templates/vr_dashboard/weekly.html:54
+#: vr_dashboard/templates/vr_dashboard/weekly.html:77
+#: vr_dashboard/views/views.py:760
+msgid "Total"
+msgstr ""
+
+#: help_desk/views/report_views.py:247
+#: vr_dashboard/templates/vr_dashboard/election_day_preliminary.html:17
+msgid "Overall"
+msgstr ""
+
+#: help_desk/views/report_views.py:273
+msgid "Number of calls by outcome"
+msgstr ""
+
+#: help_desk/views/report_views.py:275
+msgid "Average length of calls in seconds by outcome"
+msgstr ""
+
+#: httptester/forms.py:12
+msgid "Shortcode"
+msgstr ""
+
+#: httptester/forms.py:18
+msgid "Multiple Messages"
+msgstr ""
+
+#: httptester/forms.py:20
+msgid ""
+"Alternatively, upload a <em>plain text file</em> containing a single message "
+"per line."
+msgstr ""
+
+#: httptester/forms.py:27
+msgid "Phone number must be all numeric."
+msgstr ""
+
+#: httptester/templates/httptester/index.html:4
+#: httptester/templates/httptester/index.html:10
+#: libya_site/templates/libya_site/staff.html:51
+msgid "Message Tester"
+msgstr ""
+
+#: httptester/templates/httptester/index.html:59
+msgid "Clear messages from this phone"
+msgstr ""
+
+#: httptester/templates/httptester/index.html:60
+msgid "Clear all messages"
+msgstr ""
+
+#: httptester/templates/httptester/index.html:62
+msgid "You haven't sent or received any test messages yet."
+msgstr ""
+
+#: httptester/templates/httptester/index.html:67
+msgid "Bulk Upload"
+msgstr ""
+
+#: httptester/templates/httptester/index.html:79
+msgid "Upload and Send"
+msgstr ""
+
+#: httptester/templates/httptester/table.html:10
+#, python-format
+msgid "%(count)s of %(total)s"
+msgstr ""
+
+#: httptester/templates/httptester/table.html:16
+#, python-format
+msgid "Page %(current)s of %(total)s"
+msgstr ""
+
+#: httptester/views.py:64
+msgid "Cleared all messages"
+msgstr ""
+
+#: httptester/views.py:67
+#, python-brace-format
+msgid "Cleared messages from {identity}"
+msgstr ""
+
+#: httptester/views.py:74
+msgid "Sent bulk messages"
+msgstr ""
+
+#: httptester/views.py:80
+msgid "Sent message"
+msgstr ""
+
+#: libya_elections/abstract.py:49
+msgid "deleted"
+msgstr ""
+
+#: libya_elections/abstract.py:76
+msgid "modification date"
+msgstr ""
+
+#: libya_elections/abstract.py:126
+msgid "archive time"
+msgstr ""
+
+#: libya_elections/abstract.py:130
+msgid "If non-NULL, from this time on, this record is no longer in effect."
+msgstr ""
+
+#: libya_elections/admin_models.py:17 register/admin.py:77
+#, python-format
+msgid "Permanently delete selected %(verbose_name_plural)s."
+msgstr ""
+
+#: libya_elections/admin_site.py:41
+msgid "Permission Denied."
+msgstr ""
+
+#: libya_elections/constants.py:21
+#: vr_dashboard/templates/vr_dashboard/national.html:18
+#: vr_dashboard/templates/vr_dashboard/national.html:21
+#: vr_dashboard/templates/vr_dashboard/offices.html:19
+#: vr_dashboard/templates/vr_dashboard/offices.html:21
+#: vr_dashboard/templates/vr_dashboard/offices.html:23
+#: vr_dashboard/templates/vr_dashboard/offices.html:25
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:20
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:23
+#: vr_dashboard/templates/vr_dashboard/regions.html:19
+#: vr_dashboard/templates/vr_dashboard/regions.html:22
+#: vr_dashboard/templates/vr_dashboard/weekly.html:53
+#: vr_dashboard/templates/vr_dashboard/weekly.html:109
+msgid "Female"
+msgstr ""
+
+#: libya_elections/constants.py:22
+#: vr_dashboard/templates/vr_dashboard/national.html:17
+#: vr_dashboard/templates/vr_dashboard/national.html:20
+#: vr_dashboard/templates/vr_dashboard/offices.html:18
+#: vr_dashboard/templates/vr_dashboard/offices.html:22
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:19
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:22
+#: vr_dashboard/templates/vr_dashboard/regions.html:18
+#: vr_dashboard/templates/vr_dashboard/regions.html:21
+#: vr_dashboard/templates/vr_dashboard/weekly.html:105
+msgid "Male"
+msgstr ""
+
+#: libya_elections/constants.py:23
+msgid "Unisex"
+msgstr ""
+
+#: libya_elections/constants.py:57
+msgid ""
+"Please enter a valid phone number (218xxxxxxxxx or 88216xxxxxxxx) without "
+"punctuation or spaces."
+msgstr ""
+
+#: libya_elections/settings/base.py:47
+#: text_messages/templates/text_messages/messagetext_list.html:29
+#: text_messages/templates/text_messages/messagetext_list.html:33
+msgid "Arabic"
+msgstr ""
+
+#: libya_elections/settings/base.py:48 libya_elections/tests/test_utils.py:137
+#: text_messages/templates/text_messages/messagetext_list.html:30
+#: text_messages/templates/text_messages/messagetext_list.html:32
+msgid "English"
+msgstr ""
+
+#: libya_elections/templates/404.html:23
+msgid ""
+"<h1>Not found <span>:(</span></h1> <p>Sorry, but the page you were trying to "
+"view does not exist.</p> <p>It looks like this was the result of either:</p> "
+"<ul> <li>a mistyped address</li> <li>an out-of-date link</li> </ul>"
+msgstr ""
+
+#: libya_elections/templates/500.html:23
+msgid ""
+"<h1>Server Error <span>:(</span></h1> <p>Something has gone horribly wrong.</"
+"p> <p>We've notified our admins and they won't rest until it is fixed.</p>"
+msgstr ""
+
+#: libya_elections/templates/registration/activate.html:4
+#: libya_elections/templates/registration/activate.html:5
+msgid "Activation Error"
+msgstr ""
+
+#: libya_elections/templates/registration/activate.html:8
+msgid "Account activation failed."
+msgstr ""
+
+#: libya_elections/templates/registration/activation_email.txt:1
+#, python-format
+msgid ""
+"\n"
+"This is an automatic email from the Libyan High National Election\n"
+"Commission's online voter check.\n"
+"\n"
+"Please click on the link below to verify your email address:\n"
+"https://%(site_domain)s%(activation_url)s\n"
+"\n"
+"Sincerely,\n"
+"The Libyan High National Election Commission\n"
+msgstr ""
+
+#: libya_elections/templates/registration/activation_email_subject.txt:1
+msgid "Activate your LibyaVotes account"
+msgstr ""
+
+#: libya_elections/templates/registration/login.html:12
+msgid ""
+"To check your voter registration information, you need an account. If you "
+"have an account, please log in below. To create a new account, click the "
+"button below."
+msgstr ""
+
+#: libya_elections/templates/registration/login.html:32
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+
+#: libya_elections/templates/registration/login.html:38
+#: libya_elections/templates/registration/password_reset_complete.html:12
+#: libya_site/templates/libya_site/base.html:41
+msgid "Log in"
+msgstr ""
+
+#: libya_elections/templates/registration/login.html:41
+msgid "Forgotten your username or password?"
+msgstr ""
+
+#: libya_elections/templates/registration/login.html:46
+msgid "Need to create an account?"
+msgstr ""
+
+#: libya_elections/templates/registration/password_change_done.html:4
+#: libya_elections/templates/registration/password_change_done.html:5
+msgid "Password change successful"
+msgstr ""
+
+#: libya_elections/templates/registration/password_change_done.html:8
+msgid "Your password was changed."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_complete.html:4
+#: libya_elections/templates/registration/password_reset_complete.html:5
+msgid "Password reset complete"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_complete.html:8
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:4
+#: libya_elections/templates/registration/password_reset_form.html:4
+#: libya_elections/templates/registration/password_reset_form.html:5
+msgid "Password reset"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:5
+msgid "Enter new password"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:5
+msgid "Password reset unsuccessful"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:9
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:21
+msgid "Confirm password:"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:29
+msgid "Change my password"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_confirm.html:32
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_done.html:4
+#: libya_elections/templates/registration/password_reset_done.html:5
+msgid "Password reset successful"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_done.html:8
+msgid ""
+"We've emailed you instructions for setting your password to the email "
+"address you submitted. You should be receiving it shortly."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_form.html:8
+msgid ""
+"Forgotten your username or password? Enter your email address below, and "
+"we'll email instructions for setting a new password. Your username will be "
+"included in that email."
+msgstr ""
+
+#: libya_elections/templates/registration/password_reset_form.html:21
+msgid "Reset my password"
+msgstr ""
+
+#: libya_elections/templates/registration/registration_complete.html:4
+#: libya_elections/templates/registration/registration_complete.html:5
+msgid "Check your email account"
+msgstr ""
+
+#: libya_elections/templates/registration/registration_complete.html:8
+msgid ""
+"You will receive an email and will have to click a link in that email to "
+"complete your registration."
+msgstr ""
+
+#: libya_elections/templates/registration/registration_form.html:4
+msgid "LibyaVotes: Register an account"
+msgstr ""
+
+#: libya_elections/templates/registration/registration_form.html:5
+msgid "Fill in this form to create an account"
+msgstr ""
+
+#: libya_elections/utils.py:56
+#, python-brace-format
+msgid "Duplicate value for {fieldname}"
+msgstr ""
+
+#: libya_site/forms.py:37
+msgid "A National ID is a 12-digit number."
+msgstr ""
+
+#: libya_site/forms.py:38
+msgid "A valid National ID is at most 12 digits long."
+msgstr ""
+
+#: libya_site/forms.py:39
+msgid "A valid National ID starts with 1 or 2."
+msgstr ""
+
+#: libya_site/forms.py:58
+msgid "Please type these numbers"
+msgstr ""
+
+#: libya_site/templates/admin/base_site.html:15
+#: libya_site/templates/admin/base_site.html:18
+msgid "Libya Votes Administration"
+msgstr ""
+
+#: libya_site/templates/admin/base_site.html:23
+#: libya_site/templates/libya_site/staff.html:63
+msgid "Staff Home"
+msgstr ""
+
+#: libya_site/templates/admin/base_site.html:27
+msgid "Documentation"
+msgstr ""
+
+#: libya_site/templates/admin/base_site.html:30
+msgid "Change password"
+msgstr ""
+
+#: libya_site/templates/admin/base_site.html:32
+#: libya_site/templates/libya_site/base.html:39
+msgid "Log out"
+msgstr ""
+
+#: libya_site/templates/bread/browse.html:19
+#: register/templates/register/blacklist_browse.html:11
+#: register/templates/register/whitelist_browse.html:11
+msgid "Add"
+msgstr ""
+
+#: libya_site/templates/bread/browse.html:40
+#, python-format
+msgid "Search %(names)s"
+msgstr ""
+
+#: libya_site/templates/bread/browse.html:45
+#, python-format
+msgid "%(search_terms)s"
+msgstr ""
+
+#: libya_site/templates/bread/delete.html:4
+#: libya_site/templates/bread/delete.html:8
+#, python-format
+msgid "Delete %(name)s"
+msgstr ""
+
+#: libya_site/templates/bread/delete.html:16
+#, python-format
+msgid "Really delete %(name)s?"
+msgstr ""
+
+#: libya_site/templates/bread/edit.html:4
+#: libya_site/templates/bread/edit.html:19
+#, python-format
+msgid "Edit %(name)s"
+msgstr ""
+
+#: libya_site/templates/bread/edit.html:11
+msgid "Please correct the errors in the form below."
+msgstr ""
+
+#: libya_site/templates/bread/label_value_read.html:4
+#: libya_site/templates/bread/label_value_read.html:8
+#, python-format
+msgid "Read %(name)s"
+msgstr ""
+
+#: libya_site/templates/bread/label_value_read.html:34
+#: libya_site/templates/libya_site/check_registration_results.html:26
+msgid "Back"
+msgstr ""
+
+#: libya_site/templates/libya_site/base.html:5
+msgid "LibyaVotes Home"
+msgstr ""
+
+#: libya_site/templates/libya_site/base.html:31
+#: vr_dashboard/templates/vr_dashboard/base.html:8
+msgid "Registration Statistics"
+msgstr ""
+
+#: libya_site/templates/libya_site/base.html:32
+msgid "Check Registration"
+msgstr ""
+
+#: libya_site/templates/libya_site/check_registration.html:9
+#: libya_site/templates/libya_site/check_registration_results.html:7
+msgid "Look up registration information"
+msgstr ""
+
+#: libya_site/templates/libya_site/check_registration_results.html:18
+#, python-format
+msgid "%(citizen)s is registered at voting center %(name)s with code %(code)s."
+msgstr ""
+
+#: libya_site/templates/libya_site/check_registration_results.html:22
+#, python-format
+msgid "%(citizen)s is not registered."
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:12
+msgid "Help Desk"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:16
+msgid "Field Staff Members"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:21
+msgid "Election Management"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:22
+msgid "Elections, Ballots, &amp; Candidates"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:23
+msgid "Registration Periods"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:24
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:4
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:9
+msgid "Polling Center Monitoring"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:25
+#: rollgen/templates/rollgen/overview.html:5
+#: rollgen/templates/rollgen/overview.html:10
+msgid "Voter Rolls"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:30
+msgid "Registration Management"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:31
+msgid "Registrations"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:32
+#: register/templates/register/tab.html:7
+msgid "Registration Centers"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:33
+msgid "Citizens"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:38
+msgid "SMS Messaging"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:39
+msgid "Broadcasts"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:40
+#: register/templates/polling_reports/tab.html:6
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:94
+msgid "Staff Phones"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:41
+#: register/templates/register/sms_browse.html:4
+#: register/templates/register/sms_browse.html:7
+msgid "Messages"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:42 subscriptions/models.py:11
+msgid "SMS Discrepancies"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:47
+msgid "Admin"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:48
+msgid "Users &amp; Permissions"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:49
+#: text_messages/templates/text_messages/messagetext_list.html:4
+#: text_messages/templates/text_messages/messagetext_list.html:8
+msgid "Translations"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:67
+msgid "Welcome staff member!"
+msgstr ""
+
+#: libya_site/templates/libya_site/staff.html:70
+msgid "Click a link above to administer the LibyaVotes staff site."
+msgstr ""
+
+#: libya_site/views.py:36
+msgid "Your account has been activated.  You can login now."
+msgstr ""
+
+#: polling_reports/models.py:17 polling_reports/models.py:51
+#: polling_reports/models.py:90 polling_reports/models.py:115
+#: reporting_api/models.py:8 rollgen/models.py:156 voting/models.py:130
+#: voting/models.py:187 voting/models.py:367
+msgid "election"
+msgstr ""
+
+#: polling_reports/models.py:20 polling_reports/models.py:54
+#: polling_reports/models.py:92
+msgid "Received from this phone"
+msgstr ""
+
+#: polling_reports/models.py:24
+msgid "period number"
+msgstr ""
+
+#: polling_reports/models.py:31
+msgid "number of voters"
+msgstr ""
+
+#: polling_reports/models.py:38
+msgid "polling report"
+msgstr ""
+
+#: polling_reports/models.py:39
+msgid "polling reports"
+msgstr ""
+
+#: polling_reports/models.py:41
+msgid "Can read polling report"
+msgstr ""
+
+#: polling_reports/models.py:42
+msgid "Can browse polling reports"
+msgstr ""
+
+#: polling_reports/models.py:59
+msgid "center open record"
+msgstr ""
+
+#: polling_reports/models.py:60
+msgid "center open records"
+msgstr ""
+
+#: polling_reports/models.py:62
+msgid "Can read center open record"
+msgstr ""
+
+#: polling_reports/models.py:63
+msgid "Can browse center open record"
+msgstr ""
+
+#: polling_reports/models.py:79
+msgid "staff phone"
+msgstr ""
+
+#: polling_reports/models.py:80
+msgid "staff phones"
+msgstr ""
+
+#: polling_reports/models.py:82
+msgid "Can read staff phone"
+msgstr ""
+
+#: polling_reports/models.py:83
+msgid "Can browse staff phones"
+msgstr ""
+
+#: polling_reports/models.py:97
+msgid "option"
+msgstr ""
+
+#: polling_reports/models.py:99
+msgid "number of votes"
+msgstr ""
+
+#: polling_reports/models.py:102
+msgid "preliminary vote count"
+msgstr ""
+
+#: polling_reports/models.py:103
+msgid "preliminary vote counts"
+msgstr ""
+
+#: polling_reports/models.py:106
+msgid "Can read preliminary vote count"
+msgstr ""
+
+#: polling_reports/models.py:107
+msgid "Can browse preliminary vote counts"
+msgstr ""
+
+#: polling_reports/models.py:120
+#, python-brace-format
+msgid "{center} closed for {election}"
+msgstr ""
+
+#: polling_reports/models.py:125
+msgid "center closed for election"
+msgstr ""
+
+#: polling_reports/models.py:126
+msgid "centers closed for election"
+msgstr ""
+
+#: polling_reports/models.py:128
+msgid "Can read center closed for an election"
+msgstr ""
+
+#: polling_reports/models.py:129
+msgid "Can browse centers closed for an election"
+msgstr ""
+
+#: register/admin.py:49
+msgid ""
+"The following centers are copied by other centers and cannot be deleted: {}. "
+"No centers were deleted."
+msgstr ""
+
+#: register/admin.py:68 register/views.py:536
+msgid "No copies"
+msgstr ""
+
+#: register/admin.py:119
+msgid "archived"
+msgstr ""
+
+#: register/forms.py:20
+msgid "CSV File"
+msgstr ""
+
+#: register/forms.py:81 register/models.py:297
+msgid "Copy centres are read-only."
+msgstr ""
+
+#: register/forms.py:89
+msgid "Newlines are not allowed."
+msgstr ""
+
+#: register/forms.py:110
+#, python-brace-format
+msgid "That is not a valid center_type. Valid choices are {choice_names}."
+msgstr ""
+
+#: register/forms.py:126
+msgid "Copy centre does not exist."
+msgstr ""
+
+#: register/forms.py:144
+msgid "Office does not exist."
+msgstr ""
+
+#: register/forms.py:158
+msgid "Constituency does not exist."
+msgstr ""
+
+#: register/forms.py:172
+msgid "Subconstituency does not exist."
+msgstr ""
+
+#: register/forms.py:203
+msgid "Upload a text file, one phone number per line."
+msgstr ""
+
+#: register/models.py:44
+msgid "blocked"
+msgstr ""
+
+#: register/models.py:82
+msgid "person"
+msgstr ""
+
+#: register/models.py:83
+msgid "people"
+msgstr ""
+
+#: register/models.py:91
+msgid "id"
+msgstr ""
+
+#: register/models.py:92 voting/models.py:145 voting/models.py:432
+msgid "name (English)"
+msgstr ""
+
+#: register/models.py:93 voting/models.py:146 voting/models.py:433
+msgid "name (Arabic)"
+msgstr ""
+
+#: register/models.py:129
+msgid "No Region"
+msgstr ""
+
+#: register/models.py:130
+msgid "West"
+msgstr ""
+
+#: register/models.py:131
+msgid "South"
+msgstr ""
+
+#: register/models.py:132
+msgid "East"
+msgstr ""
+
+#: register/models.py:142
+msgid "region"
+msgstr ""
+
+#: register/models.py:145 register/models.py:242
+msgid "office"
+msgstr ""
+
+#: register/models.py:146
+msgid "offices"
+msgstr ""
+
+#: register/models.py:166 register/models.py:244
+msgid "constituency"
+msgstr ""
+
+#: register/models.py:167
+msgid "constituencies"
+msgstr ""
+
+#: register/models.py:180 register/models.py:247
+msgid "subconstituency"
+msgstr ""
+
+#: register/models.py:181 voting/models.py:369
+msgid "subconstituencies"
+msgstr ""
+
+#: register/models.py:206
+msgid "General"
+msgstr ""
+
+#: register/models.py:207
+msgid "Displaced"
+msgstr ""
+
+#: register/models.py:208
+msgid "Oil"
+msgstr ""
+
+#: register/models.py:209
+msgid "Disability"
+msgstr ""
+
+#: register/models.py:210
+msgid "Revolution"
+msgstr ""
+
+#: register/models.py:211
+msgid "Copy"
+msgstr ""
+
+#: register/models.py:212
+msgid "Split"
+msgstr ""
+
+#: register/models.py:238
+msgid "center id"
+msgstr ""
+
+#: register/models.py:248
+msgid "mahalla name"
+msgstr ""
+
+#: register/models.py:249
+msgid "village name"
+msgstr ""
+
+#: register/models.py:250
+msgid "type"
+msgstr ""
+
+#: register/models.py:252
+msgid "latitude"
+msgstr ""
+
+#: register/models.py:257
+msgid "longitude"
+msgstr ""
+
+#: register/models.py:266
+msgid "copy of"
+msgstr ""
+
+#: register/models.py:273
+msgid "support for registrations"
+msgstr ""
+
+#: register/models.py:287
+msgid "Copy centre type must be \"copy\"."
+msgstr ""
+
+#: register/models.py:302
+msgid "A centre may not be changed to a copy centre."
+msgstr ""
+
+#: register/models.py:307
+msgid "A copy centre cannot copy another copy centre."
+msgstr ""
+
+#: register/models.py:311
+#, python-brace-format
+msgid "Copy centre already has the maximum number of copies ({n_max})."
+msgstr ""
+
+#: register/models.py:315
+msgid "Centre type \"copy\" requires copy centre information."
+msgstr ""
+
+#: register/models.py:320
+msgid "Either set both latitude and longitude or neither."
+msgstr ""
+
+#: register/models.py:324
+msgid "Split centers must be associated with subconstituency {}."
+msgstr ""
+
+#: register/models.py:329
+msgid "Only split centers may be associated with subconstituency {}."
+msgstr ""
+
+#: register/models.py:335
+msgid "registration centers"
+msgstr ""
+
+#: register/models.py:418
+msgid "change count"
+msgstr ""
+
+#: register/models.py:420
+msgid ""
+"The number of times this registration has been changed after it was "
+"initially made (original registration not counted). "
+msgstr ""
+
+#: register/models.py:424
+msgid "max changes"
+msgstr ""
+
+#: register/models.py:426
+msgid ""
+"The number of times this registration is allowed to be changed after it was "
+"initially made. Defaults to 3, but can be increased."
+msgstr ""
+
+#: register/models.py:430
+msgid "repeat count"
+msgstr ""
+
+#: register/models.py:432
+msgid ""
+"The number of times messages have been received for this exact registration. "
+"The first message is counted, so the 2nd time we see the same registration, "
+"the count becomes 2, and so forth. This is reset each time the registration "
+"is changed."
+msgstr ""
+
+#: register/models.py:439
+msgid "unlocked until"
+msgstr ""
+
+#: register/models.py:441
+msgid ""
+"If this is set and the current datetime is earlier than this value, allow "
+"changing this registration from any phone, even if it's not the phone "
+"previously used."
+msgstr ""
+
+#: register/models.py:452
+msgid "registrations"
+msgstr ""
+
+#: register/models.py:483
+msgid "This registration is unlocked until {}."
+msgstr ""
+
+#: register/models.py:485
+msgid "This registration is locked."
+msgstr ""
+
+#: register/models.py:544
+msgid "Invalid format"
+msgstr ""
+
+#: register/models.py:545
+msgid "Multiple problems"
+msgstr ""
+
+#: register/models.py:546
+msgid "Invalid registration centre code length"
+msgstr ""
+
+#: register/models.py:547
+msgid "No such registration centre found"
+msgstr ""
+
+#: register/models.py:548
+msgid "Not enough enough National ID digits"
+msgstr ""
+
+#: register/models.py:549
+msgid "Invalid valid National ID"
+msgstr ""
+
+#: register/models.py:550
+msgid "Unknown"
+msgstr ""
+
+#: register/models.py:551
+msgid "Registration update"
+msgstr ""
+
+#: register/models.py:552
+msgid "Registration Center query"
+msgstr ""
+
+#: register/models.py:553
+msgid "Invalid Form ID"
+msgstr ""
+
+#: register/models.py:554
+msgid "Phone activation"
+msgstr ""
+
+#: register/models.py:555 vr_dashboard/views/views.py:1332
+msgid "Daily Report"
+msgstr ""
+
+#: register/models.py:556
+msgid "Daily Report invalid"
+msgstr ""
+
+#: register/models.py:557
+msgid "Bulk Outgoing Message"
+msgstr ""
+
+#: register/models.py:558
+msgid "Polling Report"
+msgstr ""
+
+#: register/models.py:559
+msgid "Polling Report invalid"
+msgstr ""
+
+#: register/models.py:560
+msgid "Phone number not activated"
+msgstr ""
+
+#: register/models.py:564
+msgid "from number"
+msgstr ""
+
+#: register/models.py:565
+msgid "to number"
+msgstr ""
+
+#: register/models.py:568
+msgid "carrier"
+msgstr ""
+
+#: register/models.py:570
+msgid "message type"
+msgstr ""
+
+#: register/models.py:571
+msgid "order"
+msgstr ""
+
+#: register/models.py:574
+msgid "message code"
+msgstr ""
+
+#: register/models.py:582
+msgid "in response to"
+msgstr ""
+
+#: register/models.py:583
+msgid "need to anonymize"
+msgstr ""
+
+#. Translators: "smses" is plural for "SMS" (a Short Message Service text message)
+#: register/models.py:598
+msgid "smses"
+msgstr ""
+
+#: register/models.py:632
+msgid "Obsolete message code: {}"
+msgstr ""
+
+#: register/models.py:649
+msgid "blacklisted number"
+msgstr ""
+
+#: register/models.py:650
+msgid "blacklisted numbers"
+msgstr ""
+
+#: register/models.py:668
+msgid "whitelisted number"
+msgstr ""
+
+#: register/models.py:669
+msgid "whitelisted numbers"
+msgstr ""
+
+#: register/templates/polling_reports/delete_all_staffphones.html:4
+#: register/templates/polling_reports/delete_all_staffphones.html:7
+msgid "Delete All Staff Phones"
+msgstr ""
+
+#: register/templates/polling_reports/delete_all_staffphones.html:13
+#, python-format
+msgid "Are you sure you want to delete all %(object_count)s Staff Phones?"
+msgstr ""
+
+#: register/templates/polling_reports/delete_all_staffphones.html:23
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:41
+msgid "Delete All"
+msgstr ""
+
+#: register/templates/polling_reports/delete_all_staffphones.html:29
+msgid "There are currently no Staff Phones."
+msgstr ""
+
+#: register/templates/polling_reports/staffphone_browse.html:10
+msgid "Delete all Staff Phones"
+msgstr ""
+
+#: register/templates/polling_reports/tab.html:7
+msgid "Whitelisted Numbers"
+msgstr ""
+
+#: register/templates/polling_reports/tab.html:8
+msgid "Blacklisted Numbers"
+msgstr ""
+
+#: register/templates/register/blacklist_browse.html:7
+#: register/templates/register/registrationcenter_browse.html:13
+#: register/templates/register/whitelist_browse.html:7
+msgid "Upload CSV"
+msgstr ""
+
+#: register/templates/register/blacklist_browse.html:9
+#: register/templates/register/registrationcenter_browse.html:15
+#: register/templates/register/whitelist_browse.html:9
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:62
+msgid "Download CSV"
+msgstr ""
+
+#: register/templates/register/blacklist_browse.html:22
+msgid "Delete all Blacklisted Numbers"
+msgstr ""
+
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:6
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:15
+msgid "Delete All Blacklisted Numbers"
+msgstr ""
+
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:8
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:17
+msgid "Delete All Whitelisted Numbers"
+msgstr ""
+
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:26
+#, python-format
+msgid ""
+"Are you sure you want to delete all %(object_count)s Blacklisted numbers?"
+msgstr ""
+
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:30
+#, python-format
+msgid ""
+"Are you sure you want to delete all %(object_count)s Whitelisted numbers?"
+msgstr ""
+
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:48
+msgid "There are currently no Blacklisted numbers."
+msgstr ""
+
+#: register/templates/register/delete_all_blackwhitelisted_numbers.html:50
+msgid "There are currently no Whitelisted numbers."
+msgstr ""
+
+#: register/templates/register/delete_all_copy_centers.html:4
+#: register/templates/register/delete_all_copy_centers.html:7
+#: register/templates/register/delete_all_copy_centers.html:38
+msgid "Delete All Copy Centres"
+msgstr ""
+
+#: register/templates/register/delete_all_copy_centers.html:15
+#, python-format
+msgid ""
+"All %(n_copy_centers)s copy centres in the database are shown below. Are you "
+"sure you want to delete them?"
+msgstr ""
+
+#: register/templates/register/delete_all_copy_centers.html:23
+msgid "Copy Centres That Will Be Deleted"
+msgstr ""
+
+#: register/templates/register/delete_all_copy_centers.html:44
+msgid "There are currently no copy centres defined."
+msgstr ""
+
+#: register/templates/register/registration_browse.html:6
+msgid "Change registrations"
+msgstr ""
+
+#: register/templates/register/registrationcenter_browse.html:10
+msgid "Delete all Copy Centres"
+msgstr ""
+
+#: register/templates/register/tab.html:8
+#: vr_dashboard/templates/vr_dashboard/base.html:59
+#: vr_dashboard/templates/vr_dashboard/regions.html:17
+msgid "Subconstituencies"
+msgstr ""
+
+#: register/templates/register/tab.html:9
+msgid "Constituencies"
+msgstr ""
+
+#: register/templates/register/tab.html:10
+#: rollgen/templates/rollgen/tab.html:4
+#: vr_dashboard/templates/vr_dashboard/base.html:53
+#: vr_dashboard/templates/vr_dashboard/election_day_preliminary.html:36
+msgid "Offices"
+msgstr ""
+
+#: register/templates/register/upload_blackwhitelisted_numbers.html:8
+msgid "Upload blacklisted numbers"
+msgstr ""
+
+#: register/templates/register/upload_blackwhitelisted_numbers.html:10
+msgid "Upload whitelisted numbers"
+msgstr ""
+
+#: register/templates/register/upload_centers_csv.html:6
+msgid "Upload new registration centers"
+msgstr ""
+
+#: register/templates/register/upload_centers_csv.html:21
+#, python-format
+msgid ""
+"<p>CSV File Requirements</p> <ul> <li>Please ensure the file is saved in "
+"UTF-8 encoding as a CSV file.</li> <li>You must include column headers in "
+"the file.</li> <li>The file must include all of the following columns in "
+"this order: <pre>%(csv_columns)s</pre> </li> <li>Please double-check your "
+"file before uploading.</li> <li>Download the <a href=\"%(download_csv_url)s"
+"\">current file of registration centers</a>.</li> </ul>"
+msgstr ""
+
+#: register/templates/register/whitelist_browse.html:22
+msgid "Delete all Whitelisted Numbers"
+msgstr ""
+
+#: register/utils.py:31
+#, python-brace-format
+msgid ""
+"Imported {created} new centers. Updated {updated} centers. There were "
+"{dupes} duplicates skipped. Blank rows {blank}"
+msgstr ""
+
+#: register/utils.py:34
+msgid ""
+"Errors occurred while parsing the uploaded file. No centers were imported or "
+"updated."
+msgstr ""
+
+#: register/utils.py:37
+#, python-brace-format
+msgid ""
+"Error found in line {line_number}: row does not contain the exact number of "
+"columns required or it contains blank lines. The row should only have the "
+"following  columns: {columns}."
+msgstr ""
+
+#: register/utils.py:41
+#, python-brace-format
+msgid ""
+"Error in row {line_number}. Field: {field_name}. Value: {value}. Error: "
+"{error}"
+msgstr ""
+
+#: register/utils.py:43
+#, python-brace-format
+msgid "Error in row {line_number}. Error: {error}"
+msgstr ""
+
+#: register/views.py:89
+msgid "All copy centres have been deleted."
+msgstr ""
+
+#: register/views.py:314
+#, python-format
+msgid ""
+"Numbers on these lines not imported because they are not valid phone "
+"numbers: %s."
+msgstr ""
+
+#: register/views.py:368
+msgid "All Staff Phones have been deleted."
+msgstr ""
+
+#: register/views.py:398
+msgid "Phone number"
+msgstr ""
+
+#: register/views.py:399
+msgid "Registration center"
+msgstr ""
+
+#: register/views.py:403
+msgid "Center Id, Center name, or Phone number"
+msgstr ""
+
+#: register/views.py:442
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:116
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:40
+msgid "Message Type"
+msgstr ""
+
+#: register/views.py:444
+msgid "Message Code"
+msgstr ""
+
+#: register/views.py:503
+msgid "Center Id"
+msgstr ""
+
+#: register/views.py:508
+msgid "Type"
+msgstr ""
+
+#: register/views.py:512
+msgid "Constituency"
+msgstr ""
+
+#: register/views.py:514
+msgid "Subconstituency"
+msgstr ""
+
+#: register/views.py:516
+msgid "Supports Registrations"
+msgstr ""
+
+#: register/views.py:520
+msgid "Center Id, Center name"
+msgstr ""
+
+#: register/views.py:562
+msgid "Copied by"
+msgstr ""
+
+#: register/views.py:602 register/views.py:634 register/views.py:663
+msgid "Id"
+msgstr ""
+
+#: register/views.py:603 register/views.py:635 register/views.py:664
+msgid "Name (English)"
+msgstr ""
+
+#: register/views.py:604 register/views.py:636 register/views.py:665
+msgid "Name (Arabic)"
+msgstr ""
+
+#: register/views.py:608 vr_dashboard/templates/vr_dashboard/regions.html:17
+msgid "Region"
+msgstr ""
+
+#: register/views.py:611 register/views.py:639 register/views.py:668
+msgid "Id or Name (in English or Arabic)"
+msgstr ""
+
+#: register/views.py:704
+msgid "Any"
+msgstr ""
+
+#: register/views.py:731
+msgid "national ID, first name, father name, grandfather name, family name "
+msgstr ""
+
+#: register/views.py:756
+msgid "Lock Status"
+msgstr ""
+
+#: reporting_api/models.py:9
+msgid "report"
+msgstr ""
+
+#: reporting_api/models.py:10
+msgid "headquarters reports"
+msgstr ""
+
+#: reporting_api/models.py:11
+msgid "message log"
+msgstr ""
+
+#: reporting_api/models.py:14
+msgid "election report"
+msgstr ""
+
+#: reporting_api/models.py:15
+msgid "election reports"
+msgstr ""
+
+#: rollgen/forms.py:31
+msgid "Please enter a comma-delimited list of center ids."
+msgstr ""
+
+#: rollgen/forms.py:52
+#, python-format
+msgid "\"%(name)s\" is not a valid job name."
+msgstr ""
+
+#: rollgen/forms.py:54
+#, python-format
+msgid "There is already a job named \"%(name)s\"."
+msgstr ""
+
+#: rollgen/forms.py:60
+msgid ""
+"There are no restrictions on job names except that they may not begin with a "
+"period and may not contain back nor forward slashes."
+msgstr ""
+
+#: rollgen/forms.py:66
+msgid "Accept centres with no office"
+msgstr ""
+
+#: rollgen/forms.py:68
+msgid "Accept centres with no voters"
+msgstr ""
+
+#: rollgen/forms.py:70
+msgid "All centres"
+msgstr ""
+
+#: rollgen/forms.py:71
+msgid "The centres in the constituencies selected below "
+msgstr ""
+
+#: rollgen/forms.py:72
+msgid "The centres in the offices selected below "
+msgstr ""
+
+#: rollgen/forms.py:73
+msgid "The centres selected below "
+msgstr ""
+
+#: rollgen/forms.py:74
+msgid "The centres in this comma-delimited list "
+msgstr ""
+
+#: rollgen/forms.py:96
+msgid "You must select at least one constituency."
+msgstr ""
+
+#: rollgen/forms.py:101
+msgid "You must select at least one office."
+msgstr ""
+
+#: rollgen/forms.py:106
+msgid "You must select at least one centre."
+msgstr ""
+
+#: rollgen/forms.py:114
+msgid "These centre ids are invalid: {}"
+msgstr ""
+
+#: rollgen/forms.py:120
+msgid "You must enter at least one centre."
+msgstr ""
+
+#: rollgen/models.py:158 text_messages/models.py:22
+msgid "number"
+msgstr ""
+
+#: rollgen/models.py:160
+msgid "number of registrants"
+msgstr ""
+
+#: rollgen/models.py:161
+msgid "first voter name"
+msgstr ""
+
+#: rollgen/models.py:162
+msgid "first voter number"
+msgstr ""
+
+#: rollgen/models.py:163
+msgid "last voter name"
+msgstr ""
+
+#: rollgen/models.py:164
+msgid "last voter number"
+msgstr ""
+
+#: rollgen/models.py:192
+msgid "station"
+msgstr ""
+
+#: rollgen/models.py:193
+msgid "stations"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_centers.html:10
+#: rollgen/templates/rollgen/browse_job_offices.html:11
+#: rollgen/templates/rollgen/job_failed_view.html:11
+#: rollgen/templates/rollgen/job_in_progress_view.html:11
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:12
+msgid "Return to Overview"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_centers.html:12
+#: rollgen/templates/rollgen/browse_job_offices.html:13
+msgid "Voter Rolls > Job"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_centers.html:26
+msgid "Click on a center to jump to the PDFs for that center."
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_centers.html:30
+#, python-format
+msgid ""
+"The center with no registrants is not clickable because it has no associated "
+"documents."
+msgid_plural ""
+"The %(n_empty_centers)s centers with no registrants are not clickable "
+"because they have no associated documents."
+msgstr[0] ""
+msgstr[1] ""
+
+#: rollgen/templates/rollgen/browse_job_centers.html:47
+msgid "Center Group"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_centers.html:48
+#: rollgen/templates/rollgen/overview.html:36
+msgid "Centers"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_offices.html:32
+msgid "Office Number"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_offices.html:33
+msgid "Browse Office"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_offices.html:34
+msgid "Download Zip File"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_job_offices.html:44
+msgid "Download"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_office.html:11
+msgid "Return to Job"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_office.html:14
+msgid "Voter Rolls > Job > View Office"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_office.html:29
+msgid "File Name"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_office.html:30
+msgid "Size"
+msgstr ""
+
+#: rollgen/templates/rollgen/browse_office.html:47
+#, python-format
+msgid "%(n_pages)s page"
+msgid_plural "%(n_pages)s pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: rollgen/templates/rollgen/browse_office.html:59
+msgid "There are no files for this office."
+msgstr ""
+
+#: rollgen/templates/rollgen/job_failed_view.html:14
+#: rollgen/templates/rollgen/job_in_progress_view.html:14
+msgid "Voter Rolls > Job "
+msgstr ""
+
+#: rollgen/templates/rollgen/job_failed_view.html:19
+msgid "This job failed. Error information follows."
+msgstr ""
+
+#: rollgen/templates/rollgen/job_in_progress_view.html:19
+msgid "This job is still in progress. Please check back later."
+msgstr ""
+
+#: rollgen/templates/rollgen/new.html:5
+msgid "Voter Rolls - New"
+msgstr ""
+
+#: rollgen/templates/rollgen/new.html:11
+msgid "Voter Rolls > Create New Voter Roll"
+msgstr ""
+
+#: rollgen/templates/rollgen/new.html:38
+msgid "Options"
+msgstr ""
+
+#: rollgen/templates/rollgen/new.html:51 rollgen/templates/rollgen/tab.html:5
+msgid "Centres"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:13
+msgid "New"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:22
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:40
+msgid "Overview"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:33
+msgid "Job"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:35
+msgid "Phase"
+msgstr ""
+
+#. Translators: "Number of PDFs/Pages" is the heading for a table column
+#. that contains a count of the PDF files in a set of documents and the number of pages in
+#. those PDFs. For instance, if a set contains 3 PDFs with 4 pages each, the data in the
+#. column would look like this:
+#. 3 PDFs
+#. 12 pages
+#.
+#: rollgen/templates/rollgen/overview.html:44
+msgid "Number of PDFs/Pages"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:58
+msgid "This job is in progress."
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:61
+msgid "Failed"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:63
+#, python-format
+msgid "Completed<br/>%(end_date)s, %(end_time)s"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:74
+#, python-format
+msgid "(Total %(n_centers)s)"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:86
+#, python-format
+msgid "and %(n_excess_centers)s more"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:101
+#, python-format
+msgid "%(n_files)s PDFs <br/> %(n_pages)s pages"
+msgstr ""
+
+#: rollgen/templates/rollgen/overview.html:114
+msgid "Download Polling CSV"
+msgstr ""
+
+#: rollgen/utils.py:202
+msgid "These ids are invalid: {}"
+msgstr ""
+
+#: rollgen/views.py:286
+msgid "You do not have permission to view roll generator output."
+msgstr ""
+
+#: rollgen/views.py:301
+msgid "You do not have permission to run the roll generator."
+msgstr ""
+
+#: rollgen/views.py:500
+msgid "The criteria you specified didn't match any active centres."
+msgstr ""
+
+#: staff/views.py:86
+msgid "Email"
+msgstr ""
+
+#: staff/views.py:88
+msgid "Last name"
+msgstr ""
+
+#: staff/views.py:90
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:17
+#: vr_dashboard/views/views.py:1142 vr_dashboard/views/views.py:1454
+msgid "Active"
+msgstr ""
+
+#: staff/views.py:94
+msgid "username, email, first name, or last name"
+msgstr ""
+
+#: subscriptions/models.py:14
+msgid "subscription type"
+msgstr ""
+
+#: subscriptions/models.py:25
+msgid "email alert subscription"
+msgstr ""
+
+#: subscriptions/models.py:26
+msgid "email alert subscriptions"
+msgstr ""
+
+#: subscriptions/templates/subscriptions/email_body.txt:4
+msgid ""
+"\n"
+"The HNEC Voter Registration Audit System has identified the following "
+"issues\n"
+"which require review. Details of these issues are summarized below.\n"
+"Please click on an issue to view it in the Audit System.\n"
+msgstr ""
+
+#: subscriptions/templates/subscriptions/email_subject.txt:3
+msgid "[TESTING] HNEC Voter Registration Audit System"
+msgstr ""
+
+#: subscriptions/templates/subscriptions/email_subject.txt:5
+msgid "HNEC Voter Registration Audit System"
+msgstr ""
+
+#: subscriptions/templates/subscriptions/subscription_browse.html:6
+msgid "Back to SMS discrepancies"
+msgstr ""
+
+#: subscriptions/views.py:17 subscriptions/views.py:36
+msgid "Type of subscription"
+msgstr ""
+
+#: text_messages/forms.py:32
+#, python-format
+msgid ""
+"Messages should use either {} placeholders or %()s placeholders but not both"
+msgstr ""
+
+#: text_messages/forms.py:39
+#, python-format
+msgid ""
+"English and Arabic messages must use the same kind of placeholders, either "
+"{} or %()s"
+msgstr ""
+
+#: text_messages/forms.py:76
+msgid "The Arabic text must have the same placeholders as the English text."
+msgstr ""
+
+#: text_messages/models.py:24
+msgid "label"
+msgstr ""
+
+#: text_messages/models.py:28
+msgid "english"
+msgstr ""
+
+#: text_messages/models.py:32
+msgid "arabic"
+msgstr ""
+
+#: text_messages/models.py:35
+msgid "english repeat message"
+msgstr ""
+
+#: text_messages/models.py:38
+msgid "arabic repeat message"
+msgstr ""
+
+#: text_messages/models.py:41
+msgid "description"
+msgstr ""
+
+#: text_messages/models.py:45
+msgid "last updated by"
+msgstr ""
+
+#: text_messages/models.py:49
+msgid "message text"
+msgstr ""
+
+#: text_messages/models.py:50
+msgid "message texts"
+msgstr ""
+
+#: text_messages/templates/text_messages/messagetext_form.html:4
+msgid "Message text"
+msgstr ""
+
+#: text_messages/templates/text_messages/messagetext_form.html:8
+msgid "Editing"
+msgstr ""
+
+#: text_messages/templates/text_messages/messagetext_form.html:23
+msgid "Last updated by:"
+msgstr ""
+
+#: text_messages/templates/text_messages/messagetext_form.html:27
+msgid "Last updated at:"
+msgstr ""
+
+#: text_messages/templates/text_messages/messagetext_list.html:13
+msgid ""
+"These are only the translations for SMS messages. All other translations are "
+"available at <a href='https://transifex.com'>Transifex.com</a>"
+msgstr ""
+
+#: text_messages/templates/text_messages/messagetext_list.html:53
+msgid "if repeated"
+msgstr ""
+
+#: voting/forms.py:35
+msgid "Start date"
+msgstr ""
+
+#: voting/forms.py:41
+msgid "End date"
+msgstr ""
+
+#: voting/models.py:131
+msgid "message number"
+msgstr ""
+
+#: voting/models.py:132
+msgid "reminder number"
+msgstr ""
+
+#: voting/models.py:135
+msgid "reminder queued"
+msgstr ""
+
+#: voting/models.py:136
+msgid "reminders queued"
+msgstr ""
+
+#: voting/models.py:150
+msgid ""
+"Earliest time associated with this election - set automatically from other "
+"fields"
+msgstr ""
+
+#: voting/models.py:157
+msgid ""
+"Latest time associated with this election - set automatically from other "
+"fields"
+msgstr ""
+
+#: voting/models.py:163
+msgid "polling start time"
+msgstr ""
+
+#: voting/models.py:164
+msgid "polling end time"
+msgstr ""
+
+#: voting/models.py:167
+msgid "work start time"
+msgstr ""
+
+#: voting/models.py:168
+msgid ""
+"Earliest time that phones can be activated, center opening reports "
+"submitted, etc. for this election. Automatically set to midnight two days "
+"before the start of polling."
+msgstr ""
+
+#: voting/models.py:176
+msgid "work end time"
+msgstr ""
+
+#: voting/models.py:177
+msgid ""
+"Latest time that reports can be submitted for this election. Automatically "
+"set to 16 hours after the end of polling."
+msgstr ""
+
+#: voting/models.py:188
+msgid "elections"
+msgstr ""
+
+#: voting/models.py:196
+#, python-brace-format
+msgid "{0.name_arabic} ({0.name_english})"
+msgstr ""
+
+#: voting/models.py:209
+msgid "polling start time is later than end time."
+msgstr ""
+
+#: voting/models.py:362
+msgid "General ballot"
+msgstr ""
+
+#: voting/models.py:363
+msgid "Women's ballot"
+msgstr ""
+
+#: voting/models.py:372
+msgid "internal ballot number"
+msgstr ""
+
+#: voting/models.py:373
+msgid "Number used internally to identify unique ballots across an election."
+msgstr ""
+
+#: voting/models.py:375
+msgid "ballot type"
+msgstr ""
+
+#: voting/models.py:377
+msgid "number of seats"
+msgstr ""
+
+#: voting/models.py:380 voting/models.py:437
+msgid "ballot"
+msgstr ""
+
+#: voting/models.py:381
+msgid "ballots"
+msgstr ""
+
+#: voting/models.py:396
+#, python-brace-format
+msgid ""
+"Ballot #{ballot_number} {ballot_name} in subconstituencies "
+"{subconstituencies} on {election}"
+msgstr ""
+
+#: voting/models.py:435
+msgid "candidate number"
+msgstr ""
+
+#: voting/models.py:436
+msgid "Number used in text messages when voting for this candidate"
+msgstr ""
+
+#: voting/models.py:440
+msgid "candidate"
+msgstr ""
+
+#: voting/models.py:441
+msgid "candidates"
+msgstr ""
+
+#: voting/models.py:452
+#, python-brace-format
+msgid "Candidate {0.name_arabic} ({0.name_english}) on {0.ballot}"
+msgstr ""
+
+#: voting/models.py:479
+msgid "registration period"
+msgstr ""
+
+#: voting/models.py:480
+msgid "registration periods"
+msgstr ""
+
+#: voting/models.py:488
+msgid "Both start and end must be provided."
+msgstr ""
+
+#: voting/models.py:494
+msgid "End time must be after start time."
+msgstr ""
+
+#: voting/models.py:509
+msgid "Other registration periods overlap this one."
+msgstr ""
+
+#: voting/templates/voting/election_label_value_read.html:9
+msgid "Upload election data"
+msgstr ""
+
+#: voting/templates/voting/election_label_value_read.html:12
+msgid "Download election data"
+msgstr ""
+
+#: voting/templates/voting/tab.html:8
+msgid "Elections"
+msgstr ""
+
+#: voting/templates/voting/tab.html:9
+msgid "Ballots"
+msgstr ""
+
+#: voting/templates/voting/tab.html:10
+msgid "Candidates"
+msgstr ""
+
+#: voting/templates/voting/tab.html:11
+msgid "Stations"
+msgstr ""
+
+#: voting/templates/voting/tab.html:12
+msgid "Closed Centers"
+msgstr ""
+
+#: voting/views.py:22 voting/views.py:87
+msgid "Name (en)"
+msgstr ""
+
+#: voting/views.py:23 voting/views.py:88
+msgid "Name (ar)"
+msgstr ""
+
+#: voting/views.py:26
+msgid "Election name in English or Arabic"
+msgstr ""
+
+#: voting/views.py:85
+msgid "Ballot"
+msgstr ""
+
+#: voting/views.py:86
+msgid "Number"
+msgstr ""
+
+#: voting/views.py:92
+msgid "Candidate name in English or Arabic"
+msgstr ""
+
+#: vr_dashboard/forms.py:13
+#, python-format
+msgid "Center %s is not a valid center."
+msgstr ""
+
+#: vr_dashboard/forms.py:23
+msgid "Either a phone number or a center must be supplied, but not both."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:22
+msgid "Summary"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:38
+msgid "Check your registration information"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:51
+#: vr_dashboard/templates/vr_dashboard/hq.html:21
+#: vr_dashboard/views/views.py:950
+msgid "Libya"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:52
+msgid "Regions"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:56
+msgid "Offices Detail"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:61
+#: vr_dashboard/templates/vr_dashboard/weekly.html:38
+msgid "Weekly"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:62
+msgid "SMS"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:72
+msgid "Period:"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:80
+#: vr_dashboard/templates/vr_dashboard/base.html:141
+msgid "New Registrations"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:95
+msgid "Cumulative Registrations"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:118
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:59
+msgid "Last Updated: "
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:120
+msgid "Download Full CSV"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:121
+msgid "Download Daily CSV"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:135
+msgid "January"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:135
+msgid "February"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:135
+msgid "March"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:136
+msgid "April"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:136
+msgid "May"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:136
+msgid "June"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:137
+msgid "July"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:137
+msgid "August"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:137
+msgid "September"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:138
+msgid "October"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:138
+msgid "November"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:138
+msgid "December"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/base.html:142
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:15
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:84
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:87
+#: vr_dashboard/templates/vr_dashboard/weekly.html:7
+#: vr_dashboard/views/views.py:1140
+msgid "Total Registrations"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:10
+msgid "Polling is over"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:12
+msgid "Polling is in progress"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:14
+msgid "Polling has not started"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:16
+msgid "Work period"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:19
+msgid "Polling period"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:52
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:12
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:7
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:43
+#: vr_dashboard/views/views.py:978 vr_dashboard/views/views.py:1137
+#: vr_dashboard/views/views.py:1452
+msgid "Polling Center"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:53
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:18
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:45
+#: vr_dashboard/views/views.py:979 vr_dashboard/views/views.py:1143
+#: vr_dashboard/views/views.py:1455
+msgid "Opened"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:54
+#: vr_dashboard/views/views.py:980 vr_dashboard/views/views.py:1309
+msgid "Not Opened"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:55
+#: vr_dashboard/templates/vr_dashboard/election_day.html:56
+#: vr_dashboard/templates/vr_dashboard/election_day.html:57
+#: vr_dashboard/templates/vr_dashboard/election_day.html:58
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:19
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:20
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:21
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:22
+#: vr_dashboard/views/views.py:983 vr_dashboard/views/views.py:984
+#: vr_dashboard/views/views.py:985 vr_dashboard/views/views.py:986
+msgid "Period"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:55
+#: vr_dashboard/templates/vr_dashboard/election_day.html:56
+#: vr_dashboard/templates/vr_dashboard/election_day.html:57
+#: vr_dashboard/templates/vr_dashboard/election_day.html:58
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:79
+#: vr_dashboard/views/views.py:983 vr_dashboard/views/views.py:984
+#: vr_dashboard/views/views.py:985 vr_dashboard/views/views.py:986
+#: vr_dashboard/views/views.py:1322
+msgid "Not Reported"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day.html:59
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:23
+#: vr_dashboard/views/views.py:987 vr_dashboard/views/views.py:1148
+msgid "Closed"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:7
+msgid "Loading..."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:13
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:44
+#: vr_dashboard/views/views.py:1138 vr_dashboard/views/views.py:1453
+msgid "Code"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:14
+#: vr_dashboard/views/views.py:1139
+msgid "Copied Polling Center"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:19
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:20
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:21
+#: vr_dashboard/templates/vr_dashboard/election_day_center.html:22
+msgid "Reported"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:11
+msgid "Return to Office"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:19
+msgid "Copy of center"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:25
+msgid "Copies of this center:"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:33
+msgid "The center was inactive for this election."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:37
+msgid "Reporting"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:40
+msgid "Last Opened"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:44
+msgid "Last Reported"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:51
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:118
+msgid "Reported Votes"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:56
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:62
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:68
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:74
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:117
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:46
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:47
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:48
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:49
+#: vr_dashboard/views/views.py:1144 vr_dashboard/views/views.py:1145
+#: vr_dashboard/views/views.py:1146 vr_dashboard/views/views.py:1147
+#: vr_dashboard/views/views.py:1456 vr_dashboard/views/views.py:1457
+#: vr_dashboard/views/views.py:1458 vr_dashboard/views/views.py:1459
+msgid "Reported Period"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:114
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:38
+msgid "Date"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:115
+msgid "Phone"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:134
+msgid "No messages were received."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:61
+msgid "Inactive"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:7
+msgid "National"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:12
+#: vr_dashboard/templates/vr_dashboard/hq.html:35
+#: vr_dashboard/templates/vr_dashboard/hq.html:63
+msgid "Location"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:13
+#: vr_dashboard/templates/vr_dashboard/hq.html:36
+#: vr_dashboard/templates/vr_dashboard/hq.html:64
+#: vr_dashboard/templates/vr_dashboard/hq.html:92
+msgid "Votes"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:14
+#: vr_dashboard/templates/vr_dashboard/hq.html:37
+#: vr_dashboard/templates/vr_dashboard/hq.html:65
+#: vr_dashboard/templates/vr_dashboard/hq.html:93
+msgid "Registrations (Active)"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:15
+#: vr_dashboard/templates/vr_dashboard/hq.html:38
+#: vr_dashboard/templates/vr_dashboard/hq.html:66
+#: vr_dashboard/templates/vr_dashboard/hq.html:94
+#, python-format
+msgid "Turnout %% (Active)"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:16
+#: vr_dashboard/templates/vr_dashboard/hq.html:39
+#: vr_dashboard/templates/vr_dashboard/hq.html:67
+#: vr_dashboard/templates/vr_dashboard/hq.html:95
+#, python-format
+msgid "Turnout %% (Open)"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:30
+msgid "By Region"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:58
+msgid "By Office"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:86
+msgid "By Center Type"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/hq.html:91
+msgid "Center Type"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/includes/error_core.html:7
+msgid "Error"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/national.html:6
+msgid "National Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/national.html:11
+#: vr_dashboard/templates/vr_dashboard/offices.html:13
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:13
+#: vr_dashboard/templates/vr_dashboard/regions.html:12
+#: vr_dashboard/templates/vr_dashboard/weekly.html:40
+msgid "Cumulative Totals"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/national.html:13
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:15
+#: vr_dashboard/templates/vr_dashboard/regions.html:14
+msgid "Age Totals"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/offices.html:6
+msgid "Office Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/offices.html:7
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:7
+#: vr_dashboard/templates/vr_dashboard/regions.html:7
+msgid "Click on a row below to see it in the chart."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:6
+msgid "Registration Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/offices_detail.html:14
+msgctxt "yesterday_total"
+msgid "Total"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/includes/whitelist_form.html:9
+msgid "Add to Whitelist"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:10
+msgid "Center"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:12
+msgid "This phone is not linked to a center."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:19
+msgid "This phone is whitelisted."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:21
+msgid "This phone is not whitelisted."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:33
+msgid "Phone History"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:39
+msgid "To or From"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:61
+msgid "No messages have been sent to or received from this phone."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:6
+msgid "Phones for center"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:13
+msgid "Whitelist Status"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:19
+msgid "History"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool/query_form.html:7
+msgid ""
+"Please enter a center id, or a phone number (218xxxxxxxxx or 88216xxxxxxxx) "
+"without punctuation or spaces. Either a phone number or a center must be "
+"supplied, but not both."
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:4
+#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:8
+msgid "Phone and Message Tool"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:24
+msgid "Enter Another Phone or Center ID #"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:28
+msgid "Return to Polling Centers Monitoring"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:12
+msgid "Phone Tool"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:18
+msgid "Election Title"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:43
+msgid "Center List"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:46
+msgid "HQ"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/polling_base.html:49
+msgid "Preliminary Vote Counts"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/regions.html:6
+msgid "Region Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/sms.html:6
+msgid "SMS Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/sms.html:11
+#: vr_dashboard/templates/vr_dashboard/sms.html:52
+msgid "Stat"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/sms.html:13
+#: vr_dashboard/templates/vr_dashboard/sms.html:54
+#: vr_dashboard/templates/vr_dashboard/weekly.html:37
+msgid "Last 7 Days"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/sms.html:27
+msgid "Phones with Registrations from Multiple Family Books"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/sms.html:37
+msgid "Phones Attempting Duplicate Registrations"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/sms.html:47
+msgid "Message Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/weekly.html:16
+#: vr_dashboard/views/views.py:760
+msgid "Yesterday"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/weekly.html:32
+msgid "Weekly Stats"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/weekly.html:39
+msgid "CDA"
+msgstr ""
+
+#: vr_dashboard/templates/vr_dashboard/weekly.html:50
+msgctxt "interval"
+msgid "to"
+msgstr ""
+
+#: vr_dashboard/views/phone_tool.py:54
+msgid "This request is not intended to be called directly."
+msgstr ""
+
+#: vr_dashboard/views/phone_tool.py:60
+#, python-format
+msgid "Phone number %s is not a valid staff phone."
+msgstr ""
+
+#: vr_dashboard/views/phone_tool.py:72
+msgid "No matching phones were found."
+msgstr ""
+
+#: vr_dashboard/views/views.py:65
+#, python-brace-format
+msgid "Period {period} Votes Reported: {count}"
+msgstr ""
+
+#: vr_dashboard/views/views.py:104
+#, python-brace-format
+msgid ""
+"As of {date} at {time} {total} people have registered on the High National "
+"Elections Commission SMS Voter Register. {num_women} of the registrants are "
+"women and {num_men} are men."
+msgstr ""
+
+#: vr_dashboard/views/views.py:121
+msgid ""
+"Data for this report is currently being generated.  Please try again later."
+msgstr ""
+
+#: vr_dashboard/views/views.py:760
+msgid "Group"
+msgstr ""
+
+#: vr_dashboard/views/views.py:760
+msgid "Total M"
+msgstr ""
+
+#: vr_dashboard/views/views.py:760
+msgid "Total F"
+msgstr ""
+
+#: vr_dashboard/views/views.py:760
+msgid "Yesterday M"
+msgstr ""
+
+#: vr_dashboard/views/views.py:761
+msgid "Yesterday F"
+msgstr ""
+
+#: vr_dashboard/views/views.py:896
+msgid "Response format is not supported."
+msgstr ""
+
+#: vr_dashboard/views/views.py:901
+#, python-format
+msgid "Last Updated: %s"
+msgstr ""
+
+#: vr_dashboard/views/views.py:971
+msgid "Election Day Overview"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1021 vr_dashboard/views/views.py:1479
+#, python-brace-format
+msgid "As of {time} on {date}:"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1025 vr_dashboard/views/views.py:1482
+#, python-brace-format
+msgid "{count} centers have opened"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1028 vr_dashboard/views/views.py:1485
+#, python-brace-format
+msgid "{count} centers have not opened"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1081
+msgid "No Data Available"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1082
+msgid "Preliminary vote reports have not been received for this election."
+msgstr ""
+
+#: vr_dashboard/views/views.py:1131
+msgid "Election Day Centers"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1266
+msgid "Not Whitelisted"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1291
+#, python-format
+msgid "Center id %s is not valid."
+msgstr ""
+
+#: vr_dashboard/views/views.py:1306
+msgid "N/A"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1326
+msgid "Votes Report"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1328
+msgid "Phone Link"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1330
+msgid "Check in"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1389
+#, python-format
+msgid "Office id %s is not valid."
+msgstr ""
+
+#: vr_dashboard/views/views.py:1420
+msgctxt "has_reported"
+msgid "Yes"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1421
+msgctxt "has_not_reported"
+msgid "No"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1446
+#, python-format
+msgid "Election Day Office %d"
+msgstr ""
+
+#: vr_dashboard/views/views.py:1489
+#, python-brace-format
+msgid "{count} are inactive"
+msgstr ""

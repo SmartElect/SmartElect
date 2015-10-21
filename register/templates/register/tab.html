@@ -1,0 +1,11 @@
+{% url 'browse_registrationcenters' as registrationcenter_url %}
+{% url 'browse_subconstituencies' as subconstituency_url %}
+{% url 'browse_constituencies' as constituency_url %}
+{% url 'browse_offices' as office_url %}
+
+<nav class="tabs">
+  {% include 'includes/tablink.html' with url=registrationcenter_url linktext=_("Registration Centers") %}
+  {% include 'includes/tablink.html' with url=subconstituency_url linktext=_("Subconstituencies") %}
+  {% include 'includes/tablink.html' with url=constituency_url linktext=_("Constituencies") %}
+  {% include 'includes/tablink.html' with url=office_url linktext=_("Offices") %}
+</nav>

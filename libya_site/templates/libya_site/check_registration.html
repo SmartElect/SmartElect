@@ -1,0 +1,60 @@
+{% extends 'libya_site/base.html' %}
+{% load i18n %}
+
+{% block messages %}{% endblock %}
+
+{% block content %}
+  <div class="page-width float-layout">
+    <div class="collapsing sixth"></div>
+    <h1 class="two-thirds cushion">{% trans "Look up registration information" %}</h1>
+    <div class="collapsing sixth"></div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="milk">
+    <div class="page-width float-layout">
+      <div class="collapsing sixth"></div>
+      <div class="two-thirds cushion">
+        {% include "includes/messages.html" %}
+
+        <form method="post" action="{% url 'check_registration' %}">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+          {% endif %}
+
+          {{ form.national_id.label_tag }}
+          {{ form.national_id }}
+
+          {% if form.national_id.errors %}
+            {{ form.national_id.errors }}
+          {% endif %}
+
+          {{ form.fbr_number.label_tag }}
+          {{ form.fbr_number }}
+
+          {% if form.fbr_number.errors %}
+            {{ form.fbr_number.errors }}
+          {% endif %}
+
+          {{ form.captcha.label_tag }}
+          <div class="float-layout">
+            {{ form.captcha }}
+
+            {% if form.captcha.errors %}
+              {{ form.captcha.errors }}
+            {% endif %}
+
+            <div class="spacer"></div>
+            <input class="full" type="submit" value="{% trans "Submit" %}">
+          </div>
+          <div class="clear"></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="collapsing sixth"></div>
+    <div class="clear"></div>
+  </div>
+{% endblock content %}

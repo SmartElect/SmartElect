@@ -1,0 +1,149 @@
+{% extends "libya_site/base.html" %}
+{% load i18n staticfiles %}
+
+{% block extra_css %}
+  <link href="{% static 'css/charts.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block title %}{% trans "Registration Statistics" %}{% endblock %}
+
+{% block subnav %}
+{% endblock %}
+
+{% block status_messages %}
+<div id="status-messages" class="page-width cushion">
+
+	<div class="table-layout">
+		<div>
+		  <div class="kumquat">
+            <img src="{% static 'img/summary.png' %}" height="80" class="centered">
+          </div>
+		  <div class="milk cushion">
+            <label>{% trans 'Summary' %}</label>
+			<p>{{ headline_stats }}</p>
+		  </div>
+		</div>
+	</div>
+
+	<div class="spacer"></div>
+
+	<div class="table-layout">
+	  <div>
+		<div class="kumquat">
+		  <img class="centered" src="{% static 'img/registration.png' %}" height="80">
+		</div>
+		<div class="milk cushion">
+          <label>{% trans 'Registration' %}</label>
+		  <p><a href="{% url 'check_registration' %}">
+            <strong>{% trans "Check your registration information" %}</strong>
+          </a></p>
+		</div>
+	  </div>
+	</div>
+
+	<div class="clear spacer"></div>
+
+</div>
+{% endblock status_messages %}
+
+{% block charts %}
+<nav class="page-width cushion-sides tabs">
+	<a {% if national_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:national' %}">{% trans "Libya" %}</a>
+	<a {% if regions_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:regions' %}">{% trans "Regions" %}</a>
+	<a {% if offices_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:offices' %}">{% trans "Offices" %}</a>
+    {% if user.is_staff %}
+        <a {% if offices_detail_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:offices-detail' %}">
+            {% trans "Offices Detail" %}
+        </a>
+        <a {% if subconstituencies_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:subconstituencies' %}">
+            {% trans "Subconstituencies" %}
+        </a>
+        <a {% if weekly_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:weekly' %}">{% trans "Weekly" %}</a>
+        <a {% if sms_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:sms' %}">{% trans "SMS" %}</a>
+    {% endif %}
+</nav>
+<div class="plum" style="overflow:auto">
+	<div class="float-layout page-width">
+
+		{% if new_reg_chart or cum_reg_chart %}
+
+      <div id="slider-container" class="full">
+        <div class="cushion">
+          <label class="text-centered block" for="slider">{% trans "Period:" %} <span id="start_date"></span> - <span id="end_date"></span></label>
+          <input id="slider" type="range" style="width:100%">
+        </div>
+      </div>
+
+			{% if new_reg_chart %}
+				<div class="chart-container half">
+					<div class="cushion">
+						<h2>{% trans "New Registrations" %}</h2>
+						<div class="milk">
+							<div id="left-chart-container-inner" class="chart-container-inner">
+								<div id="new-registrations-chart" class="chart">
+									<svg style="height: 200px"></svg>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+			{% if cum_reg_chart %}
+				<div class="chart-container half">
+					<div class="cushion">
+						<h2>{% trans "Cumulative Registrations" %}</h2>
+						<div class="milk">
+							<div id="right-chart-container-inner" class="chart-container-inner">
+								<div id="cumulative-registrations-chart" class="chart">
+									<svg style="height: 200px"></svg>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+			{% block right_chart %}{% endblock %}
+
+		{% endif %}
+
+    </div></div>
+{% endblock %}
+
+{% block page_footer %}
+  {% if user.is_staff %}
+    <div class="plum">
+      <div class="page-width cushion-ends">
+        <label class="cushion-sides">{% trans "Last Updated: " %}{{ last_updated|date:"H:i d-m-Y"}}</label>
+        <div class="right">
+          <a class="button transparent" href="{% url 'vr_dashboard:csv' %}">{% trans "Download Full CSV" %}</a>
+          <a class="button transparent" href="{% url 'vr_dashboard:daily-csv' %}">{% trans "Download Daily CSV" %}</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  {# VR Dashboard charts #}
+  {% if new_reg_chart or cum_reg_chart %}
+    <script>
+     // provide these translations to the JavaScript charting logic
+     var dashboardTrans = {
+         'months': [
+             '{% trans "January" %}', '{% trans "February" %}', '{% trans "March" %}',
+             '{% trans "April" %}', '{% trans "May" %}', '{% trans "June" %}',
+             '{% trans "July" %}', '{% trans "August" %}', '{% trans "September" %}',
+             '{% trans "October" %}', '{% trans "November" %}', '{% trans "December" %}'
+         ],
+         'Gender': '{% trans "Gender" %}',
+         'New Registrations': '{% trans "New Registrations" %}',
+         'Total Registrations': '{% trans "Total Registrations" %}'
+     };
+    </script>
+    <script src="{% static 'js/d3.js' %}" charset="utf-8"></script>
+    <script src="{% static 'js/nv.d3.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+  {% endif %}
+{% endblock %}

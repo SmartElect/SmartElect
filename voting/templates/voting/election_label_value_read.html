@@ -1,0 +1,20 @@
+{% extends 'bread/label_value_read.html' %}
+{% load i18n %}
+
+{% block actions %}
+
+
+  {% if may_edit %}
+    <a class="button success" href="{% url bread.edit_url_name object.pk %}">{% trans "Edit" %}</a>
+    <a class="button transparent" href="{% url 'upload_election_data' object.pk %}">{% trans "Upload election data" %}</a>
+  {% endif %}
+
+  <a class="button transparent" href="{% url 'download_election_data' object.pk %}">{% trans "Download election data" %}</a>
+
+  <a class="button inverse" href="{% url bread.browse_url_name %}">{% trans "Back to list" %}</a>
+  {% if may_delete %}
+    <a class="button warning" href="{% url bread.delete_url_name view.object.pk %}">{% trans "Delete" %}</a>
+  {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'bread/edit.html' %}
+{% load i18n staticfiles %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static "css/jquery/jquery-ui.css" %}" type="text/css">
+  <link href="{% static 'selectable/css/dj.selectable.css' %}" type="text/css" media="all" rel="stylesheet">
+  <style>
+    label.requiredField { font-weight: bold; }
+    span.asteriskField { display: none; }
+  </style>
+{% endblock %}
+
+{% block title %}
+  {% if active == 'add' %}
+    {% trans "Add changeset" %}
+  {% else %}
+    {% trans "Edit changeset" %}
+  {% endif %}
+{% endblock %}
+
+{% block form_fields %}
+  {% for field in form %}
+    <div id="div_id_{{ field.html_name }}">
+      {# roll our own label so we can include requiredField in the css classes #}
+      {# for required fields #}
+      <label class="{{ field.css_classes }}" for="{{ field.id_for_label }}">{{ field.label }}{{ field.label_suffix }}</label>
+      {{ field }}
+      {% if field.errors %}
+          {{ field.errors }}
+      {% endif %}
+      {% if field.help_text %}
+        <p class="helptext">{{ field.help_text }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endblock form_fields %}
+
+{% block actions %}
+  <button class="success" type="submit">{% trans 'Submit' %}</button>
+
+  <a class="button inverse right" href="{% if changeset.pk %}{% url bread.read_url_name form.instance.pk %}{% else %}{% url bread.browse_url_name %}{% endif %}">{% trans "Cancel" %}</a>
+
+  {% if form.instance.pk and perms.changesets.delete_changeset and changeset.in_deletable_status %}
+  <a class="button inverse right" href="{% url bread.delete_url_name form.instance.pk %}">{% trans "Delete" %}</a>
+  {% endif %}
+{% endblock actions %}
+
+
+{% block extra_js %}
+  <script type="text/javascript" src="{% static 'js/jquery/jquery-ui.js' %}"></script>
+  <script type="text/javascript" src="{% static 'selectable/js/jquery.dj.selectable.js' %}"></script>
+  {# this is inline so we can substitute in the values of constants using Django templating: #}
+  <script>
+  function show_hide () {
+    var how_val = $('select#id_how_to_select').val();
+    var change_val = $('select#id_change').val();
+
+    if (change_val === "{{ changeset.CHANGE_ROLLBACK }}") { /* Roll back other */
+      $('select#id_how_to_select').val("{{ changeset.SELECT_OTHER_CHANGESET }}");
+      $('div#div_id_how_to_select').toggle(false);
+      $('div#div_id_selected_centers').toggle(false);
+      $('div#div_id_other_changeset').toggle(true);
+      $('div#div_id_other_changeset').addClass('requiredField');
+      $('div#div_id_target_center').toggle(false);
+      $('div#div_id_upload_file').toggle(false);
+    } else {
+      $('div#div_id_how_to_select').toggle(true);
+      $('div#div_id_selected_centers').toggle(how_val === "{{ changeset.SELECT_CENTERS }}");  // select list
+      $('div#div_id_other_changeset').toggle(how_val === "{{ changeset.SELECT_OTHER_CHANGESET }}");  // select other
+      $('div#div_id_upload_file').toggle(how_val === "{{ changeset.SELECT_UPLOADED_NIDS }}"); // upload list
+      $('div#div_id_target_center').toggle(change_val === "{{ changeset.CHANGE_CENTER }}"); // move voters
+
+      if (how_val === "{{ changeset.SELECT_OTHER_CHANGESET }}") {
+        $('div#div_id_other_changeset').addClass('requiredField');
+      } else {
+        $('div#div_id_other_changeset').removeClass('requiredField');
+      }
+    }
+  }
+  $('select#id_how_to_select').on('change', show_hide);
+  $('select#id_change').on('change', show_hide);
+  show_hide();
+
+  function set_required(elt_id, yes_no) {
+    // Mark an input-ish element required or not, and update the styling
+    // of its label element if any.
+    // elt_id is the id for an input or select element.
+    var $elt = $(elt_id), $label = $('label[for=' + elt_id + ']');
+    if (yes_no) {
+      $elt.attr('required', 'required');
+      $label.addClass('requiredField');
+    } else {
+      $elt.removeAttr('required');
+      $label.removeClass('requiredField');
+    }
+  }
+
+  function update_required() {
+    var how_val = $('select#id_how_to_select').val();
+    var change_val = $('select#id_change').val();
+
+    set_required('id_other_changeset', change_val === "{{ changeset.CHANGE_ROLLBACK }}" || how_val === "{{ changeset.SELECT_OTHER_CHANGESET }}");
+    /* We can't really use HTML required on the center fields because of how
+       django-selectable works, the input field is always empty.
+     */
+    set_required('id_upload_file', how_val === "{{ changeset.SELECT_UPLOADED_NIDS }}");
+
+    /* The form doesn't add the 'requiredField' class to its label tags for
+      required inputs, so we need to do that.
+      */
+    $('[required=required]').each(function(){
+      var $input = $(this);
+      var elt_id = $input.attr('id');
+      $('label[for=' + elt_id + ']').addClass('requiredField');
+    })
+  }
+  $('select#id_how_to_select').on('change', update_required);
+  $('select#id_change').on('change', update_required);
+  update_required();
+  /* At least make center fields' labels look required */
+  $('label[for=id_selected_centers_0]').addClass('requiredField');
+  $('label[for=id_target_center_0]').addClass('requiredField');
+</script>
+{% endblock %}

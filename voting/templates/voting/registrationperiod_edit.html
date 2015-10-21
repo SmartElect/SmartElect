@@ -1,0 +1,19 @@
+{% extends 'bread/edit.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+  <link href="{% static 'css/jquery/jquery-ui.min.css' %}" type="text/css" rel="stylesheet">
+  <link href="{% static 'css/jquery/timepicker.css' %}" type="text/css" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block extra_js %}
+  <script type="text/javascript" src="{% static 'js/jquery/jquery-ui.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery/datepicker_apply.js' %}"></script>
+  {% if LANGUAGE_CODE == 'ar' %}
+    <script type="text/javascript" src="{% static 'js/jquery/datepicker_arabicize.js' %}"></script>
+  {% endif %}
+
+  <script type="text/javascript" src="{% static 'js/jquery/timepicker.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery/timepicker_apply.js' %}"></script>
+{% endblock extra_js %}

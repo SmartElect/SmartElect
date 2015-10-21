@@ -1,0 +1,67 @@
+{% extends "libya_site/staff.html" %}
+{% load i18n staticfiles %}
+
+{% block title %}{% trans "Polling Center Monitoring" %}{% endblock %}
+
+{% block charts %}
+  <div class="page-width cushion-ends">
+
+    <h1 class="left">{% trans "Polling Center Monitoring" %}</h1>
+
+    <a href="{% url 'vr_dashboard:phone-message-tool' %}" class="right">
+      <button type="submit">{% trans "Phone Tool" %}</button>
+    </a>
+    <div class="clear"></div>
+
+    {% if selected_election %}
+      <form>
+        <label class="inline" for="select-election">{% trans "Election Title" %}</label>
+        <select id="select-election" onchange="location = this.options[this.selectedIndex].value;">
+          {% for election in elections %}
+            <option value="{{ request.path }}?election={{ election.id }}"
+                    {% if election.id == selected_election.id %}
+                    selected
+                    {% endif %}
+                    >
+              {{ election.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+    {% endif %}
+
+    <div class="clear"></div>
+  </div>
+
+  <div class="page-width">
+
+    <nav class="tabs">
+      <a {% if election_day_overview_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:election-day' %}">
+        {% trans "Overview" %}
+      </a>
+      <a {% if election_day_center_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:election-day-center' %}">
+        {% trans "Center List" %}
+      </a>
+      <a {% if election_day_hq_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:election-day-hq' %}">
+        {% trans "HQ" %}
+      </a>
+      <a {% if election_day_preliminary_votes_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:election-day-preliminary' %}">
+        {% trans "Preliminary Vote Counts" %}
+      </a>
+    </nav>
+  </div>
+
+{% endblock %}
+
+{% block page_footer %}
+  <div class="milk">
+    <div class="page-width cushion-ends">
+      <label class="cushion-sides">{% trans "Last Updated: " %}{{ last_updated|date:"H:i d-m-Y"}}</label>
+      {% block page_footer_csv_links %}
+        <div class="right">
+          <a class="button transparent" href="{{ request.path }}?format=csv">{% trans "Download CSV" %}</a>
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}

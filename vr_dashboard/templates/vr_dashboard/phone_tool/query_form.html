@@ -1,0 +1,20 @@
+{% extends 'vr_dashboard/phone_tool_base.html' %}
+{% load i18n static %}
+{% block main_content %}
+  <section class="milk">
+    <div class="page-width cushion">
+
+      <p class="two-thirds help-text">{% blocktrans trimmed %}Please enter a center id, or a phone number
+        (218xxxxxxxxx or 88216xxxxxxxx) without punctuation or spaces. Either
+        a phone number or a center must be supplied, but not both.{% endblocktrans %}
+      </p>
+      <br />
+
+      <form class="two-thirds" method="post" action="{% url 'vr_dashboard:phone-message-tool' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="success" type="submit" value="Submit"/>
+      </form>
+    </div>
+  </section>
+{% endblock main_content %}

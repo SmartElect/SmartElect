@@ -1,0 +1,13 @@
+{% url 'browse_elections' as election_url %}
+{% url 'browse_ballots' as ballot_url %}
+{% url 'browse_candidates' as candidate_url %}
+{% url 'browse_stations' as station_url %}
+{% url 'browse_closedcenters' as closedcenters_url %}
+
+<nav class="tabs">
+  {% include 'includes/tablink.html' with url=election_url linktext=_("Elections") %}
+  {% include 'includes/tablink.html' with url=ballot_url linktext=_("Ballots") %}
+  {% include 'includes/tablink.html' with url=candidate_url linktext=_("Candidates") %}
+  {% include 'includes/tablink.html' with url=station_url linktext=_("Stations") %}
+  {% include 'includes/tablink.html' with url=closedcenters_url linktext=_("Closed Centers") %}
+</nav>

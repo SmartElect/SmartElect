@@ -1,0 +1,20 @@
+{% extends 'libya_site/staff.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Caller Assistance" %}{% endblock title %}
+
+{% block messages %}{% endblock %}
+
+{% block content %}
+
+  <h1 class="page-width cushion">{% trans "Caller Assistance" %}</h1>
+
+  <div class="milk">
+    <div class="page-width cushion">
+      {% include 'includes/messages.html' %}
+      {% block assistance %}
+      {% endblock %}
+    </div>
+  </div>
+
+{% endblock content %}

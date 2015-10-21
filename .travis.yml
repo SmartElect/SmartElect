@@ -1,0 +1,24 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+addons:
+  postgresql: "9.1"
+env:
+  - DJANGO_SETTINGS_MODULE="libya_elections.settings.dev"
+install:
+  - pip install -r requirements/dev.txt
+services:
+  - memcached
+  - redis-server
+before_script:
+  - find . -name '*.pyc' -delete
+script:
+  - flake8 .
+  - python manage.py makemigrations --dry-run | grep 'No changes detected' || (echo 'There are changes which require migrations.' && exit 1)
+  - python manage.py test --noinput
+branches:
+  only:
+    - master
+    - develop
+    - open-source

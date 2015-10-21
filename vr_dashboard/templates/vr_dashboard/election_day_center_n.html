@@ -1,0 +1,141 @@
+{% extends 'vr_dashboard/polling_base.html' %}
+{% load i18n libya_tags %}
+{% block content %}
+  <div class="banana cushion-ends">
+    <div class="page-width float-layout notice">
+      <div class="third cushion">
+        <h3>{% trans "Polling Center" %} {{ center_id }} - {{ center.name }}</h3>
+
+        <p>
+          <a href='{% url 'vr_dashboard:election-day-office-n' center.office_id %}'>
+            {% trans "Return to Office" %} {{ center.office_id }}
+          </a>
+        </p>
+
+        <br style="line-height: 40%;" />
+
+        {% if center.copy_of_polling_center %}
+          <ul>
+            <li>{% trans "Copy of center" %}</li>
+            <li><a href='{% url 'vr_dashboard:election-day-center-n' center.copy_of_polling_center %}'>
+              {{ center.copy_of_polling_center }}</a></li>
+          </ul>
+        {% endif %}
+        {% if copies %}
+          <p>{% trans "Copies of this center:" %}</p>
+          <ul>
+            {% for copy in copies %}
+              <li><a href='{% url 'vr_dashboard:election-day-center-n' copy %}'>{{ copy }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if center.inactive_for_election %}
+          <p><strong>{% trans 'The center was inactive for this election.' %}</strong></p>
+        {% endif %}
+
+        <br />
+        <h3>{% trans "Reporting" %}</h3>
+        <ul>
+          <li>
+            {% trans "Last Opened" %}:
+            {{ stats.last_opened }}
+          </li>
+          <li>
+            {% trans "Last Reported" %}:
+            {{ stats.last_report }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="third cushion">
+        <h3>{% trans "Reported Votes" %}</h3>
+        <ul>
+          {% if stats.reported_period_1 or stats.reported_period_2 or stats.reported_period_3 or stats.reported_period_4 %}
+            {% if stats.reported_period_1 %}
+              <li>
+                {% trans "Reported Period" %} 1:
+                {{ stats.reported_period_1|safe }}
+              </li>
+            {% endif %}
+            {% if stats.reported_period_2 %}
+              <li>
+                {% trans "Reported Period" %} 2:
+                {{ stats.reported_period_2|safe }}
+              </li>
+            {% endif %}
+            {% if stats.reported_period_3 %}
+              <li>
+                {% trans "Reported Period" %} 3:
+                {{ stats.reported_period_3|safe }}
+              </li>
+            {% endif %}
+            {% if stats.reported_period_4 %}
+              <li>
+                {% trans "Reported Period" %} 4:
+                {{ stats.reported_period_4|safe }}
+              </li>
+            {% endif %}
+          {% else %}
+            <li>{% trans "Not Reported" %}</li>
+          {% endif %}
+        </ul>
+
+        <br />
+        <h3>{% trans "Total Registrations" %}</h3>
+        <ul>
+          <li>
+            {% trans "Total Registrations" %}:
+            {{ stats.total|safe }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="third cushion">
+        <h3>{% trans "Staff Phones" %}</h3>
+        <ul id='phones'>
+          {% for phone in phones %}
+            <li>{{ phone.number|format_phone_number }} {{ phone.timestamp }}
+              <strong>{{ phone.error }}</strong>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <section class="milk">
+    <div class="page-width cushion">
+      {% if log %}
+        <table>
+          <thead>
+          <tr>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Phone" %}</th>
+            <th>{% trans "Message Type" %}</th>
+            <th>{% trans "Reported Period" %}</th>
+            <th>{% trans "Reported Votes" %}</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for message in log %}
+            <tr>
+              <td>{{ message.formatted_creation_date }}</td>
+              <td class="phone">{{ message.phone_number|format_phone_number }}</td>
+              <td>{{ message.type }}</td>
+              <td>{{ message.period }}</td>
+              <td>{{ message.votes }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>{% trans "No messages were received." %}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock content %}
+
+{% block page_footer_csv_links %}
+{% endblock %}

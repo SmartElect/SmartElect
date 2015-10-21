@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<div class="float-layout banana">
+  <div class="half cushion">
+    <label>{% trans "Family Book Record Number" %}</label>
+    <p>{{ case.citizen.fbr_number }}</p>
+  </div>
+  <div class="half cushion">
+    <label>{% trans "Mother's Name" %}</label>
+    <p>{{ case.citizen.mother_name }}</p>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div class="spacer"></div>
+
+<p>
+  {% trans "Ask the citizen" %}:
+</p>
+<blockquote>
+  {% if case.field_staff %}
+    {% trans "Provide either the citizen's Family Book Record Number or the citizen's Mother's Name." %}
+  {% else %}
+    {% trans "Provide either your Family Book Record Number or your Mother's Name." %}
+  {% endif %}
+</blockquote>
+<p>
+  {% trans "Did they provide either correctly?" %}
+</p>

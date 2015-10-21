@@ -1,0 +1,119 @@
+{% extends 'rollgen/base.html' %}
+
+{% load humanize i18n rollgen_tags %}
+
+{% block title %}{% trans "Voter Rolls" %}{% endblock title %}
+
+{% block rollgen_content %}
+  <div id='overview'>
+    <div class="page-width cushion-sides">
+      <h1 class="left">{% trans "Voter Rolls" %}</h1>
+      <div class="cushion-ends">
+        {% if new_url %}
+          <a class="button success right" href="{{ new_url }}">{% trans "New" %}</a>
+        {% endif %}
+      </div>
+      <div class="clear"></div>
+    </div>
+
+    <div class="milk">
+      <div class="page-width cushion">
+
+        <h2>{% trans "Overview" %}</h2>
+
+        <table>
+          <colgroup>
+            <col id='job'>
+            <col id='status'>
+            <col id='phase'>
+            <col id='centers'>
+            <col id='content_counts'>
+          </colgroup>
+          <thead>
+            <th>{% trans "Job" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Phase" %}</th>
+            <th>{% trans "Centers" %}</th>
+            {% comment %}Translators: "Number of PDFs/Pages" is the heading for a table column
+            that contains a count of the PDF files in a set of documents and the number of pages in
+            those PDFs. For instance, if a set contains 3 PDFs with 4 pages each, the data in the
+            column would look like this:
+                  3 PDFs
+                 12 pages
+            {% endcomment %}
+            <th>{% trans "Number of PDFs/Pages" %}</th>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+              <tr>
+                <td>
+                  {% if job.in_progress %}
+                    {{ job.dirname }}
+                  {% else %}
+                    <a href="{% url 'rollgen:browse_job_offices' job.dirname %}">{{ job.dirname }}</a>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if job.in_progress %}
+                    {% trans "This job is in progress." %}
+                  {% else %}
+                    {% if job.fail_message %}
+                      {% trans "Failed" %}
+                    {% else %}
+                      {% blocktrans trimmed with end_date=job.end_time|date:'d/m/Y' end_time=job.end_time|time %}
+                        Completed<br/>{{ end_date }}, {{ end_time }}
+                      {% endblocktrans %}
+                    {% endif %}
+                  {% endif %}
+                </td>
+                <td>{{ job.phase }}</td>
+                <td>
+                  {% with n_centers=job.center_ids|length %}
+                    {% with n_excess_centers=n_centers|add:"-25" %}
+                      {% if n_centers %}
+                        {% blocktrans trimmed %}
+                          (Total {{ n_centers }})
+                        {% endblocktrans %}
+                        {% comment %}
+                          If there are > 30 centers I don't want to try to display them all. (30 is a
+                          fairly arbitrary choice.) In that case I display the first 25 and the text
+                          "and N more centers".
+                        {% endcomment %}
+                        {% if n_excess_centers > 5 %}
+                          {# 30 or more centers in the list. #}
+                          {{ job.center_ids|slice:":25"|join:', ' }},
+                          {% blocktrans trimmed %}
+                            and {{ n_excess_centers }} more
+                          {% endblocktrans %}.
+                        {% else %}
+                          {{ job.center_ids|join:', ' }}
+                        {% endif %}
+                      {% else %}
+                        {# n_centers == 0, so don't display anything #}
+                        &nbsp;
+                      {% endif %}
+                    {% endwith %}
+                  {% endwith %}
+                </td>
+                <td>
+                  {% if job.end_time %}
+                    {% blocktrans trimmed with n_pages=job.n_pages|intcomma n_files=job.n_files|intcomma %}
+                      {{ n_files }} PDFs <br/> {{ n_pages }} pages
+                    {% endblocktrans %}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class='spacer'>&nbsp;</div>
+
+        {% if polling_csv_url %}
+          <a class="button transparent" href="{{ polling_csv_url }}">{% trans "Download Polling CSV" %}</a>
+        {% endif %}
+      </div>
+    </div>
+</div>
+
+{% endblock rollgen_content %}
