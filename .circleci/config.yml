@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # Deployment is to Ubuntu 18.04, which has Python 3.6.7
+      - image: circleci/python:3.6.7
+        environment:
+          DJANGO_SETTINGS_MODULE: libya_elections.settings.dev
+          DB_USER: ubuntu
+          DB_HOST: localhost
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: ubuntu
+          POSTGRES_DB: open_source_elections
+          POSTGRES_PASSWORD: ""
+          LC_COLLATE: en_US.UTF-8
+      - image: circleci/redis:3-alpine
+      - image: memcached:1-alpine
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps2-{{ checksum "requirements/dev.txt" }}
+      - run:
+          name: Install requirements
+          command: |
+            python -m venv env
+            . env/bin/activate
+            pip install -r requirements/dev.txt
+      - save_cache:
+          key: deps2-{{ checksum "requirements/dev.txt" }}
+          paths:
+            - "env"
+      - run:
+          name: Run Tests
+          command: |
+            . env/bin/activate
+            ./run_tests.sh

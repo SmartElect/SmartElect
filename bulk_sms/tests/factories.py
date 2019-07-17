@@ -7,14 +7,16 @@ from register.tests.factories import SMSFactory
 
 
 class BatchFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Batch
+    class Meta:
+        model = models.Batch
 
     created_by = factory.SubFactory(UserFactory)
     reviewed_by = factory.SubFactory(UserFactory)
 
 
 class BulkMessageFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.BulkMessage
+    class Meta:
+        model = models.BulkMessage
 
     phone_number = factory.Sequence(lambda n: get_random_phone_number())
     message = factory.fuzzy.FuzzyText()
@@ -23,7 +25,8 @@ class BulkMessageFactory(factory.DjangoModelFactory):
 
 
 class BroadcastFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Broadcast
+    class Meta:
+        model = models.Broadcast
 
     created_by = factory.SubFactory(UserFactory)
     batch = factory.SubFactory(BatchFactory)

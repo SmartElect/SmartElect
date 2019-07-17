@@ -1,9 +1,7 @@
-# Python imports
-from __future__ import division
-from __future__ import unicode_literals
-
-# Django imports
 from django import template
+
+from libya_elections.utils import should_see_staff_view
+
 
 register = template.Library()
 
@@ -20,3 +18,13 @@ def can_rollgen(user):
     return (user.is_superuser
             or in_group(user, "rollgen_view_job")
             or in_group(user, "rollgen_create_job"))
+
+
+@register.filter
+def can_see_staff_link(user):
+    """
+    Return True if the user should see the staff view.
+
+    Example usage:  {{ user|can_see_staff_link }}
+    """
+    return should_see_staff_view(user)

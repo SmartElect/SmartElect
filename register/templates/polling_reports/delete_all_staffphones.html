@@ -17,7 +17,7 @@
 
         <div class="spacer"></div>
 
-        <form class="two-thirds" method="POST">
+        <form class="two-thirds" method="POST" novalidate>
           {% csrf_token %}
 
           <button name="ok" class="warning">{% trans "Delete All" %}</button>

@@ -28,6 +28,7 @@
             <th>{% trans "Full Name" %}</th>
             <th>{% trans "Groups" %}</th>
             <th>{% trans "Date Joined" %}</th>
+            <th>{% trans "Account Expires" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -46,6 +47,13 @@
               </td>
               <td>
                 {{ user.date_joined|date:"d/m/Y" }}
+              </td>
+              <td>
+                  {% if user.active_range.end_date %}
+                      {{ user.active_range.end_date|date:"d/m/Y" }}
+                  {% else %}
+                      {% trans "No expiration" %}
+                  {% endif %}
               </td>
             </tr>
           {% endfor %}

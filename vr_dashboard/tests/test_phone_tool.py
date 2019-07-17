@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from libya_site.tests.factories import DEFAULT_USER_PASSWORD, UserFactory
 from register.models import RegistrationCenter
@@ -43,8 +43,8 @@ class TestPhoneTool(TestCase):
         )
 
         # these will both get whitelisted by this test class
-        self.good_phone_number_1 = 218000000106
-        self.good_phone_number_2 = 218000000107
+        self.good_phone_number_1 = 218900000106
+        self.good_phone_number_2 = 218900000107
 
     def test_form_validation(self):
         # no args
@@ -105,7 +105,6 @@ class TestPhoneTool(TestCase):
         rsp = self.client.post(reverse('vr_dashboard:phone-message-tool'), {
             'phone_number': self.good_phone_number_1
         })
-        print rsp.content
         self.assertRedirects(
             rsp,
             reverse('vr_dashboard:phone-history') + '?phone=%s' % self.good_phone_number_1
@@ -115,14 +114,14 @@ class TestPhoneTool(TestCase):
         """ Test what happens when bad data gets past the form, or the form is
         bypassed.
         """
-        rsp = self.client.get(reverse('vr_dashboard:search-phones') +
-                              '?phone=%s' % self.bad_phone_number)
+        rsp = self.client.get(reverse('vr_dashboard:search-phones')
+                              + '?phone=%s' % self.bad_phone_number)
         self.assertEqual(400, rsp.status_code)
-        rsp = self.client.get(reverse('vr_dashboard:search-phones') +
-                              '?center=%s' % self.bad_center_id)
+        rsp = self.client.get(reverse('vr_dashboard:search-phones')
+                              + '?center=%s' % self.bad_center_id)
         self.assertEqual(400, rsp.status_code)
-        rsp = self.client.get(reverse('vr_dashboard:phone-history') +
-                              '?phone=%s' % self.bad_phone_number)
+        rsp = self.client.get(reverse('vr_dashboard:phone-history')
+                              + '?phone=%s' % self.bad_phone_number)
         self.assertEqual(400, rsp.status_code)
 
     def test_whitelist(self):        # success, redirect to phone history

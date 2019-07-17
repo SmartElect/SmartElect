@@ -7,7 +7,7 @@
 
   <div class="milk">
     <div class="page-width cushion">
-      <form class="two-thirds" method="post" action="{% url 'upload-centers-csv' %}" enctype="multipart/form-data">
+      <form class="two-thirds" method="post" action="{% url 'upload-centers-csv' %}" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
         <label for="id_registry_number">{{ form.csv.label }}:</label>

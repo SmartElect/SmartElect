@@ -56,9 +56,10 @@ def clear_cache(*args, **kwargs):
 
 def pick_text(text_en, text_ar):
     """
-    Return text_en if current language is english, else text_ar
+    Return text_en if current language is english or text_ar is not set,
+    else text_ar
     """
-    return text_en if get_language() == 'en' else text_ar
+    return text_en if (get_language() == 'en' or not text_ar) else text_ar
 
 
 def maybe_add_message_to_database(

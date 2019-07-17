@@ -11,7 +11,7 @@ from staff.views import gitrev_view
 
 urlpatterns = [
     # HNEC Staff applications
-    url(r'^django-admin/', include(admin_site.urls)),
+    url(r'^django-admin/', admin_site.urls),
 
     url(r'^admin/', include('libya_elections.urls_admin')),
     url(r'^captcha/', include('captcha.urls')),
@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^sms/send/', include('bulk_sms.urls')),
     url(r'^sms/', include('libya_elections.urls_sms')),
     url(r'^staff/', include('staff.urls')),
-    url(r'^voter/', include('civil_registry.urls')),
 
     url(r'', include('audit.urls')),
     url(r'', include('subscriptions.urls')),
@@ -66,4 +65,10 @@ if "thuraya" in settings.INSTALLED_BACKENDS:
 if settings.ENVIRONMENT != 'production':
     urlpatterns += [
         url(r'^httptester/', include('httptester.urls')),
+    ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
     ]

@@ -19,11 +19,11 @@ class TestVrDashboardUtils(TestCase):
             max_result_size = number_of_dates if number_of_dates < 7 else 7
             # one case is when the last date is today
             results = last_seven_dates(input_strings)
-            self.assertEquals(results, input_strings[:-1][-max_result_size:])
+            self.assertEqual(results, input_strings[:-1][-max_result_size:])
 
             # another case is when the last date is before today
             results = last_seven_dates(input_strings[:-1])
-            self.assertEquals(results, input_strings[:-1][-max_result_size:])
+            self.assertEqual(results, input_strings[:-1][-max_result_size:])
 
     def test_parse_phone_number_fields(self):
         whitelisted = '8821612340058 W 2014-12-03 10:10:51+00'

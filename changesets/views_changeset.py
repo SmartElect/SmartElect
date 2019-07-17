@@ -1,6 +1,5 @@
 # Python
-from __future__ import unicode_literals
-from httplib import TEMPORARY_REDIRECT, BAD_REQUEST, FORBIDDEN
+from http.client import TEMPORARY_REDIRECT, BAD_REQUEST, FORBIDDEN
 
 # 3rd party
 from bread.bread import Bread, EditView, AddView, DeleteView, ReadView
@@ -9,8 +8,8 @@ from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -22,6 +21,7 @@ from libya_elections.filters import LibyaChoiceFilter
 from .forms import ChangesetForm
 from libya_elections.libya_bread import StaffBreadMixin, PaginatedBrowseView
 from .models import Changeset
+from libya_elections.utils import get_comma_delimiter
 
 
 class ChangesetFilterset(FilterSet):
@@ -52,7 +52,7 @@ class ChangesetBrowse(PaginatedBrowseView):
 def display_selected_centers(changeset):
     if changeset.how_to_select == changeset.SELECT_CENTERS:
         centers = [str(center) for center in changeset.selected_centers.order_by('center_id')]
-        return ', '.join(centers)
+        return get_comma_delimiter().join(centers)
 
 
 def display_target_center(changeset):
@@ -72,7 +72,7 @@ def display_number_of_uploaded_voters(changeset):
 
 def display_approvers(changeset):
     if changeset.number_of_approvals:
-        return ', '.join([unicode(user) for user in changeset.approvers.all()])
+        return get_comma_delimiter().join([str(user) for user in changeset.approvers.all()])
 
 
 def display_error_text(changeset):
@@ -153,7 +153,7 @@ class ChangesetRead(ReadView):
             ('finish_time', changeset.finish_time),
             ('rollback_changeset', changeset.rollback_changeset),
             ('error_text', paragraphs(display_error_text(changeset))),
-            ]
+        ]
 
         # Now change the first item in each entry to the actual field object
         def fix_field(row):
@@ -169,7 +169,7 @@ class ChangesetRead(ReadView):
                     help_text = row[4]
                 row[0] = DummyField()
             else:
-                row[0] = Changeset._meta.get_field_by_name(row[0])[0]
+                row[0] = Changeset._meta.get_field(row[0])
             # Return a tuple, with any extra fields for label, help thrown away now
             return tuple(row[:3])
 
@@ -230,7 +230,7 @@ class ChangesetAdd(AddView):
 class ChangesetDelete(DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(),
                                      settings.LOGIN_URL,
                                      REDIRECT_FIELD_NAME)
@@ -263,7 +263,7 @@ class ApproveView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         # User has to be logged in
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(),
                                      settings.LOGIN_URL,
                                      REDIRECT_FIELD_NAME)

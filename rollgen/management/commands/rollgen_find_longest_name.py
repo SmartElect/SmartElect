@@ -1,13 +1,7 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import logging
-from optparse import make_option
 
 # 3rd party imports
-
-
-# Django imports
 from django.core.management.base import BaseCommand, CommandError
 
 # Project imports
@@ -34,13 +28,13 @@ class Command(BaseCommand):
     """
     args = '<entity>'
 
-    option_list = BaseCommand.option_list + (
-        make_option('--filename',
-                    action='store',
-                    dest='filename',
-                    default=None,
-                    help='The longest string will be written to this file (defaults to stdout)'),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--filename',
+            action='store',
+            dest='filename',
+            default=None,
+            help='The longest string will be written to this file (defaults to stdout)')
 
     def handle(self, *args, **options):
         if len(args) != 1:

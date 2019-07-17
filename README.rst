@@ -1,18 +1,15 @@
 SmartElect
 ==========
 
-.. image:: https://travis-ci.org/SmartElect/SmartElect.svg?branch=develop
-           :target: https://travis-ci.org/SmartElect/SmartElect
-
 Below you will find basic setup and deployment instructions for the SmartElect
 project. To begin you should have the following applications installed on your
 local development system:
 
-- Python = 2.7
-- `pip >= 1.5.4 <http://www.pip-installer.org/>`_
+- Python = 3.6
+- `pip >= 8 <http://www.pip-installer.org/>`_
 - `virtualenv >= 1.11 <http://www.virtualenv.org/>`_
 - `virtualenvwrapper >= 3.0 <http://pypi.python.org/pypi/virtualenvwrapper>`_
-- Postgres >= 9.1
+- Postgres >= 10
 - git >= 1.7
 - memcached >= 1.4
 - redis >= 2.10
@@ -26,7 +23,7 @@ Getting Started
 To setup your local environment you should create a virtualenv and install the
 necessary requirements::
 
-    mkvirtualenv -p `which python2.7` smartelect
+    mkvirtualenv -p `which python3.6` open_source_elections
     $VIRTUAL_ENV/bin/pip install -U -r $PWD/requirements/dev.txt
 
 Then create a local settings file and set your ``DJANGO_SETTINGS_MODULE`` to use it::
@@ -38,18 +35,21 @@ Then create a local settings file and set your ``DJANGO_SETTINGS_MODULE`` to use
 Exit the virtualenv and reactivate it to activate the settings just changed::
 
     deactivate
-    workon smartelect
+    workon open_source_elections
 
 Create the Postgres database and run the initial migrate::
 
-    createdb -E UTF-8 smartelect
+    createdb --encoding=UTF-8 --lc-collate=en_US.UTF-8 open_source_elections
     python manage.py migrate
+
+If the ``createdb`` command fails, you need to alter your Postgres ``template1``
+database to use the ``UTF-8`` encoding and ``en_US.UTF-8`` LC_COLLATE setting.
 
 Create a superuser::
 
     python manage.py createsuperuser
 
-Redis is required.  Install the server with ``brew install redis`` (OS X) or ``sudo apt-get install redis-server``
+Redis is required.  Install the server with ``brew install redis`` (OS X) or ``sudo apt install redis-server``
 (some Linux), or something else.  If Redis is listening on a non-standard port or not accessible over ``localhost``,
 use the ``REPORTING_REDIS_SETTINGS`` in ``base.py`` to configure it.
 
@@ -61,43 +61,18 @@ To run the test suite (including flake8 and a coverage report)::
 
     ./run_tests.sh
 
-We use the `django-nose <https://github.com/django-nose/django-nose>`_ test runner which offers some
-extra features. You can set the env var ``REUSE_DB=1`` to have Django reuse the test database
-between test runs, saving many seconds in test startup time. If you do, be aware that test runs will
-not automatically pick up new migrations anymore, so if you create a new migration, you'll have to
-unset ``REUSE_DB`` for one test run to pick up the new migrations::
-
-    REUSE_DB=1 ./run_tests.sh
-
-You can also tell django-nose to stop at the first test failure, and to only rerun failed tests.
-This is very handy when you're focused on a new feature and don't want to run the whole test suite
-with each change, but do want to run the whole test suite once you have your test working (to make
-sure that your working code didn't break something else). Put this in ``$HOME/.noserc``::
-
-    [nosetests]
-    # failed=1 means only run tests that failed on a previous run.
-    # Note though that failed tests are only recorded when failed=1
-    # is set, which means it's not very useful unless you keep it
-    # set.
-    failed=1
-
-    # stop=1 means stop on the first failure. This sometimes breaks tests by leaving
-    # the database in an unclean state. If you hit weird test failures after the
-    # first one, try adding FORCE_DB=1 (just one time); it's the anti-REUSE_DB=1
-    # and will ensure running the tests with a fresh new test database.
-    stop=1
 
 Next, we'll discuss setting up celery and celerybeat. This may not be necessary for all purposes, so
 see below for a simpler alternative mechanism. If that simpler mechanism is not sufficient, then you
 will need to setup celery. In a separate shell, run the celery workers::
 
-    python manage.py celery worker
+    celery worker -A libya_elections
 
-- If this fails due to an error connecting to RabbitMQ, ensure that RabbitMQ is installed and running.  (Ubuntu: ``sudo apt-get install rabbitmq-server``)
+- If this fails due to an error connecting to RabbitMQ, ensure that RabbitMQ is installed and running.  (Ubuntu: ``sudo apt install rabbitmq-server``)
 
 In a separate shell, run the ``celerybeat`` process::
 
-    python manage.py celerybeat
+    celery beat -A libya_elections
 
 *The* ``celerybeat`` *and celery worker processes will need to be manually recycled to pick up code changes.*
 

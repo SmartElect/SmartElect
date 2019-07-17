@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 
-from polling_reports.views import CenterClosedForElectionBread, CenterOpenBread, PollingReportBread, \
-    PreliminaryVoteCountBread
+from polling_reports.views import CenterClosedForElectionBread, CenterOpenBread, \
+    PollingReportBread, PreliminaryVoteCountBread
 from rollgen.views import StationBread
 from voting.views import ElectionBread, BallotBread, CandidateBread, \
     RegistrationPeriodBread

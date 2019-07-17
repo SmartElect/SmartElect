@@ -22,4 +22,5 @@ class StationAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+
 admin_site.register(Station, StationAdmin)

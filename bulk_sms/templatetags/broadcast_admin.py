@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django import template
 from django.utils.translation import ugettext as _
 
@@ -26,8 +24,8 @@ def approve_submit_row(context):
         'show_delete_link': (not is_popup and context['has_delete_permission']
                              and change and context.get('show_delete', True)),
         'show_save_as_new': not is_popup and save_as and not change,
-        'show_save_and_add_another': (context['has_add_permission'] and
-                                      not is_popup and context['has_change_permission']),
+        'show_save_and_add_another': (context['has_add_permission']
+                                      and not is_popup and context['has_change_permission']),
         'show_save_and_continue': not is_popup and context['has_change_permission'],
         'show_go_back': context['has_read_permission'],
         'is_popup': is_popup,

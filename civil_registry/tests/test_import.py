@@ -1,11 +1,11 @@
 # coding: utf-8
 from datetime import timedelta
 from time import sleep
+from unittest.mock import patch, ANY
 
 from django.forms import model_to_dict
 from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch, ANY
 
 from civil_registry.models import Citizen, TempCitizen, CitizenMetadata
 from civil_registry.tests.factories import CitizenFactory
@@ -26,7 +26,7 @@ class CitizenImportTest(TestCase):
         with patch('civil_registry.utils.mirror_database') as mirror_database:
             mirror_database.return_value = MirrorStats()
             import_citizen_dump(input_filename=None)
-        mirror_database.assert_called()
+        assert mirror_database.called
         self.assertEqual(1, CitizenMetadata.objects.count())
 
     def test_metadata_updated(self, get_records, open):
@@ -61,7 +61,7 @@ class CitizenImportTest(TestCase):
         # mocked delete_all, so it should still be there.
         self.assertFalse(Citizen.objects.exists())
         self.assertEqual(1, stats.records_read)
-        mirror_database.assert_called()
+        assert mirror_database.called
         temp_cit = TempCitizen.objects.get()
         self.assertEqual(data, model_to_dict(temp_cit))
 

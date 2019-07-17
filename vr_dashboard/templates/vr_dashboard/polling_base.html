@@ -1,5 +1,5 @@
 {% extends "libya_site/staff.html" %}
-{% load i18n staticfiles %}
+{% load i18n static %}
 
 {% block title %}{% trans "Polling Center Monitoring" %}{% endblock %}
 
@@ -14,7 +14,7 @@
     <div class="clear"></div>
 
     {% if selected_election %}
-      <form>
+      <form novalidate>
         <label class="inline" for="select-election">{% trans "Election Title" %}</label>
         <select id="select-election" onchange="location = this.options[this.selectedIndex].value;">
           {% for election in elections %}

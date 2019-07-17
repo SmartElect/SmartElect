@@ -14,7 +14,7 @@
 
       <div class="two-thirds cushion">
         {% blocktrans with name=view.object %}Really delete {{ name }}?{% endblocktrans %}
-        <form method="POST">
+        <form method="POST" novalidate>
           {% csrf_token %}
           <div class="spacer"></div>
           <button class="warning" type="submit">{% trans 'Delete' %}</button>

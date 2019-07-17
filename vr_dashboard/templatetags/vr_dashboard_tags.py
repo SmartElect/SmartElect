@@ -2,6 +2,7 @@ import datetime
 
 from django import template
 from django.utils.translation import ugettext as _
+from django.utils.safestring import mark_safe
 
 from libya_site.utils import intcomma
 from reporting_api.constants import PRELIMINARY_VOTE_COUNTS
@@ -9,16 +10,7 @@ from reporting_api.constants import PRELIMINARY_VOTE_COUNTS
 register = template.Library()
 
 
-@register.simple_tag(name='active_if_lang')
-def active_if_lang(request, language_code):
-    """ Emit 'class="active"' if running in the specified language. """
-    if language_code == request.LANGUAGE_CODE:
-        return 'class="active"'
-    else:
-        return ''
-
-
-@register.assignment_tag()
+@register.simple_tag()
 def assign_lookup(current, *args):
     """A version of lookup() that can be used with 'as'.
 
@@ -94,7 +86,7 @@ def gen_data_points(request, js_var_name, table, xy_keys):
         x_label, y_label = 'label', 'value'
     js = ['var %s = [' % js_var_name]
     for subdivision in table:  # e.g., each region/office/etc.
-        if isinstance(subdivision['label'], basestring):
+        if isinstance(subdivision['label'], str):
             label = _(subdivision['label'])
         elif request.LANGUAGE_CODE == 'en' and 'english_name' in subdivision['label']:
             label = subdivision['label']['english_name']
@@ -111,7 +103,7 @@ def gen_data_points(request, js_var_name, table, xy_keys):
         js.append('         ]')
         js.append('        },')
     js.append('    ];')
-    return '\n'.join(js)
+    return mark_safe('\n'.join(js))
 
 
 @register.simple_tag(name='gen_prelim_count_cells')
@@ -129,7 +121,7 @@ def gen_prelim_count_cells(options, counts):
         number = counts.get(option)
         formatted_number = intcomma(number) if number else '-'
         output.append('<td>%s</td>' % formatted_number)
-    return ''.join(output)
+    return mark_safe(''.join(output))
 
 
 @register.filter

@@ -4,7 +4,6 @@ Given a SQL dump file from the CRA, update
 our citizens table.
 """
 import logging
-from optparse import make_option
 import os.path
 
 from django.core.management.base import LabelCommand, CommandError
@@ -21,15 +20,15 @@ class Command(LabelCommand):
     args = "<filename>"
     help = "Updates civil registry data from a SQL dump"
 
-    option_list = LabelCommand.option_list + (
-        make_option(
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--encoding',
             action='store',
             dest='encoding',
             default='UTF-8',
             help='The input file has this encoding. Default: UTF-8.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--max-change-percent',
             action='store',
             dest='max_change_percent',
@@ -41,7 +40,6 @@ class Command(LabelCommand):
                  'to be overridden when initializing a nearly empty database. '
                  'Default is %f%%.' % DEFAULT_MAX_CHANGE_PERCENT
         )
-    )
 
     def handle_label(self, label, **options):
 

@@ -7,12 +7,10 @@ from django.utils.timezone import now
 
 # Project imports
 from register.tests.test_models import RegistrationCenterFactory
-from register.utils import registration_in_progress
 from reporting_api.data_pull_common import get_active_registration_locations, \
     get_all_polling_locations
 from reporting_api.reports import calc_yesterday, parse_iso_datetime, printable_iso_datetime
 from reporting_api.utils import get_datetime_from_local_date_and_time
-from voting.tests.factories import RegistrationPeriodFactory
 
 
 class TestReportUtils(TestCase):
@@ -37,27 +35,15 @@ class TestReportUtils(TestCase):
         first_dt = today - datetime.timedelta(7)
         input_strings = [(first_dt + datetime.timedelta(delta_days)).strftime('%Y-%m-%d')
                          for delta_days in range(7)]
-
-        # the behavior depends on the current datetime relative to registration end,
-        # so try it with registration end before and after the current time
-        reg_period = RegistrationPeriodFactory(start_time=today - datetime.timedelta(days=5),
-                                               end_time=today)
-        for fake_registration_end in [today - datetime.timedelta(days=1),
-                                      today + datetime.timedelta(days=1)]:
-            reg_period.end_time = fake_registration_end
-            reg_period.save()
-            if registration_in_progress(as_of=today.date()):
-                expected_str = input_strings[-2]
-            else:
-                expected_str = input_strings[-1]
-            expected_date = datetime.datetime.strptime(expected_str, '%Y-%m-%d').date()
-            date_and_string = calc_yesterday(input_strings)
-            self.assertEqual(date_and_string, (expected_date, expected_str))
-            # try again, providing the date objects
-            input_dates = [datetime.datetime.strptime(s, '%Y-%m-%d').date()
-                           for s in input_strings]
-            date_and_string = calc_yesterday(input_strings, input_dates)
-            self.assertEqual(date_and_string, (expected_date, expected_str))
+        expected_str = input_strings[-1]
+        expected_date = datetime.datetime.strptime(expected_str, '%Y-%m-%d').date()
+        date_and_string = calc_yesterday(input_strings)
+        self.assertEqual(date_and_string, (expected_date, expected_str))
+        # try again, providing the date objects
+        input_dates = [datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                       for s in input_strings]
+        date_and_string = calc_yesterday(input_strings, input_dates)
+        self.assertEqual(date_and_string, (expected_date, expected_str))
 
     def test_iso_parsing(self):
         times = (
@@ -95,5 +81,6 @@ class TestReportUtils(TestCase):
         for_registration = get_active_registration_locations()
         all_locations = get_all_polling_locations()
 
-        self.assertEquals(sorted(for_registration.keys()), sorted([rc1.center_id]))
-        self.assertEquals(sorted(all_locations.keys()), sorted([rc1.center_id, rc2.center_id]))
+        self.assertEqual(sorted(for_registration.keys()), sorted([rc1.center_id]))
+        self.assertEqual(sorted(all_locations.keys()),
+                         sorted([rc1.center_id, rc2.center_id]))

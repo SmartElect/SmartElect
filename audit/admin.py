@@ -21,8 +21,8 @@ class StatusFilter(SimpleListFilter):
     def choices(self, cl):
         for lookup, title in self.lookup_choices:
             yield {
-                'selected': (self.value() == force_text(lookup) or
-                             not self.value() and force_text(lookup) == "not_resolved"),
+                'selected': (self.value() == force_text(lookup)
+                             or not self.value() and force_text(lookup) == "not_resolved"),
                 'query_string': cl.get_query_string({
                     self.parameter_name: lookup,
                 }, []),
@@ -40,7 +40,7 @@ class StatusFilter(SimpleListFilter):
 
 class DiscrepancyAdmin(LibyaAdminModel):
     fields = ("deleted", "trail_report", "comments", "resolved")
-    list_display = ("__unicode__", "resolved",)
+    list_display = ("__str__", "resolved",)
     list_filter = (StatusFilter, )
     readonly_fields = ("trail_report",)
 
@@ -63,6 +63,7 @@ class VumiLogAdmin(LibyaAdminModel):
     list_display = ('logged_date', 'from_addr', 'direction', 'to_addr',
                     'content', 'is_audited')
     list_filter = ('is_audited', 'direction')
+
 
 admin_site.register(Discrepancy, DiscrepancyAdmin)
 admin_site.register(SMSTrail, SMSTrailAdmin)

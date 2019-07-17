@@ -1,12 +1,11 @@
-from __future__ import unicode_literals
 import datetime
 import random
 
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _, ugettext
 
@@ -51,10 +50,12 @@ class Batch(AbstractTimestampTrashBinModel):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                   related_name='batches_created')
+                                   related_name='batches_created',
+                                   on_delete=models.CASCADE)
     reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     related_name='batches_reviewed',
-                                    null=True, blank=True)
+                                    null=True, blank=True,
+                                    on_delete=models.CASCADE)
     status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING)
     errors = models.IntegerField(default=0)
     priority = models.IntegerField(default=PRIORITY_BATCH,
@@ -65,8 +66,9 @@ class Batch(AbstractTimestampTrashBinModel):
     class Meta:
         verbose_name = _("batch")
         verbose_name_plural = _("batches")
+        ordering = ['-creation_date']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def time_remaining(self):
@@ -155,16 +157,19 @@ class BulkMessage(AbstractTimestampTrashBinModel):
                                       default=settings.REGISTRATION_SHORT_CODE,
                                       help_text=_('What shortcode should this appear to be from?'))
     message = models.TextField(_('message'))
-    batch = models.ForeignKey(Batch, related_name='messages', verbose_name=_('batch'))
-    sms = models.OneToOneField(SMS, null=True, blank=True, verbose_name=_('sms'))
+    batch = models.ForeignKey(Batch, related_name='messages', verbose_name=_('batch'),
+                              on_delete=models.CASCADE)
+    sms = models.OneToOneField(SMS, null=True, blank=True, verbose_name=_('sms'),
+                               on_delete=models.CASCADE)
 
     objects = BulkMessageManager()
 
     class Meta:
         verbose_name = _("bulk message")
         verbose_name_plural = _("bulk messages")
+        ordering = ['-creation_date']
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Message to %s from batch %s' % (self.phone_number, self.batch)
 
     def clean(self):
@@ -194,18 +199,22 @@ class Broadcast(CreatedByFormatterMixin, RegistrationCenterFormatterMixin,
     ALL_AUDIENCES = MINIMUM_AUDIENCE + (CUSTOM_CHOICE, )
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
-                                   related_name='broadcast_created', verbose_name=_('created by'))
+                                   related_name='broadcast_created', verbose_name=_('created by'),
+                                   on_delete=models.CASCADE)
     reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                     related_name='broadcast_reviewed',
-                                    verbose_name=_('reviewed by'))
-    batch = models.OneToOneField(Batch, verbose_name=_('batch'))
+                                    verbose_name=_('reviewed by'),
+                                    on_delete=models.CASCADE)
+    batch = models.OneToOneField(Batch, verbose_name=_('batch'),
+                                 on_delete=models.CASCADE)
     audience = models.CharField(_('audience'), max_length=20, choices=ALL_AUDIENCES,
                                 default=STAFF_ONLY)
     center = models.ForeignKey('register.RegistrationCenter', null=True, blank=True,
-                               verbose_name=_('registration center'))
+                               verbose_name=_('registration center'),
+                               on_delete=models.CASCADE)
     message = models.TextField(_('message'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.message
 
     def get_absolute_url(self):

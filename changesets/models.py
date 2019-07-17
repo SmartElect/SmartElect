@@ -1,10 +1,9 @@
-from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.db import models, transaction
+from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -112,13 +111,13 @@ class Changeset(AbstractTimestampModel):
         limit_choices_to={
             # Only allow selecting other changesets that have already been executed
             'status__in': HAS_BEEN_EXECUTED_STATUSES
-        }
+        },
+        on_delete=models.CASCADE
     )
 
     # The centers whose registrations we'll update
     selected_centers = models.ManyToManyField(
         RegistrationCenter,
-        null=True,
         blank=True,
         verbose_name=_('selected centers'),
         related_name='changesets_from',
@@ -131,7 +130,6 @@ class Changeset(AbstractTimestampModel):
 
     selected_citizens = models.ManyToManyField(
         'civil_registry.Citizen',
-        null=True,
         blank=True,
         verbose_name=_('selected citizens'),
         related_name='changesets_selected',
@@ -232,8 +230,8 @@ class Changeset(AbstractTimestampModel):
         ]
 
     def clean(self):
-        if (self.change == Changeset.CHANGE_ROLLBACK and
-                self.how_to_select != Changeset.SELECT_OTHER_CHANGESET):
+        if (self.change == Changeset.CHANGE_ROLLBACK
+                and self.how_to_select != Changeset.SELECT_OTHER_CHANGESET):
             raise ValidationError("Rollbacks must have how_to_select=OTHER CHANGESET")
         if (self.how_to_select == Changeset.SELECT_OTHER_CHANGESET
                 and not self.other_changeset):
@@ -246,7 +244,7 @@ class Changeset(AbstractTimestampModel):
             return self.approvers.count()
         return 0
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -355,7 +353,13 @@ class Changeset(AbstractTimestampModel):
         changed, or whose citizens should be changed, for this changeset.
         """
         if self.how_to_select == Changeset.SELECT_CENTERS:
-            return Registration.objects.filter(registration_center__in=self.selected_centers.all())
+            # Get registrations from selected centers
+            regs = Registration.objects.filter(registration_center__in=self.selected_centers.all())
+            # Only include those that have citizen records
+            citizens = Citizen.objects.filter(pk__in=regs.values_list('citizen_id', flat=True))
+            citizen_ids = list(citizens.values_list('civil_registry_id', flat=True))
+            regs = regs.filter(citizen_id__in=citizen_ids)
+            return regs
         else:
             return Registration.objects.filter(citizen__in=self.get_citizens_to_change())
 
@@ -390,7 +394,7 @@ class Changeset(AbstractTimestampModel):
         self.save()
         try:
             execute_changeset.delay(self.pk)
-        except:
+        except Exception:
             # If anything goes wrong scheduling the task,
             # un-mark the changeset as started
             self.status = Changeset.STATUS_APPROVED
@@ -438,6 +442,10 @@ class Changeset(AbstractTimestampModel):
                 if self.change == Changeset.CHANGE_CENTER:
                     changerecord_kwargs = dict(changeset=self, change=self.change,
                                                to_center=self.target_center)
+                    # FIXME MAYBE: get_registrations_to_change() omits registrations that
+                    # we're missing a citizen record on for some reason. So we could leave
+                    # some registrations still pointing at the old center (albeit not
+                    # valid registrations anymore).
                     for reg in self.get_registrations_to_change():
                         changerecord_kwargs.update(
                             citizen=reg.citizen,
@@ -544,6 +552,7 @@ class ChangeRecord(AbstractTimestampModel):
             # We can only change a citizen once per changeset
             ('changeset', 'citizen'),
         ]
+        ordering = ['change', 'changeset_id', 'citizen_id']
 
     def undo(self, changeset):
         """
@@ -605,6 +614,7 @@ class ChangeRecord(AbstractTimestampModel):
         if self.change == Changeset.CHANGE_CENTER:
             return self.to_center
 
+
 # Put at end to work around Python circular import but still be
 # able to patch this in tests
-from .tasks import execute_changeset
+from .tasks import execute_changeset  # noqa: E402

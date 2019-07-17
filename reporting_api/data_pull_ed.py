@@ -12,13 +12,13 @@ from django.db.models import Count
 from libya_elections.utils import ConnectionInTZ
 from polling_reports.models import CenterClosedForElection, PollingReport, PreliminaryVoteCount
 from register.models import Office, RegistrationCenter
-from aggregate import aggregate_up, join_by_date, join_by_date_nested
-from constants import COUNTRY, INACTIVE_FOR_ELECTION, OFFICE, POLLING_CENTER_CODE, \
+from .aggregate import aggregate_up, join_by_date, join_by_date_nested
+from .constants import COUNTRY, INACTIVE_FOR_ELECTION, OFFICE, POLLING_CENTER_CODE, \
     POLLING_CENTER_COPY_OF, POLLING_CENTER_TYPE, PRELIMINARY_VOTE_COUNTS, REGION, \
     SUBCONSTITUENCY_ID
 from .data_pull_common import get_offices
 from .utils import dictfetchall, get_polling_centers
-import query
+from . import query
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +136,7 @@ def process_raw_data(polling_centers, inactive_for_election, center_opens, cente
     for inactive_center in inactive_for_election:
         polling_centers[inactive_center][INACTIVE_FOR_ELECTION] = True
 
-    offices = aggregate_up(polling_centers.itervalues(),
+    offices = aggregate_up(polling_centers.values(),
                            aggregate_key=OFFICE,
                            lesser_key='polling_center',
                            skip_keys=(SUBCONSTITUENCY_ID, POLLING_CENTER_CODE,
@@ -147,7 +147,7 @@ def process_raw_data(polling_centers, inactive_for_election, center_opens, cente
                            count_inner_keys=(1, 2, 3, 4, 'opened'),
                            sum_inner_keys=(1, 2, 3, 4))
 
-    regions = aggregate_up(offices.itervalues(),
+    regions = aggregate_up(offices.values(),
                            aggregate_key=REGION,
                            lesser_key='office',
                            skip_keys=(OFFICE, 'name', INACTIVE_FOR_ELECTION),
@@ -155,7 +155,7 @@ def process_raw_data(polling_centers, inactive_for_election, center_opens, cente
                            sum_inner_keys=(1, 2, 3, 4,
                                            '1_count', '2_count', '3_count', '4_count'))
 
-    country = aggregate_up(regions.itervalues(),
+    country = aggregate_up(regions.values(),
                            aggregate_key=COUNTRY,
                            lesser_key=REGION,
                            skip_keys=(REGION, 'name'),
@@ -165,7 +165,7 @@ def process_raw_data(polling_centers, inactive_for_election, center_opens, cente
 
     # Office and broader groupings should include preliminary vote counts from centers
     # (and aggregate_up can't handle this)
-    for center_dict in center_vote_counts.itervalues():
+    for center_dict in center_vote_counts.values():
         # office, region, and country representations must already exist by virtue of
         # the center being represented
         office_dict = offices[center_dict[OFFICE]]
@@ -253,7 +253,8 @@ def generate_election_day_hq_reports(election):
         .distinct()
 
     all_centers = RegistrationCenter.objects.all() \
-        .annotate(n_registrations=Count('registration'))
+        .annotate(n_registrations=Count('registration')) \
+        .order_by('center_id')
 
     # OK, all the queries are done. The next step is to loop through the results and count.
 

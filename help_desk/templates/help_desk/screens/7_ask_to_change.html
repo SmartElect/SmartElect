@@ -3,7 +3,7 @@
 <p>{% trans "The citizen's registration information" %}:</p>
 
 <div class="float-layout banana">
-  <div class="third cushion">
+  <div class="quarter cushion">
     <label>{% trans "Registration Center" %}</label>
     <p>
       {{ case.citizen.registration.registration_center.center_id }}
@@ -11,14 +11,26 @@
     </p>
   </div>
 
-  <div class="third cushion">
+  <div class="quarter cushion">
     <label>{% trans "Office" %}</label>
     <p>
       {{ case.citizen.registration.registration_center.office_name }}
     </p>
   </div>
 
-  <div class="third cushion">
+  <div class="quarter cushion">
+    <label>{% trans "Registration Date" %}</label>
+    <p>
+      {% comment %}
+        This purposefully doesn't use formatted_creation_date because we want to take advantage of
+        Django's automatic timezone conversion. Eventually we should change all date/time display to
+        do this (#1963), and then we can remove this comment.
+      {% endcomment %}
+      {{ case.citizen.registration.creation_date }}
+    </p>
+  </div>
+
+  <div class="quarter cushion">
     <label>{% trans "Phone number associated with citizen's registration" %}</label>
     <p>
       {{ case.citizen.registration.sms.from_number|format_phone_number }}
@@ -33,5 +45,5 @@
 {% if case.field_staff %}
   <blockquote>{% trans "Does the citizen wish to change their centre or update the phone number associated with their registration?" %}</blockquote>
 {% else %}
-  <blockquote>{% trans "Do you wish to change your centre or update the phone number assoicated with your registration?" %}</blockquote>
+  <blockquote>{% trans "Do you wish to change your centre or update the phone number associated with your registration?" %}</blockquote>
 {% endif %}

@@ -17,7 +17,7 @@
       <div class="two-thirds cushion">
         {% include "includes/messages.html" %}
 
-        <form method="post" action="{% url 'check_registration' %}">
+        <form method="post" action="{% url 'check_registration' %}" novalidate>
           {% csrf_token %}
 
           {% if form.non_field_errors %}

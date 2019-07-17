@@ -156,11 +156,11 @@ class SMSAdmin(LibyaAdminModel):
         # admin calls get_list_display() to be sure someone is in the admin,
         # since it's only in the admin that it matters at all whether these
         # choices are defined.
-        if not SMS._meta.get_field('message_code')._choices:
+        if not SMS._meta.get_field('message_code').choices:
             message_code_choices = [
                 (msg.number, msg.label) for msg in MessageText.objects.all()
             ]
-            SMS._meta.get_field('message_code')._choices = message_code_choices
+            SMS._meta.get_field('message_code').choices = message_code_choices
         return super(SMSAdmin, self).get_list_display(*args, **kwargs)
 
 

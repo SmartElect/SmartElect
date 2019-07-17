@@ -1,4 +1,5 @@
 import datetime
+from functools import reduce
 from itertools import groupby
 import operator
 
@@ -15,12 +16,10 @@ from help_desk.utils import get_day_name, format_seconds
 from help_desk.views.views import GetURLMixin
 from libya_elections.libya_bread import PaginatorMixin
 from libya_elections.utils import LoginMultiplePermissionsRequiredMixin
-
-
-# There won't be any cases earlier than this
 from staff.views import StaffViewMixin
 
 
+# There won't be any cases earlier than this
 EARLIEST_START_DATE = datetime.date(2014, 4, 1)
 # Or later than this
 LATEST_START_DATE = datetime.date(2999, 12, 31)
@@ -75,7 +74,7 @@ class ReportMixin(PaginatorMixin):
         initial.update({
             'from_date': EARLIEST_START_DATE,
             'to_date': LATEST_START_DATE,
-            })
+        })
         return initial
 
     def get_form_kwargs(self):
@@ -84,7 +83,7 @@ class ReportMixin(PaginatorMixin):
             # Use initial data for default values, e.g. if the query
             # string doesn't have all the fields
             qdict = self.request.GET.copy()
-            for k, v in kwargs['initial'].iteritems():
+            for k, v in kwargs['initial'].items():
                 if k not in qdict:
                     if isinstance(v, list):
                         qdict.setlist(k, v)
@@ -292,8 +291,10 @@ class StatisticsReportView(LoginMultiplePermissionsRequiredMixin,
         Return one row of the table, with statistics for this list of cases.
         The list of cases should be sorted by outcomes.
         """
-        # Need to make iterable list_of_cases into a list because we're going over it twice
-        list_of_cases = list(list_of_cases)
+        # Need to make iterable list_of_cases into a list because we're going over it twice. We also
+        # need to sort the list by call_outcome because we later `groupby` call_outcome which only
+        # groups results if they are contiguous.
+        list_of_cases = sorted(list(list_of_cases), key=lambda case: case.call_outcome)
         # Each column is the stats for the cases for a particular outcome
         # Compute the columns for the outcomes we have cases for
         stats_dict = {

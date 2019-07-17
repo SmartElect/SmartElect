@@ -50,5 +50,5 @@ def look_for_new_dumps():
             )
         else:
             logger.info("No new files")
-    except:
+    except Exception:
         logger.exception("Something went wrong while checking for new dump files")

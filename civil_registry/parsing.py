@@ -1,8 +1,6 @@
 """
 Code for parsing SQL dumps from the Civil Registry.
 """
-from __future__ import unicode_literals
-
 import logging
 import re
 
@@ -17,20 +15,20 @@ from civil_registry.forms import CitizenRecordForm
 # Notice that it knows which fields are quoted and which aren't, and leaves
 # out the quotes.  Similarly for whitespace and commas between fields.
 VALUES_MATCH = re.compile(r'VALUES\('
-                          " *(?P<civil_registry_id>\d*) *,"
-                          " *'(?P<first_name>.*)' *,"
-                          " *'(?P<father_name>.*)' *,"
-                          " *'(?P<grandfather_name>.*)' *,"
-                          " *'(?P<family_name>.*)' *,"
-                          " *'(?P<mother_name>.*)' *,"
-                          " *(?P<gender>[12]) *,"
-                          " *'(?P<birth_date>.*)' *,"
-                          " *'(?P<address>.*)' *,"
-                          " *'(?P<national_id>.*)' *,"
-                          " *'(?P<fbr_number>.*)' *,"
-                          " *(?P<office_id>.*) *,"
-                          " *(?P<branch_id>.*) *,"
-                          " *(?P<state>.*) *\)",
+                          r" *(?P<civil_registry_id>\d*) *,"
+                          r" *'(?P<first_name>.*)' *,"
+                          r" *'(?P<father_name>.*)' *,"
+                          r" *'(?P<grandfather_name>.*)' *,"
+                          r" *'(?P<family_name>.*)' *,"
+                          r" *'(?P<mother_name>.*)' *,"
+                          r" *(?P<gender>[12]) *,"
+                          r" *'(?P<birth_date>.*)' *,"
+                          r" *'(?P<address>.*)' *,"
+                          r" *'(?P<national_id>.*)' *,"
+                          r" *'(?P<fbr_number>.*)' *,"
+                          r" *(?P<office_id>.*) *,"
+                          r" *(?P<branch_id>.*) *,"
+                          r" *(?P<state>.*) *\)",
                           re.UNICODE)
 
 
@@ -90,7 +88,7 @@ def match_line_split(line):
     (civil_registry_id, first_name, father_name, grandfather_name,
      family_name, mother_name, gender,
      birth_date, address, national_id, fbr_number,
-     office_id, branch_id, state) = map(strip_space_and_quotes, parts)
+     office_id, branch_id, state) = list(map(strip_space_and_quotes, parts))
 
     # Note that we're not returning these in the same order...
     return (civil_registry_id, national_id, fbr_number,
@@ -126,7 +124,7 @@ def line_to_dictionary(line):
     :raises ValueError: if any inputs are not valie
     :return: a dictionary
     """
-    data = dict(zip(FIELD_NAMES, break_line(line)))
+    data = dict(list(zip(FIELD_NAMES, break_line(line))))
     form = CitizenRecordForm(data=data)
     if not form.is_valid():
         raise ValueError(form.errors)

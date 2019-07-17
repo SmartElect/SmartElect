@@ -3,7 +3,7 @@
 import base64
 from decimal import Decimal, InvalidOperation
 import functools
-from httplib import UNAUTHORIZED
+from http.client import UNAUTHORIZED
 import logging
 import random
 import re
@@ -182,7 +182,7 @@ def cleanup_lat_or_long(latlng):
     """
 
     # Strip whitespace and degree signs
-    s = latlng.strip().rstrip(u'E\xb0')
+    s = latlng.strip().rstrip('E\xb0')
 
     # If nothing left, we have no data.
     if len(s) == 0:
@@ -215,7 +215,7 @@ def cleanup_lat_or_long(latlng):
         # 12° 2'54.62"
         # 12°37'7.00"
         # Assume the format is:  degrees  minutes  seconds.milliseconds
-        m = re.match('r^(\d\d?)\D+(\d\d?)\D+(\d\d?)\D+(\d\d?)$', s)
+        m = re.match(r'^(\d\d?)\D+(\d\d?)\D+(\d\d?)\D+(\d\d?)$', s)
         if m:
             parts = m.groups()
             val = (float(parts[0])
@@ -267,7 +267,7 @@ def cleanup_lat_or_long(latlng):
     return d
 
 
-NONDIGITS_RE = re.compile('[^\d]', flags=re.UNICODE)
+NONDIGITS_RE = re.compile(r'[^\d]', flags=re.UNICODE)
 
 
 @sensitive_variables()
@@ -276,7 +276,7 @@ def clean_input_msg(msg_text):
     them to American strings, and then joining them with an asterisk. We do not
     validate them. That will be done by the handlers.
     """
-    return u'*'.join(str(long(num)) for num in _extract_numerals(msg_text))
+    return '*'.join(str(int(num)) for num in _extract_numerals(msg_text))
 
 
 def _extract_numerals(msg_text):
@@ -305,7 +305,7 @@ class LoginPermissionRequiredMixin(PermissionRequiredMixin):
     """
     def dispatch(self, request, *args, **kwargs):
         # User has to be logged in
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(),
                                      self.get_login_url(),
                                      self.get_redirect_field_name())
@@ -334,7 +334,7 @@ class LoginMultiplePermissionsRequiredMixin(MultiplePermissionsRequiredMixin):
 
     def dispatch(self, request, *args, **kwargs):
         # User has to be logged in
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(),
                                      self.get_login_url(),
                                      self.get_redirect_field_name())
@@ -397,7 +397,7 @@ def random_string(length=255, extra_chars=''):
     :param extra_chars: Additional characters to include in generated
         string.
     """
-    chars = string.letters + extra_chars
+    chars = string.ascii_letters + extra_chars
     return ''.join([random.choice(chars) for i in range(length)])
 
 
@@ -407,14 +407,14 @@ def get_random_number_string(length=10, choices=string.digits, no_leading_zero=T
     while no_leading_zero and not int(first):
         # keep picking until we get nonzero
         first = random.choice(choices)
-    return first + u''.join(random.choice(choices) for __ in xrange(length - 1))
+    return first + ''.join(random.choice(choices) for __ in range(length - 1))
 
 
 def shuffle_string(s):
     """Randomly shuffle a string and return result."""
-    l = list(s)
-    random.shuffle(l)
-    return u''.join(l)
+    list_of_chars = list(s)
+    random.shuffle(list_of_chars)
+    return ''.join(list_of_chars)
 
 
 def strip_nondigits(string):
@@ -581,8 +581,8 @@ def basic_auth(f, auth_db, realm_name):
     def wrapper(request, *args, **kwargs):
         if 'HTTP_AUTHORIZATION' in request.META:
             auth = request.META['HTTP_AUTHORIZATION'].split()
-            if len(auth) == 2 and auth[0].lower() == 'basic':
-                username, passwd = base64.b64decode(auth[1]).split(':')
+            if len(auth) == 2 and auth[0].lower() == b'basic':
+                username, passwd = base64.b64decode(auth[1]).decode().split(':')
                 ok = username in auth_db and passwd == auth_db[username]
                 del passwd
                 if ok:
@@ -642,9 +642,9 @@ def get_verbose_name(an_object, field_name, init_cap=True):
 
     If field_name doesn't refer to a model field, raises a FieldDoesNotExist error.
     """
-    # get_field_by_name() can raise FieldDoesNotExist which I simply propogate up to the caller.
+    # get_field() can raise FieldDoesNotExist which we propagate up to the caller.
     try:
-        field = an_object._meta.get_field_by_name(field_name)[0]
+        field = an_object._meta.get_field(field_name)
     except TypeError:
         # TypeError happens if the caller is very confused and passes an unhashable type such
         # as {} or []. I convert that into a FieldDoesNotExist exception for simplicity.
@@ -653,7 +653,7 @@ def get_verbose_name(an_object, field_name, init_cap=True):
     verbose_name = field.verbose_name
 
     if init_cap:
-        verbose_name = lazy(capfirst, unicode)(verbose_name)
+        verbose_name = lazy(capfirst, str)(verbose_name)
 
     return verbose_name
 
@@ -736,3 +736,24 @@ def migrate_bread_permissions_backward(app_label, model_names, apps, schema_edit
         Permission.objects.filter(content_type__app_label=app_label,
                                   # view_mymodel
                                   codename='browse_' + model).delete()
+
+
+def should_hide_public_view(request):
+    """
+    Return True if settings.HIDE_PUBLIC_DASHBOARD is True and the user
+    is not authenticated or is not a member of staff.
+    Call this from views that should not be public when HIDE_PUBLIC_DASHBOARD
+    is True.
+    """
+    return settings.HIDE_PUBLIC_DASHBOARD and not request.user.is_staff
+
+
+def should_see_staff_view(user):
+    """
+    Return True if:
+    - user has `is_staff` set, or
+    - user is a member of any Group.
+
+    This allows users to see the staff view but not see the public dashboard.
+    """
+    return user.is_staff or user.groups.exists()

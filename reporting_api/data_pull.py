@@ -9,8 +9,8 @@ from django.db import connection
 from django.utils import translation
 
 # Project imports
-import codings
-import query
+from . import codings
+from . import query
 from libya_elections.utils import ConnectionInTZ
 from register.models import Office
 from .aggregate import aggregate_up, aggregate_nested_key, aggregate_dates
@@ -73,7 +73,7 @@ def get_polling_center_dicts(cursor, polling_locations):
 
     to_return = {}
 
-    for (k, def_d) in polling_to_demo.iteritems():
+    for (k, def_d) in polling_to_demo.items():
         # Copy to regular dict (not defaultdict)
         d = dict(def_d)
         d[POLLING_CENTER_CODE] = k
@@ -126,7 +126,7 @@ def get_sms_dicts(cursor):
                 try:
                     # Message type strings are lazily translated; force the translation here
                     # since the JSON encoder won't otherwise resolve it.
-                    msg_type_dict[MESSAGE_TYPE] = unicode(codings.MESSAGE_TYPES[msg_type])
+                    msg_type_dict[MESSAGE_TYPE] = str(codings.MESSAGE_TYPES[msg_type])
                 except KeyError:
                     msg_type_dict[MESSAGE_TYPE] = msg_type
     return sms_messages
@@ -138,6 +138,15 @@ def multiple_family_book_registrations(cursor):
     for (from_number, num_count, num_list, latest) in cursor:
         fbrn[from_number] = num_list
     return fbrn
+
+
+def registrations_by_phone(cursor):
+    """
+    Get a list of registrations by phone number, returned as a list of 2-item tuples:
+    [(phone_number, registration_count), ...]
+    """
+    cursor.execute(query.REGISTRATIONS_BY_PHONE_QUERY)
+    return cursor.fetchall()
 
 
 def duplicate_registrations(cursor):
@@ -165,28 +174,32 @@ def get_raw_data(polling_locations):
 
     fbrn_dict = multiple_family_book_registrations(cursor)
     duplicate_dict = duplicate_registrations(cursor)
-    return polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate_dict, all_dates
+
+    regs_by_phone = registrations_by_phone(cursor)
+    return (polling_center_code_to_demo, sms_dict, fbrn_dict,
+            duplicate_dict, all_dates, regs_by_phone)
 
 
-def process_raw_data(polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate_dict, all_dates):
-    subconstituency_to_demo = aggregate_up(polling_center_code_to_demo.itervalues(),
+def process_raw_data(polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate_dict, all_dates,
+                     regs_by_phone):
+    subconstituency_to_demo = aggregate_up(polling_center_code_to_demo.values(),
                                            aggregate_key=SUBCONSTITUENCY_ID,
                                            lesser_key='polling_center',
                                            skip_keys=(POLLING_CENTER_CODE,
                                                       POLLING_CENTER_COPY_OF, POLLING_CENTER_TYPE),
                                            copy_keys=(OFFICE, REGION, COUNTRY, SUBCONSTITUENCY_ID))
-    office_to_demo = aggregate_up(polling_center_code_to_demo.itervalues(),
+    office_to_demo = aggregate_up(polling_center_code_to_demo.values(),
                                   aggregate_key=OFFICE,
                                   lesser_key='polling_center',
                                   skip_keys=(SUBCONSTITUENCY_ID, POLLING_CENTER_CODE,
                                              POLLING_CENTER_COPY_OF, POLLING_CENTER_TYPE),
                                   copy_keys=(OFFICE, REGION, COUNTRY))
-    region_to_demo = aggregate_up(office_to_demo.itervalues(),
+    region_to_demo = aggregate_up(office_to_demo.values(),
                                   aggregate_key=REGION,
                                   lesser_key='office',
                                   skip_keys=(OFFICE, ),
                                   copy_keys=(REGION, COUNTRY))
-    country_to_demo = aggregate_up(region_to_demo.itervalues(),
+    country_to_demo = aggregate_up(region_to_demo.values(),
                                    aggregate_key=COUNTRY,
                                    lesser_key=REGION,
                                    skip_keys=(REGION, ),
@@ -199,11 +212,11 @@ def process_raw_data(polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate
     output_dict = {
         'subconstituencies': get_subconstituencies(),
         'offices': get_offices(),
-        'by_' + COUNTRY: country_to_demo.values(),
-        'by_' + REGION: region_to_demo.values(),
-        'by_' + OFFICE: office_to_demo.values(),
-        'by_' + SUBCONSTITUENCY_ID: subconstituency_to_demo.values(),
-        'by_' + POLLING_CENTER_CODE: polling_center_code_to_demo.values(),
+        'by_' + COUNTRY: list(country_to_demo.values()),
+        'by_' + REGION: list(region_to_demo.values()),
+        'by_' + OFFICE: list(office_to_demo.values()),
+        'by_' + SUBCONSTITUENCY_ID: list(subconstituency_to_demo.values()),
+        'by_' + POLLING_CENTER_CODE: list(polling_center_code_to_demo.values()),
         'demographic_breakdowns': {
             'by_age': list(sorted(set(codings.AGE_CODING.values())))},
         'dates': list(sorted(all_dates)),
@@ -211,13 +224,14 @@ def process_raw_data(polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate
         'phone_duplicate_registrations': len(duplicate_dict),
         'sms_stats': sms_stats,
         'message_stats': message_stats,
+        'registrations_by_phone': regs_by_phone,
         'last_updated': datetime.datetime.now().isoformat()}
 
     return output_dict
 
 
 def pull_data(polling_locations):
-    polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate_dict, all_dates =\
+    polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate_dict, all_dates, regs_by_phone =\
         get_raw_data(polling_locations)
     return process_raw_data(polling_center_code_to_demo, sms_dict, fbrn_dict, duplicate_dict,
-                            all_dates)
+                            all_dates, regs_by_phone)

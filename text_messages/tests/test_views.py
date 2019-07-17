@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import Permission
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from libya_site.tests.factories import UserFactory
 from text_messages.models import MessageText

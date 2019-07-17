@@ -1,14 +1,27 @@
 {% extends 'help_desk/base.html' %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "Update Help Desk Staff" %}{% endblock %}
+
+{% block extra_css %}
+    <link href="{% static 'css/jquery/jquery-ui.min.css' %}" type="text/css" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script src="{% static 'js/jquery/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/jquery/datepicker_apply.js' %}"></script>
+    {% if LANGUAGE_CODE == 'ar' %}
+        <script type="text/javascript" src="{% static 'js/jquery/datepicker_arabicize.js' %}"></script>
+    {% endif %}
+{% endblock extra_js %}
 
 {% block content %}
   <h1 class="page-width cushion">{% trans "Update Help Desk Staff" %}</h1>
 
   <div class="milk">
     <div class="page-width cushion">
-      <form class="two-thirds" method="POST">
+      <form class="two-thirds" method="POST" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
 

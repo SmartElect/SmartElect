@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
-import cStringIO as StringIO
+import io
 import collections
 import random
 import os
@@ -12,7 +10,6 @@ import time
 from lxml import etree
 
 # 3rd party imports
-from reportlab.platypus import Paragraph
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfinterp import PDFPageInterpreter
@@ -21,8 +18,8 @@ from pdfminer.layout import LAParams
 
 # Project imports
 # Importing pdf_canvas registers the fonts that the PDF will use.
-import rollgen.pdf_canvas   # flake8: noqa
-from ..utils import CountingDocTemplate, is_iterable
+import rollgen.pdf_canvas   # noqa
+from ..utils import is_iterable
 
 # Our PDFs use only Amiri-Regular and Amiri-Bold
 EXPECTED_FONTS = ('Amiri-Regular', 'Amiri-Bold',)
@@ -46,9 +43,10 @@ random.seed(seed)
 # Writing to stderr ensures that if a test fails on Travis, the seed will be visible in Travis' log.
 sys.stderr.write("seed is {}\n".format(seed))
 
+
 def parse_bbox(bbox):
     """Given PDFMiner bbox info as a comma-delimited string, return it as a list of floats."""
-    return map(float, bbox.split(','))
+    return list(map(float, bbox.split(',')))
 
 
 def unwrap_lines(lines, index):
@@ -105,7 +103,7 @@ def extract_pdf_page(filename, page_number_or_numbers):
     else:
         page_numbers = [page_number_or_numbers]
 
-    f_out = StringIO.StringIO()
+    f_out = io.BytesIO()
     laparams = LAParams()
     rsrcmgr = PDFResourceManager()
     device = XMLConverter(rsrcmgr, f_out, codec='utf-8', laparams=laparams)

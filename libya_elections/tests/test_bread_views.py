@@ -1,5 +1,5 @@
-from django.core.urlresolvers import NoReverseMatch, reverse
 from django.test import TestCase, RequestFactory
+from django.urls import NoReverseMatch, reverse
 
 from libya_elections.tests.utils import ResponseCheckerMixin
 from libya_site.tests.factories import UserFactory
@@ -10,10 +10,11 @@ from staff.tests.base import StaffUserMixin
 # Get the Bread
 from bulk_sms.views import BroadcastBread
 from civil_registry.views import CitizenBread
-from polling_reports.views import CenterClosedForElectionBread, CenterOpenBread, PollingReportBread, \
-    PreliminaryVoteCountBread
-from register.views import BlacklistedNumberBread, ConstituencyBread, OfficeBread, RegistrationBread, \
-    RegistrationCenterBread, SMSBread, StaffPhoneBread, SubconstituencyBread, WhitelistedNumberBread
+from polling_reports.views import CenterClosedForElectionBread, CenterOpenBread, \
+    PollingReportBread, PreliminaryVoteCountBread
+from register.views import BlacklistedNumberBread, ConstituencyBread, OfficeBread, \
+    RegistrationBread, RegistrationCenterBread, SMSBread, StaffPhoneBread, SubconstituencyBread, \
+    WhitelistedNumberBread
 from rollgen.views import StationBread
 from staff.views import UserBread
 from voting.views import BallotBread, CandidateBread, ElectionBread

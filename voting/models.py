@@ -1,13 +1,12 @@
-from __future__ import unicode_literals
-
 from datetime import datetime, timedelta
 import logging
 from operator import itemgetter
 
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import force_text
+from django.utils.formats import date_format
 from django.utils.timezone import now as django_now, utc
 from django.utils.translation import get_language, ugettext_lazy as _
 
@@ -31,7 +30,7 @@ class ElectionManager(TrashBinManager):
         return self.filter(
             start_time__lte=as_of,
             end_time__gt=as_of,
-            ).order_by('start_time').first()
+        ).order_by('start_time').first()
 
     def get_most_current_election(self, as_of=None):
         """Returns the 'most current' election, which is one of the following, in this order:
@@ -127,7 +126,8 @@ class ReminderQueued(AbstractTimestampTrashBinModel):
     Created when a particular reminder message for an election
     has been queued.
     """
-    election = models.ForeignKey('voting.Election', verbose_name=_('election'))
+    election = models.ForeignKey('voting.Election', verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
     message_number = models.IntegerField(_('message number'))
     reminder_number = models.IntegerField(_('reminder number'))
 
@@ -192,7 +192,7 @@ class Election(ElectionTimesFormatterMixin,
             ("read_election", "Can read election"),
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         return _('{0.name_arabic} ({0.name_english})').format(self)
 
     @property
@@ -205,7 +205,8 @@ class Election(ElectionTimesFormatterMixin,
         return reverse('read_election', args=[self.id])
 
     def clean(self):
-        if self.polling_start_time > self.polling_end_time:
+        if self.polling_start_time and self.polling_end_time and \
+           self.polling_start_time > self.polling_end_time:
             raise ValidationError(_("polling start time is later than end time."))
 
     def save(self, *args, **kwargs):
@@ -364,7 +365,8 @@ class Ballot(ElectionFormatterMixin, SubconstituenciesFormatterMixin,
     ]
     VALID_RACE_TYPES = [x[0] for x in BALLOT_TYPE_CHOICES]
 
-    election = models.ForeignKey(Election, related_name='ballots', verbose_name=_('election'),)
+    election = models.ForeignKey(Election, related_name='ballots', verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
     subconstituencies = models.ManyToManyField('register.SubConstituency', blank=True,
                                                verbose_name=_('subconstituencies'),
                                                related_name='ballots')
@@ -388,7 +390,7 @@ class Ballot(ElectionFormatterMixin, SubconstituenciesFormatterMixin,
             ('election', 'internal_ballot_number'),
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         # self.id can be None when this object is in the process of being deleted, and invoking
         # an M2M manager when in that state will raise an error.
         # ref: https://github.com/hnec-vr/libya-elections/issues/831
@@ -434,7 +436,8 @@ class Candidate(BallotFormatterMixin, AbstractTimestampTrashBinModel):
     candidate_number = models.IntegerField(
         _('candidate number'),
         help_text=_("Number used in text messages when voting for this candidate"))
-    ballot = models.ForeignKey(Ballot, related_name='candidates', verbose_name=_('ballot'))
+    ballot = models.ForeignKey(Ballot, related_name='candidates', verbose_name=_('ballot'),
+                               on_delete=models.CASCADE)
 
     class Meta(object):
         verbose_name = _("candidate")
@@ -448,7 +451,7 @@ class Candidate(BallotFormatterMixin, AbstractTimestampTrashBinModel):
             ('candidate_number', 'ballot'),
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Candidate {0.name_arabic} ({0.name_english}) on {0.ballot}").format(self)
 
     @property
@@ -483,6 +486,12 @@ class RegistrationPeriod(StartEndTimeFormatterMixin, AbstractTimestampTrashBinMo
             ("browse_registrationperiod", "Can browse registration periods"),
         )
 
+    def __str__(self):
+        return _("registration period from {start_time} to {end_time}").format(
+            start_time=date_format(self.start_time, 'SHORT_DATETIME_FORMAT'),
+            end_time=date_format(self.end_time, 'SHORT_DATETIME_FORMAT'),
+        )
+
     def clean(self):
         if not (self.end_time and self.start_time):
             raise ValidationError(_("Both start and end must be provided."))
@@ -511,4 +520,4 @@ class RegistrationPeriod(StartEndTimeFormatterMixin, AbstractTimestampTrashBinMo
 
 # This is at the end to avoid circular import problems while still
 # allowing it to be mocked during testing
-from bulk_sms.tasks import message_reminder_task
+from bulk_sms.tasks import message_reminder_task  # noqa: E402

@@ -1,9 +1,8 @@
 # Python imports
-from __future__ import division
-from __future__ import unicode_literals
 from contextlib import contextmanager
 import collections
-import cStringIO as StringIO
+import csv
+import io
 import errno
 import os
 import tempfile
@@ -27,7 +26,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph
 from .constants import ROLLGEN_FLAG_FILENAME, JOB_FAILURE_FILENAME
 from .strings import STRINGS
 from libya_elections.constants import ARABIC_COMMA, MALE, FEMALE, UNISEX, CENTER_ID_LENGTH
-from libya_elections.csv_utils import UnicodeWriter
 from register.models import RegistrationCenter
 from voting.models import Election
 
@@ -110,7 +108,8 @@ def read_ids(filename):
     CommandError instead of some other kind of error.
     """
     try:
-        lines = open(filename, 'rb').read()
+        with open(filename, 'r') as f:
+            lines = f.read()
     except IOError:
         raise CommandError("""I can't read the file "{}".""".format(filename))
 
@@ -118,7 +117,7 @@ def read_ids(filename):
     lines = [line.strip() for line in lines if line.strip()]
 
     try:
-        map(int, lines)
+        list(map(int, lines))
     except (ValueError, TypeError):
         raise CommandError('At least one of the ids in "{}" is not valid.'.format(filename))
     else:
@@ -141,7 +140,7 @@ def is_iterable(an_object, include_strings=False):
     except TypeError:
         rc = False
 
-    if rc and (not include_strings) and isinstance(an_object, basestring):
+    if rc and (not include_strings) and isinstance(an_object, str):
         rc = False
 
     return rc
@@ -153,7 +152,7 @@ def is_intable(an_object):
     try:
         int(an_object)
         intable = True
-    except:
+    except Exception:
         # Sorry for the naked except, but I don't care why the above failed.
         pass
 
@@ -220,7 +219,7 @@ def chunker(seq, chunk_size):
     """
     # could be inefficient with really long lists, benchmark?
     # alternatively use itertools
-    return (seq[pos:pos + chunk_size] for pos in xrange(0, len(seq), chunk_size))
+    return (seq[pos:pos + chunk_size] for pos in range(0, len(seq), chunk_size))
 
 
 def even_chunker(seq, n_chunks):
@@ -242,7 +241,7 @@ def even_chunker(seq, n_chunks):
     n_chunks == 15: [6, 7, 7, 6, 7, 7, 6, 7, 7, 6, 7, 7, 6, 7, 7]
     """
     length = len(seq)
-    return [seq[i*length // n_chunks: (i+1)*length // n_chunks]
+    return [seq[i * length // n_chunks: (i + 1) * length // n_chunks]
             for i in range(n_chunks)]
 
 
@@ -310,7 +309,8 @@ def handle_job_exception(exception, output_path):
         fail_message += traceback.format_exc()
         is_expected = False
 
-    open(os.path.join(output_path, JOB_FAILURE_FILENAME), 'wb').write(fail_message.encode('utf-8'))
+    with open(os.path.join(output_path, JOB_FAILURE_FILENAME), 'wb') as f:
+        f.write(fail_message.encode('utf-8'))
 
     return is_expected
 
@@ -353,20 +353,20 @@ def find_longest_string_in_list(the_strings):
 
     # Landscape orientation, a large paper size, and generous left/right margins reduce the odds
     # that a string will wrap.
-    doc = CountingDocTemplate(filename, pagesize=landscape(A0), leftMargin=.25*cm,
-                              rightMargin=.25*cm, topMargin=1*cm, bottomMargin=1*cm)
+    doc = CountingDocTemplate(filename, pagesize=landscape(A0), leftMargin=.25 * cm,
+                              rightMargin=.25 * cm, topMargin=1 * cm, bottomMargin=1 * cm)
 
     # I map each string to its own Paragraph.
     strings_to_paragraphs = collections.OrderedDict()
     for item in the_strings:
         strings_to_paragraphs[item] = Paragraph(item, stylesheet['Arabic'])
 
-    doc.build(strings_to_paragraphs.values())
+    doc.build(list(strings_to_paragraphs.values()))
 
     os.remove(filename)
 
     longest = ('', 0)
-    for the_string, the_paragraph in strings_to_paragraphs.iteritems():
+    for the_string, the_paragraph in strings_to_paragraphs.items():
         line_lengths = the_paragraph.getActualLineWidths0()
         n_line_lengths = len(line_lengths)
 
@@ -437,7 +437,7 @@ def generate_polling_metadata_csv():
                      station.creation_date.strftime('%Y-%m-%d %H:%M:%S')
                      ))
 
-    faux_file = StringIO.StringIO()
-    csv = UnicodeWriter(faux_file)
-    csv.writerows(rows)
-    return faux_file.getvalue()
+    faux_file = io.StringIO()
+    writer = csv.writer(faux_file)
+    writer.writerows(rows)
+    return faux_file.getvalue().encode()

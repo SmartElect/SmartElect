@@ -13,7 +13,7 @@
 
   <div class="milk">
     <div class="page-width cushion">
-      <form class="two-thirds" method="post" enctype="multipart/form-data">
+      <form class="two-thirds" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
         {% if form.non_field_errors %}

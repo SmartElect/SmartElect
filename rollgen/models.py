@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import division
-
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -153,8 +150,10 @@ class Station(ElectionFormatterMixin, RegistrationCenterFormatterMixin, Abstract
     such a thing.) And in practice, number, gender and roll are populated by the
     function station_distributor() (q.v.).
     """
-    election = models.ForeignKey(Election, verbose_name=_('election'))
-    center = models.ForeignKey(RegistrationCenter, verbose_name=_('registration center'))
+    election = models.ForeignKey(Election, verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
+    center = models.ForeignKey(RegistrationCenter, verbose_name=_('registration center'),
+                               on_delete=models.CASCADE)
     number = models.PositiveSmallIntegerField(_('number'))
     gender = models.PositiveSmallIntegerField(_('gender'))
     n_registrants = models.IntegerField(_('number of registrants'))
@@ -198,7 +197,7 @@ class Station(ElectionFormatterMixin, RegistrationCenterFormatterMixin, Abstract
             ("read_station", "Can read a station"),
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         # While debugging, it's possible that the center might not yet be set when this is invoked.
         center_id = self.center.center_id if self.center_id else "[None]"
         return "Center {}, Station {}".format(center_id, self.number)

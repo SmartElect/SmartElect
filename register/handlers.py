@@ -100,7 +100,7 @@ class LibyaHandler(LibyaHandlerMixin, PatternHandler):
     def respond(self, text, **kwargs):
         # Force translation of response message to happen while we still have
         # the right language set.
-        return self.msg.respond(unicode(text), **kwargs)
+        return self.msg.respond(str(text), **kwargs)
 
     def error(self, message_code):
         """Helper for handlers to respond with a particular message code."""
@@ -140,7 +140,7 @@ class VoterQueryCitizenLookupHandler(VoterQueryHandler):
 
     def handle(self, nid):
         logger.debug("VoterQueryCitizenLookupHandler")
-        nid = long(nid)
+        nid = int(nid)
         self.msg.sms.msg_type = SMS.QUERY
         self.msg.sms.save()
         result = process_registration_lookup(nid, self.msg.sms)
@@ -215,7 +215,7 @@ class RegistrationMessageHandler(Tool_1_Handler):
     def handle(self, nid, center_id):
         logger.debug("RegistrationMessageHandler")
         center_id = int(center_id)
-        nid = long(nid)
+        nid = int(nid)
         self.msg.sms.msg_type = SMS.REGISTRATION
         result = process_registration_request(
             center_id, nid, self.msg.sms

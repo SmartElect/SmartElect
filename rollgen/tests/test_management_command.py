@@ -1,13 +1,9 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import logging
 import os
 import shutil
 import tempfile
-
-# 3rd party imports
-from mock import patch, ANY
+from unittest.mock import patch, ANY
 
 # Django imports
 from django.core.management.base import CommandError
@@ -16,7 +12,7 @@ from django.test import TestCase
 
 # Project imports
 from ..job import PHASES
-from libya_elections.constants import CENTER_ID_MAX_INT_VALUE, NO_NAMEDTHING
+from libya_elections.constants import NO_NAMEDTHING, NO_SUCH_CENTER
 from register.models import Office
 from register.tests.factories import RegistrationCenterFactory, RegistrationFactory
 from voting.models import Election
@@ -65,15 +61,15 @@ class TestManagementCommand(TestCase):
         """Ensure that one must specify the phase"""
         with self.assertRaises(CommandError) as cm:
             call_command(self.command_name)
-        msg = 'Please specify exactly one of the following phases: ' + ', '.join(PHASES.keys())
-        self.assertEqual(cm.exception.message, msg)
+        msg = 'Error: the following arguments are required: phase'
+        self.assertEqual(str(cm.exception), msg)
 
     def test_nonsense_phase_rejected(self, mock_generate_rolls, mock_ctor):
         """Ensure that only valid phases are accepted"""
         with self.assertRaises(CommandError) as cm:
             call_command(self.command_name, 'banana')
         expected_message = 'Phase must be one of {}'.format(', '.join(PHASES.keys()))
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
     def test_phases(self, mock_generate_rolls, mock_ctor):
         """Exercise simple invocations and ensure expected calls are made"""
@@ -130,7 +126,7 @@ class TestManagementCommand(TestCase):
             call_command(self.command_name, self.phase,
                          center_ids=str(self.inactive_center.center_id))
 
-        self.assertEqual(cm.exception.message, "The criteria you provided match no active centers.")
+        self.assertEqual(str(cm.exception), "The criteria you provided match no active centers.")
 
         self.assertFalse(mock_ctor.called)
         self.assertFalse(mock_generate_rolls.called)
@@ -238,7 +234,7 @@ class TestManagementCommand(TestCase):
                          office_ids=str(self.centers[0].office.id))
 
         expected_message = 'Please specify at most one center/office/constituency id option.'
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
         self.assertFalse(mock_ctor.called)
         self.assertFalse(mock_generate_rolls.called)
@@ -247,7 +243,7 @@ class TestManagementCommand(TestCase):
         """ensure that a non-existent center id raises an error"""
         mock_ctor.return_value = None
 
-        center_id = CENTER_ID_MAX_INT_VALUE
+        center_id = NO_SUCH_CENTER
 
         self.input_arguments['center_ids'] = [center_id]
 
@@ -255,7 +251,7 @@ class TestManagementCommand(TestCase):
             call_command(self.command_name, self.phase, center_ids=str(center_id))
 
         expected_message = 'The following centers are not in the database: [{}].'.format(center_id)
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
         self.assertFalse(mock_ctor.called)
         self.assertFalse(mock_generate_rolls.called)
@@ -272,7 +268,7 @@ class TestManagementCommand(TestCase):
             call_command(self.command_name, self.phase, office_ids=str(office_id))
 
         expected_message = 'The following offices are not in the database: [{}].'.format(office_id)
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
         self.assertFalse(mock_ctor.called)
         self.assertFalse(mock_generate_rolls.called)
@@ -290,7 +286,7 @@ class TestManagementCommand(TestCase):
 
         expected_message = \
             'The following constituencies are not in the database: [{}].'.format(constituency_id)
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
         self.assertFalse(mock_ctor.called)
         self.assertFalse(mock_generate_rolls.called)
@@ -335,7 +331,7 @@ class TestForgiveness(TestCase):
 
         expected_message = \
             'The following centers have no associated office: [{}].'.format(center_id)
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
     def test_no_office_center_can_be_forgiven(self):
         """ensure that a center that has no office is accepted when --forgive-no-office is True"""
@@ -360,7 +356,7 @@ class TestForgiveness(TestCase):
                          output_root=self.output_path)
 
         expected_message = 'The following centers have no registrants: [{}].'.format(center_id)
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
     def test_no_voter_center_can_be_forgiven(self):
         """ensure that a center that has no voters is accepted when --forgive-no-voters=True"""
@@ -385,7 +381,7 @@ class TestForgiveness(TestCase):
                          output_root=self.output_path)
 
         expected_message = 'The following centers have no registrants: [{}].'.format(center_id)
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)
 
     def test_copy_center_not_mistaken_for_no_registration_center(self):
         """ensure that a center that's a copy of a center with registrants is recognized as such"""
@@ -426,4 +422,4 @@ class TestNoElectioNoRollgen(TestCase):
                          output_root=self.output_path)
 
         expected_message = 'There is no current in-person election.'
-        self.assertEqual(cm.exception.message, expected_message)
+        self.assertEqual(str(cm.exception), expected_message)

@@ -20,8 +20,8 @@
           <ul>
             <li>{% trans "Election Management" %}</li>
             {% include 'libya_site/stafflink.html' with url='browse_elections' linktext=_("Elections, Ballots, &amp; Candidates") permission=perms.voting %}
-            {% include 'libya_site/stafflink.html' with url='browse_registrationperiods' linktext=_("Registration Periods") permission=perms.registrationperiod %}
-            {% include 'libya_site/stafflink.html' with url='vr_dashboard:election-day' linktext=_("Polling Center Monitoring") %}
+            {% include 'libya_site/stafflink.html' with url='browse_registrationperiods' linktext=_("Registration Periods") permission=perms.voting.browse_registrationperiod %}
+            {% include 'libya_site/stafflink.html' with url='vr_dashboard:election-day' linktext=_("Polling Center Monitoring") permission=request.user.is_staff %}
             {% include 'libya_site/stafflink.html' with url='rollgen:overview' linktext=_("Voter Rolls") permission=request.user|can_rollgen %}
           </ul>
         </div>
@@ -31,6 +31,7 @@
             {% include 'libya_site/stafflink.html' with url='browse_registrations' linktext=_("Registrations") permission=perms.register %}
             {% include 'libya_site/stafflink.html' with url='browse_registrationcenters' linktext=_("Registration Centers") permission=perms.register.browse_registrationcenter %}
             {% include 'libya_site/stafflink.html' with url='browse_citizens' linktext=_("Citizens") permission=perms.civil_registry %}
+            {% include 'libya_site/stafflink.html' with url='browse_changesets' linktext=_("Changesets") permission=perms.changesets.browse_changeset %}
           </ul>
         </div>
         <div class="fifth">
@@ -39,13 +40,13 @@
             {% include 'libya_site/stafflink.html' with url='browse_broadcasts' linktext=_("Broadcasts") permission=perms.bulk_sms %}
             {% include 'libya_site/stafflink.html' with url='browse_staffphones' linktext=_("Staff Phones") permission=perms.polling_reports.browse_staffphone %}
             {% include 'libya_site/stafflink.html' with url='browse_messages' linktext=_("Messages") permission=perms.register.browse_sms %}
-            {% include 'libya_site/stafflink.html' with url='browse_discrepancies' linktext=_("SMS Discrepancies") permissions=perms.audit %}
+            {% include 'libya_site/stafflink.html' with url='browse_discrepancies' linktext=_("SMS Discrepancies") permission=perms.audit %}
           </ul>
         </div>
         <div class="fifth">
           <ul>
             <li>{% trans "Admin" %}</li>
-            {% include 'libya_site/stafflink.html' with url='browse_users' linktext=_("Users &amp; Permissions") %}
+            {% include 'libya_site/stafflink.html' with url='browse_users' linktext=_("Users &amp; Permissions") permission=perms.users %}
             {% include 'libya_site/stafflink.html' with url='message_list' linktext=_("Translations") permission=perms.text_messages %}
             {% if ENVIRONMENT != 'production' and user.is_superuser %}
               {% include 'libya_site/stafflink.html' with url='httptester-index' linktext=_("Message Tester") %}

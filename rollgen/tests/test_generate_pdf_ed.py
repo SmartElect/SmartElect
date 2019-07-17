@@ -1,7 +1,3 @@
-# Python imports
-from __future__ import unicode_literals
-from __future__ import division
-
 # 3rd party imports
 from bidi.algorithm import get_display as apply_bidi
 
@@ -402,7 +398,7 @@ class TestGeneratePdfEdContent(TestGeneratePdfBase):
         voters = station.roll[-n_last_page_voters:]
         f = lambda voter: '{}{}'.format(apply_bidi(reshape(format_name(voter))),
                                         voter.registrant_number)
-        expected_lines += map(f, voters)
+        expected_lines += list(map(f, voters))
 
         # Footer, including page #
         expected_lines.append(mf_string)
@@ -510,7 +506,7 @@ class TestGeneratePdfEdContent(TestGeneratePdfBase):
         f = lambda voter: '{}{}{}'.format(station.number,
                                           apply_bidi(reshape(format_name(voter))),
                                           voter.registrant_number)
-        expected_lines += map(f, voters)
+        expected_lines += list(map(f, voters))
 
         # Footer, including page #
         expected_lines.append(mf_string)
@@ -546,7 +542,7 @@ class TestGeneratePdfEdContent(TestGeneratePdfBase):
         f = lambda voter: '{}{}{}'.format(station.number,
                                           apply_bidi(reshape(format_name(voter))),
                                           voter.registrant_number)
-        expected_lines += map(f, voters)
+        expected_lines += list(map(f, voters))
 
         # Footer, including page #
         expected_lines.append(mf_string)

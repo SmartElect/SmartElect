@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Python imports
-from __future__ import unicode_literals
+import codecs
+import csv
 from datetime import timedelta, datetime, time
 from functools import wraps
 import logging
@@ -21,7 +22,6 @@ from pytz import timezone
 from .forms import RegistrationCenterCSVForm, CSV_FIELDS
 from .models import Blacklist, Whitelist, Registration, RegistrationCenter
 from libya_elections.constants import CENTER_ID_MAX_INT_VALUE, CENTER_ID_MIN_INT_VALUE
-from libya_elections.csv_utils import UnicodeReader
 from libya_elections.phone_numbers import canonicalize_phone_number
 from voting.models import Election, RegistrationPeriod
 
@@ -37,6 +37,9 @@ PARSING_ERROR = _(
     "Error found in line {line_number}: row does not contain the exact number of columns "
     "required or it contains blank lines. The row should only have the following "
     " columns: {columns}.")
+COULD_NOT_PARSE_ERROR = _(
+    "Could not parse as a CSV file."
+)
 FORM_FIELD_ERROR = _(
     'Error in row {line_number}. Field: {field_name}. Value: {value}. Error: {error}')
 FORM_ERROR = _(
@@ -56,8 +59,8 @@ def registration_allowed(msg):
       - Registration changes during SMS Polling (for selected voters)
         - These voters will have msg.fields['registration_allowed'] set to True
     """
-    return (tool_1_enabled() or
-            msg.fields.get('registration_allowed'))
+    return (tool_1_enabled()
+            or msg.fields.get('registration_allowed'))
 
 
 def tool_1_enabled(as_of=None):
@@ -180,7 +183,7 @@ def import_center_csv_row(columns, row, line_number, stats, errors):
             return
 
         # create a dictionary analogous to request.POST to feed to form
-        data = dict(zip(CSV_FIELDS, row))
+        data = dict(list(zip(CSV_FIELDS, row)))
         try:
             # pull center_id and see if this center exists (so we know whether to update or insert)
             center = RegistrationCenter.objects.get(center_id=data['center_id'])
@@ -196,15 +199,14 @@ def import_center_csv_row(columns, row, line_number, stats, errors):
             # so we can tell if they've changed later
             with override('ar'):
                 old_center_type = force_text(center.get_center_type_display())
-            # FK fields must be None so that the form doesn't consider them changed.
             initial = {
                 'office_id': center.office.id,
-                'office': None,
+                'office': center.office,
                 'constituency_id': center.constituency.id,
-                'constituency': None,
+                'constituency': center.constituency,
                 'subconstituency_id': center.subconstituency.id,
-                'subconstituency': None,
-                'copy_of': None,
+                'subconstituency': center.subconstituency,
+                'copy_of': center.copy_of,
                 'center_type': old_center_type
             }
             if center.copy_of:
@@ -223,7 +225,7 @@ def import_center_csv_row(columns, row, line_number, stats, errors):
             else:
                 stats['num_dupes'] += 1
         else:
-            for field_name, form_errors in form.errors.iteritems():
+            for field_name, form_errors in form.errors.items():
                 for error in form_errors:
                     if field_name in data:
                         # this is a field-specific error
@@ -255,18 +257,21 @@ def update_center_table(_file):
     If any errors are reported, no imports occur.
     """
     errors = []
-    reader = UnicodeReader(_file)
 
+    reader = csv.reader(codecs.iterdecode(_file, 'utf-8'))
     stats = {
         'num_blank': 0,
         'num_created': 0,
         'num_dupes': 0,
         'num_updated': 0,
     }
-
     line_number = 1
     columns = ", ".join(CSV_FIELDS)
-    headers = reader.next()  # gets rid of the header row
+    try:
+        headers = next(reader)   # gets rid of the header row
+    except UnicodeDecodeError:
+        # this can happen when the file is not a CSV file jpg png etc...
+        return COULD_NOT_PARSE_ERROR, False
 
     if not len(headers) == len(CSV_FIELDS):
         return PARSING_ERROR.format(line_number=1, columns=columns), False
@@ -313,7 +318,7 @@ def process_blackwhitelisted_numbers_file(model, import_file):
     imported = skipped = 0
     errors = []
     for line_number, line in enumerate(import_file.read().splitlines()):
-        phone_number = canonicalize_phone_number(line)
+        phone_number = canonicalize_phone_number(line.decode())
         if phone_number:
             if model.objects.filter(phone_number=phone_number).exists():
                 skipped += 1

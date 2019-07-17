@@ -131,7 +131,7 @@ def get_all_perm_names_for_group(group_name):
 
 
 def create_help_desk_groups():
-    for group_name, perm_names in HELP_DESK_GROUP_PERMISSIONS.iteritems():
+    for group_name, perm_names in HELP_DESK_GROUP_PERMISSIONS.items():
         group, created = Group.objects.get_or_create(name=group_name)
         perms_to_add = permission_names_to_objects(get_all_perm_names_for_group(group_name))
         group.permissions.add(*perms_to_add)

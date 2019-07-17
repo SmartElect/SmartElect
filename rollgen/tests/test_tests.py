@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-# Python imports
-from __future__ import unicode_literals
-
 # Django imports
 from django.test import TestCase
 

@@ -1,8 +1,6 @@
-from __future__ import unicode_literals
-
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from libya_elections.abstract import AbstractTimestampTrashBinModel
@@ -44,8 +42,9 @@ class VumiLog(AbstractTimestampTrashBinModel):
         ]
         verbose_name = _("vumi log")
         verbose_name_plural = _("vumi logs")
+        ordering = ['-creation_date']
 
-    def __unicode__(self):
+    def __str__(self):
         return _("From {from_addr} to {to_addr}: {content}").format(
             from_addr=self.from_addr,
             to_addr=self.to_addr,
@@ -87,15 +86,17 @@ class SMSTrail(SMSFormatterMixin, VumilogFormatterMixin, AbstractTimestampTrashB
     and before calling report().
     """
     sms = models.OneToOneField("register.SMS", null=True, blank=True, unique=True,
-                               verbose_name=_('sms'))
+                               verbose_name=_('sms'),
+                               on_delete=models.CASCADE)
     vumi = models.OneToOneField(VumiLog, null=True, blank=True, unique=True,
-                                verbose_name=_('vumi log'))
+                                verbose_name=_('vumi log'),
+                                on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("sms trail")
         verbose_name_plural = _("sms trails")
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Trail linking SMS ({sms}) with VumiLog ({vumi})").format(
             sms=self.sms.id if self.sms else None,
             vumi=self.vumi.id if self.vumi else None,
@@ -158,7 +159,8 @@ class Discrepancy(AbstractTimestampTrashBinModel):
     """
     Keeps track of SMSTrail objects that do not have both sms and vumi records.
     """
-    trail = models.OneToOneField(SMSTrail, verbose_name=_('sms trail'))
+    trail = models.OneToOneField(SMSTrail, verbose_name=_('sms trail'),
+                                 on_delete=models.CASCADE)
     comments = models.TextField(_('comments'), blank=True)
     resolved = models.BooleanField(_('resolved'), blank=False, default=False)
 
@@ -171,7 +173,7 @@ class Discrepancy(AbstractTimestampTrashBinModel):
         verbose_name_plural = _("sms discrepancies")
         ordering = ['-creation_date']
 
-    def __unicode__(self):
+    def __str__(self):
         if self.trail.direction == INCOMING:
             msg = _("A discrepancy has been found for an incoming message at {datetime}.").format(
                 datetime=self.creation_date)
@@ -197,7 +199,7 @@ class Discrepancy(AbstractTimestampTrashBinModel):
     trail_report.allow_tags = True
 
     def sms_as_html(self):
-        return self.trail.sms_as_html
+        return self.trail.sms_as_html()
 
     def vumilog_as_html(self):
         return self.trail.vumilog_as_html

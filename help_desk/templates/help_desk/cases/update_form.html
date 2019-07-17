@@ -16,7 +16,7 @@
         <h2>{% trans "Update Form" %}</h2>
         <a name="form"></a>
 
-        <form action="" method="post">
+        <form action="" method="post" novalidate>
           {% csrf_token %}
           {{ form.as_p }}
           <input type="submit" value="Update" />

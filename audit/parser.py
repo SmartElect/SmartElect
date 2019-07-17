@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 
 LOG_PATTERN = {
     'smpp_inbound': re.compile(
-        r'(?P<date>[\d\-\+\:\s]+) .*'
+        r'(?P<date>[\d\-\+\:\sT]+) .*'
         r'Processed inbound message .*?'
         r': (?P<message>.*)'),
     'smpp_outbound': re.compile(
-        r'(?P<date>[\d\-\+\:\s]+) .*'
+        r'(?P<date>[\d\-\+\:\sT]+) .*'
         r'Processed outbound message .*?'
         r': (?P<message>.*)'),
 }
@@ -32,17 +32,17 @@ class LogParser(object):
 
     Two common output formats are the one used by SMPP for logging:
 
-    `YYYY-MM-DD HH:MM:SS+0000 <bits of text> PUBLISHING INBOUND: {
+    `YYYY-MM-DDTHH:MM:SS+0000 <bits of text> PUBLISHING INBOUND: {
         'from_addr': '218918510226',
-        'to_addr': '10010', 'content': '903039#1981', 'transport_type': 'sms',
+        'to_addr': '15015', 'content': '903039#1981', 'transport_type': 'sms',
         'transport_metadata': {},
         'message_id': 'b5c53932-b13b-4453-8b99-728e66d23062'}`
 
-    `YYYY-MM-DD HH:MM:SS+0000 <bits of text> Processed outbound message for <bits of text>: {
-        "transport_name": "almadar_smpp_transport_10010",
+    `YYYY-MM-DDTHH:MM:SS+0000 <bits of text> Processed outbound message for <bits of text>: {
+        "transport_name": "almadar_smpp_transport_15015",
         "in_reply_to": "b5c53932-b13b-4453-8b99-728e66d23062",
         "group": null,
-        "from_addr": "10010",
+        "from_addr": "15015",
         "timestamp": "2014-04-15 18:04:32.161446",
         "to_addr": "218918510226",
         "content": "",
@@ -75,7 +75,7 @@ class LogParser(object):
                         except IndexError:
                             # if a exception is risen while parsing a line,
                             # we should continue parsing the file.
-                            logger.info(u"Exception in line: {0}".format(line))
+                            logger.info("Exception in line: {0}".format(line))
             except IOError as ex:
                 # file does not exist
                 logger.info(ex)
@@ -88,7 +88,7 @@ class LogParser(object):
             data = match.groupdict()
             date = dateutil_parse(data['date'])
             kwargs = json.loads(data['message'])
-            logger.debug(u"parsing {0}".format(data['message']))
+            logger.debug("parsing {0}".format(data['message']))
             self.save(date, line, **kwargs)
 
     def save(self, date, raw_text, **kwargs):

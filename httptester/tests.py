@@ -1,13 +1,13 @@
-from six.moves import StringIO
+from io import StringIO
+from unittest.mock import patch
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
-from mock import patch
-
 from rapidsms.backends.database.models import INCOMING
-from .forms import MessageForm
 from rapidsms.tests.harness import RapidTest
+
+from .forms import MessageForm
 from .storage import store_and_queue, store_message, get_messages, \
     clear_messages, clear_all_messages
 
@@ -23,7 +23,7 @@ class StorageTest(RapidTest):
 
     def test_store_and_get(self):
         """If we store something, we can get it again"""
-        direction, identity, text = u"I", u"identity", u"text"
+        direction, identity, text = "I", "identity", "text"
         store_message(direction, identity, text)
         msgs = get_messages()
         msg = msgs[0]
@@ -33,24 +33,24 @@ class StorageTest(RapidTest):
 
     def test_clear(self):
         """We can clear messages for a given identity"""
-        direction, identity, text = u"I", u"identity1", u"text"
+        direction, identity, text = "I", "identity1", "text"
         store_message(direction, identity, text)
-        direction, identity, text = u"I", u"identity2", u"text"
+        direction, identity, text = "I", "identity2", "text"
         store_message(direction, identity, text)
-        direction, identity, text = u"I", u"identity3", u"text"
+        direction, identity, text = "I", "identity3", "text"
         store_message(direction, identity, text)
-        clear_messages(u"identity2")
+        clear_messages("identity2")
         msgs = get_messages()
         for msg in msgs:
-            self.assertNotEqual(u"identity2", msg.identity)
+            self.assertNotEqual("identity2", msg.identity)
 
     def test_clear_all(self):
         """We can clear all messages"""
-        direction, identity, text = u"I", u"identity1", u"text"
+        direction, identity, text = "I", "identity1", "text"
         store_message(direction, identity, text)
-        direction, identity, text = u"I", u"identity2", u"text"
+        direction, identity, text = "I", "identity2", "text"
         store_message(direction, identity, text)
-        direction, identity, text = u"I", u"identity3", u"text"
+        direction, identity, text = "I", "identity3", "text"
         store_message(direction, identity, text)
         clear_all_messages()
         self.assertEqual(0, len(get_messages()))
@@ -59,7 +59,7 @@ class StorageTest(RapidTest):
         """We set msg.fields['from_addr'] to the incoming phone number."""
         # Vumi sets msg.fields['from_addr'] to the incoming phone number and libya_elections
         # code relies on that fact, so httptester should do the same.
-        from_addr = '218112223333'
+        from_addr = '218912223333'
         store_and_queue(from_addr, "hi there!")
         self.assertEqual(self.inbound[0].fields['from_addr'], from_addr)
 
@@ -90,6 +90,14 @@ class ViewTest(RapidTest):
         self.assertEqual(phone2, msg.identity)
         self.assertEqual(INCOMING, msg.direction)
         self.assertEqual(message, msg.text)
+
+    def test_get_page_with_data(self):
+        self.login()
+        self.user.is_superuser = True
+        self.user.save()
+        store_and_queue(self.phone, "hi there!")
+        rsp = self.client.get(self.url)
+        self.assertEqual(200, rsp.status_code)
 
     def test_bulk(self):
         messages = ["message 1", "message 2", "message 3"]

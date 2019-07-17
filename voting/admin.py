@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.contrib import admin
 from django.utils.timezone import now
 
@@ -34,7 +33,18 @@ class ElectionAdmin(LibyaAdminModel):
     list_display_links = ['name_arabic', 'name_english']
     readonly_fields = ['start_time', 'end_time']
 
-admin_site.register(Election, ElectionAdmin)
+    def get_readonly_fields(self, request, obj=None):
+        # Don't allow changing an existing election's type
+        fields = super(ElectionAdmin, self).get_readonly_fields(request, obj)
+        if obj:
+            fields.append('type')
+        return fields
+
+    def get_fieldsets(self, request, obj=None):
+        if obj:
+            return self.inperson_change_fieldsets
+        else:
+            return self.add_fieldsets
 
 
 class CandidateInlineAdmin(admin.TabularInline):
@@ -53,14 +63,12 @@ class BallotAdmin(LibyaAdminModel):
     def get_subconstituencies(self, obj):
         return obj.subconstituency_ids_formatted
     get_subconstituencies.short_description = "Subconstituencies"
-admin_site.register(Ballot, BallotAdmin)
 
 
 class CandidateAdmin(LibyaAdminModel):
     list_display = ['election', 'ballot', 'candidate_number', 'name_arabic', 'name_english']
     list_display_links = ['candidate_number', 'name_arabic', 'name_english']
     list_filter = ['ballot']
-admin_site.register(Candidate, CandidateAdmin)
 
 
 class RegistrationPeriodAdmin(LibyaAdminModel):
@@ -76,4 +84,9 @@ class RegistrationPeriodAdmin(LibyaAdminModel):
             if obj.end_time <= right_now:
                 fields.add('end_time')
         return list(fields)
+
+
+admin_site.register(Election, ElectionAdmin)
+admin_site.register(Ballot, BallotAdmin)
+admin_site.register(Candidate, CandidateAdmin)
 admin_site.register(RegistrationPeriod, RegistrationPeriodAdmin)

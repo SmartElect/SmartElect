@@ -1,14 +1,8 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import os
 import logging
-from optparse import make_option
 
 # 3rd party imports
-
-
-# Django imports
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
 
@@ -29,8 +23,6 @@ logger.addHandler(stream_handler)
 class Command(BaseCommand):
     """Django mgmt command for running the roll generator."""
 
-    args = '<phase>'
-
     FORGIVE_NO_OFFICE_DEFAULT = False
     FORGIVE_NO_VOTERS_DEFAULT = False
     FORGIVE_NO_OFFICE_HELP = "Process centers even if they have no associated office "
@@ -38,62 +30,66 @@ class Command(BaseCommand):
     FORGIVE_NO_VOTERS_HELP = "Process centers even if they have no voters "
     FORGIVE_NO_VOTERS_HELP += ("(default={})".format(FORGIVE_NO_VOTERS_DEFAULT))
 
-    option_list = BaseCommand.option_list + (
-        make_option('--center-id-file',
-                    action='store',
-                    dest='center_id_file',
-                    default=None,
-                    help='A file containing a list of center ids to process'),
-        make_option('--center-id-list',
-                    action='store',
-                    dest='center_ids',
-                    default=None,
-                    help='A comma-delimited list of center ids to process (no spaces)'),
-        make_option('--office-id-file',
-                    action='store',
-                    dest='office_id_file',
-                    default=None,
-                    help='A file containing a list of office ids to process'),
-        make_option('--office-id-list',
-                    action='store',
-                    dest='office_ids',
-                    default=None,
-                    help='A comma-delimited list of office ids to process (no spaces)'),
-        make_option('--constituency-id-file',
-                    action='store',
-                    dest='constituency_id_file',
-                    default=None,
-                    help='A file containing a list of constituency ids to process'),
-        make_option('--constituency-id-list',
-                    action='store',
-                    dest='constituency_ids',
-                    default=None,
-                    help='A comma-delimited list of constituency ids to process (no spaces)'),
-        make_option('--output-root',
-                    action='store',
-                    dest='output_root',
-                    default=None,
-                    help='The root directory for the output (defaults to current directory)'),
-        make_option('--forgive-no-office',
-                    action='store_true',
-                    dest='forgive_no_office',
-                    default=FORGIVE_NO_OFFICE_DEFAULT,
-                    help=FORGIVE_NO_OFFICE_HELP),
-        make_option('--forgive-no-voters',
-                    action='store_true',
-                    dest='forgive_no_voters',
-                    default=False,
-                    help=FORGIVE_NO_VOTERS_HELP),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('phase')
+        parser.add_argument(
+            '--center-id-file',
+            action='store',
+            dest='center_id_file',
+            default=None,
+            help='A file containing a list of center ids to process')
+        parser.add_argument(
+            '--center-id-list',
+            action='store',
+            dest='center_ids',
+            default=None,
+            help='A comma-delimited list of center ids to process (no spaces)')
+        parser.add_argument(
+            '--office-id-file',
+            action='store',
+            dest='office_id_file',
+            default=None,
+            help='A file containing a list of office ids to process')
+        parser.add_argument(
+            '--office-id-list',
+            action='store',
+            dest='office_ids',
+            default=None,
+            help='A comma-delimited list of office ids to process (no spaces)')
+        parser.add_argument(
+            '--constituency-id-file',
+            action='store',
+            dest='constituency_id_file',
+            default=None,
+            help='A file containing a list of constituency ids to process')
+        parser.add_argument(
+            '--constituency-id-list',
+            action='store',
+            dest='constituency_ids',
+            default=None,
+            help='A comma-delimited list of constituency ids to process (no spaces)')
+        parser.add_argument(
+            '--output-root',
+            action='store',
+            dest='output_root',
+            default=None,
+            help='The root directory for the output (defaults to current directory)')
+        parser.add_argument(
+            '--forgive-no-office',
+            action='store_true',
+            dest='forgive_no_office',
+            default=self.FORGIVE_NO_OFFICE_DEFAULT,
+            help=self.FORGIVE_NO_OFFICE_HELP)
+        parser.add_argument(
+            '--forgive-no-voters',
+            action='store_true',
+            dest='forgive_no_voters',
+            default=self.FORGIVE_NO_VOTERS_DEFAULT,
+            help=self.FORGIVE_NO_VOTERS_HELP)
 
     def handle(self, *args, **options):
         valid_phases = PHASES.keys()
-
-        if len(args) != 1:
-            msg = 'Please specify exactly one of the following phases: ' + ', '.join(valid_phases)
-            raise CommandError(msg)
-
-        phase = args[0].lower()
+        phase = options['phase'].lower()
         if phase not in valid_phases:
             valid_phases = ', '.join(valid_phases)
             raise CommandError('Phase must be one of {phases}'.format(phases=valid_phases))
@@ -124,7 +120,7 @@ class Command(BaseCommand):
             except ValidationError:
                 raise CommandError("At least one of the center ids is not valid.")
 
-            center_ids = map(int, center_ids)
+            center_ids = list(map(int, center_ids))
             invalid_center_ids = find_invalid_center_ids(center_ids)
 
             if invalid_center_ids:
@@ -146,7 +142,7 @@ class Command(BaseCommand):
             except ValidationError:
                 raise CommandError("At least one of the office ids is not valid.")
 
-            office_ids = map(int, office_ids)
+            office_ids = list(map(int, office_ids))
 
             offices = Office.objects.filter(id__in=office_ids)
 
@@ -173,7 +169,7 @@ class Command(BaseCommand):
             except ValidationError:
                 raise CommandError("At least one of the constituency ids is not valid.")
 
-            constituency_ids = map(int, constituency_ids)
+            constituency_ids = list(map(int, constituency_ids))
 
             constituencies = Constituency.objects.filter(id__in=constituency_ids)
 
@@ -195,7 +191,7 @@ class Command(BaseCommand):
         else:
             centers = RegistrationCenter.objects.all()
 
-        centers = centers.filter(reg_open=True).prefetch_related('office')
+        centers = centers.filter(reg_open=True).all().prefetch_related('office')
 
         # Converting centers from a queryset to a list isn't necessary, but it makes testing easier
         # because I can ask mock to compare Job.__init__() call args to simple lists instead of

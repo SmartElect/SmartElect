@@ -106,14 +106,14 @@ class ThwartEmojiTest(LibyaRapidTest):
     """
 
     def test_that_we_surround_parens_with_spaces(self):
-        self.send(u'(8)', self.create_connection())
+        self.send('(8)', self.create_connection())
         # We don't use `self.get_last_response_message`, because that will get us
         # msg.raw_text, and we specifically want to see the postprocessed msg that
         # we would send to the phone, which is stored in msg.text
-        self.assertEqual(self.get_last_response().text, u'( 8 )')
+        self.assertEqual(self.get_last_response().text, '( 8 )')
 
     def test_result_unchanged_if_no_transformations_match(self):
-        raw_text = u'()'
+        raw_text = '()'
         self.send(raw_text, self.create_connection())
         self.assertEqual(self.get_last_response().text, raw_text)
 

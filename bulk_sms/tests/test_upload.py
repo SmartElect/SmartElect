@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from bulk_sms.models import BulkMessage, Batch, Broadcast
 from bulk_sms.tests.factories import BatchFactory
@@ -9,29 +9,27 @@ from libya_elections.tests.utils import ResponseCheckerMixin
 from libya_site.tests.factories import UserFactory
 from register.tests.base import LibyaTest
 
-GOOD_CSV_DATA = """218123456789,A message
+GOOD_CSV_DATA = """218923456789,A message
 
 8821612340058,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
-"""
+""".encode()
 
 INVALID_PHONE_DATA = """5551212,A message
-218123456789,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
-"""
+218923456789,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
+""".encode()
 
-BLANK_MESSAGE_DATA = """218123456789,
-218123456790,A message
+BLANK_MESSAGE_DATA = """218923456789,
+218923456790,A message
 8821612340058,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة""
-"""
+""".encode()
 
-FAILS_PARSING_DATA = """218123456789,A message,extra field
-218123456790,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
-"""
+FAILS_PARSING_DATA = """218923456789,A message,extra field
+218923456790,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
+""".encode()
 
-LINE_ENDINGS = "218123456789,a\n" + \
-               "8821612340058,b\r" + \
-               "218123456790,c\r\n"
-
-INVALID_CHARACTERS = "218123456789,\x8e"
+LINE_ENDINGS = ("218923456789,a\n"
+                "8821612340058,b\r"
+                "218923456790,c\r\n").encode()
 
 
 class ValidateUploadTest(ResponseCheckerMixin, LibyaTest):
@@ -47,57 +45,49 @@ class ValidateUploadTest(ResponseCheckerMixin, LibyaTest):
 
     def test_valid_upload_creates_bulkmessages(self):
         f = SimpleUploadedFile('file.csv', GOOD_CSV_DATA)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         self.client.post(self.home_url, data=data, follow=True)
         self.assertEqual(BulkMessage.objects.count(), 2)
 
     def test_line_endings(self):
         f = SimpleUploadedFile('file.csv', LINE_ENDINGS)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         self.client.post(self.home_url, data=data, follow=True)
         self.assertEqual(BulkMessage.objects.count(), 3)
 
-    def test_invalid_characters(self):
-        f = SimpleUploadedFile('file.csv', INVALID_CHARACTERS)
-        data = {'name': u'A name', 'csv': f}
-        rsp = self.client.post(self.home_url, data=data, follow=True)
-        form = rsp.context['form']
-        self.assertFalse(form.is_valid())
-        self.assertIn(u'The uploaded file had invalid characters.', form['csv'].errors[0])
-        self.assertEqual(BulkMessage.objects.count(), 0)
-
     def test_invalid_phone(self):
         f = SimpleUploadedFile('file.csv', INVALID_PHONE_DATA)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         rsp = self.client.post(self.home_url, data=data, follow=True)
         form = rsp.context['form']
         self.assertFalse(form.is_valid())
-        self.assertIn(u'Unable to parse number', form['csv'].errors[0])
+        self.assertIn('Unable to parse number', form['csv'].errors[0])
         self.assertEqual(BulkMessage.objects.count(), 0)
 
     def test_blank_message(self):
         f = SimpleUploadedFile('file.csv', BLANK_MESSAGE_DATA)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         rsp = self.client.post(self.home_url, data=data, follow=True)
         form = rsp.context['form']
         self.assertFalse(form.is_valid())
-        self.assertIn(u'Message is blank', form['csv'].errors[0])
+        self.assertIn('Message is blank', form['csv'].errors[0])
         self.assertEqual(BulkMessage.objects.count(), 0)
 
     def test_invalid_csv_structure(self):
         f = SimpleUploadedFile('file.csv', FAILS_PARSING_DATA)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         rsp = self.client.post(self.home_url, data=data, follow=True)
         form = rsp.context['form']
         self.assertFalse(form.is_valid())
-        self.assertIn(u'The row should only have the following columns', form['csv'].errors[0])
+        self.assertIn('The row should only have the following columns', form['csv'].errors[0])
         self.assertEqual(BulkMessage.objects.count(), 0)
 
     def test_bulk_create(self):
+        # FIXME: This takes 5+ seconds. Any way to test without doing so much?
         # we bulk create every 10000 records, so make sure we use a number
         # in between checkpoints to make sure we don't leave any strays
         f = SimpleUploadedFile('file.csv', GOOD_CSV_DATA * 11000)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         self.client.post(self.home_url, data=data, follow=True)
         self.assertEqual(BulkMessage.objects.count(), 22000)
 
@@ -132,7 +122,7 @@ class ValidateUploadTest(ResponseCheckerMixin, LibyaTest):
         self.staff_user.user_permissions.remove(Permission.objects.get(codename='add_broadcast'))
         self.staff_user.user_permissions.add(Permission.objects.get(codename='approve_broadcast'))
         f = SimpleUploadedFile('file.csv', GOOD_CSV_DATA)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         self.assertForbidden(self.client.post(reverse('upload_broadcast'), data=data))
         self.assertEqual(BulkMessage.objects.count(), 0)
 
@@ -143,7 +133,7 @@ class ValidateUploadTest(ResponseCheckerMixin, LibyaTest):
         # can see upload form
         self.assertIn('form', rsp.context)
         f = SimpleUploadedFile('file.csv', GOOD_CSV_DATA)
-        data = {'name': u'A name', 'csv': f}
+        data = {'name': 'A name', 'csv': f}
         rsp = self.client.post(reverse('upload_broadcast'), data=data, follow=True)
         # and messages are uploaded
         self.assertEqual(BulkMessage.objects.count(), 2)

@@ -1,0 +1,62 @@
+{% extends 'vr_dashboard/base.html' %}
+{% load humanize i18n static %}
+
+{% block extra_css %}
+  <link href="{% static 'css/jquery/jquery-ui.min.css' %}" type="text/css" rel="stylesheet">
+  <link href="{% static 'css/jquery/timepicker.css' %}" type="text/css" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block extra_js %}
+  <script type="text/javascript" src="{% static 'js/jquery/jquery-ui.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery/datepicker_apply.js' %}"></script>
+  {% if LANGUAGE_CODE == 'ar' %}
+    <script type="text/javascript" src="{% static 'js/jquery/datepicker_arabicize.js' %}"></script>
+  {% endif %}
+
+  <script type="text/javascript" src="{% static 'js/jquery/timepicker.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery/timepicker_apply.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+{# Form tag is out here so it doesn't mess up the layout #}
+<form method="POST" action="." novalidate>
+  {% csrf_token %}
+
+  <div class="full plum">
+    <div class="page-width cushion">
+      <h2>{% trans "Reports" %}</h2>
+      <div class="milk">
+        <ul class="cushion">
+          <li><a href="{% url 'vr_dashboard:csv' %}">{% trans "Full CSV Report" %}</a></li>
+          <li><a href="{% url 'vr_dashboard:daily-csv' %}">{% trans "Daily CSV Report" %}</a></li>
+          <li><a href="{% url 'vr_dashboard:center-csv' %}">{% trans "Polling Center CSV Report" %}</a></li>
+          <li><a href="{% url 'vr_dashboard:phone-csv' %}">{% trans "Phone CSV Report" %}</a></li>
+          <li>
+            <div class="page-width float-layout">
+              <div class="chart-container quarter">{% trans "Date-limited Daily CSV Report" %}</div>
+
+              {% if start_end_report_form.non_field_errors %}
+              {# If there are non-field errors, give them their own line, they could be long #}
+            </div>
+            <div class="clear page-width float-layout">
+              <div class="chart-container third cushion">{{ start_end_report_form.non_field_errors }}</div>
+            </div>
+            <div class="clear page-width float-layout">
+              {% endif %}
+
+              {% for field in start_end_report_form %}
+              <div class="chart-container fifth cushion-sides">
+                <input placeholder="{{ field.label }}" class="wants_datepicker" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default_if_none:'' }}" type="text"/>
+                {% if field.errors %} {{ field.errors }} {% endif %}
+              </div>
+              {% endfor %}
+              <div class="chart-container sixth"><button type="submit">{% trans "Report" %}</button></div>
+            </div>
+            <div class="clear"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

@@ -1,8 +1,9 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import QuerySet
+from django.urls import reverse
+from django.utils.formats import date_format
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -11,9 +12,27 @@ from libya_elections.constants import FEMALE, MALE
 from libya_elections.libya_bread import BirthDateFormatterMixin
 
 
+def national_id_validator(national_id):
+    # Import here to avoid circular import
+    from civil_registry.utils import is_valid_national_id
+
+    if not is_valid_national_id(national_id):
+        raise ValidationError(
+            "Not a syntactically valid national ID - must be 12 digits starting with 1 or 2")
+
+
+def fbr_number_validator(fbr_number):
+    # Import here to avoid circular import
+    from civil_registry.utils import is_valid_fbr_number
+    if not is_valid_fbr_number(fbr_number):
+        raise ValidationError(
+            "Not a valid Family Book Registry Number. Must be all digits, or a "
+            "sequence of 1 or more characters followed by 1 or more digits."
+        )
+
+
 class CitizenManager(models.Manager):
     queryset = QuerySet
-    use_for_related_fields = True
 
     def get_queryset(self):
         """Default queries return only unmissing objects."""
@@ -64,13 +83,18 @@ class AbstractCitizen(models.Model):
         db_index=True,
         unique=True,
         validators=[
-            MinValueValidator(100000000000),
-            MaxValueValidator(299999999999),
+            national_id_validator,
         ]
     )
-    fbr_number = models.BigIntegerField(  # REGISTRY_NO in civil registry
+    # fbr_number is almost always an integer, but in 2.3% of cases it is prefixed with
+    # one or two characters: 'r', 'f', 'se', or 'te'
+    fbr_number = models.CharField(  # REGISTRY_NO in civil registry
         _('family book record number'),
-        help_text=_('Family Book Record Number')
+        help_text=_('Family Book Record Number'),
+        max_length=20,
+        validators=[
+            fbr_number_validator,
+        ]
     )
     first_name = models.CharField(_('first name'),              # NAME in civil registry
                                   db_index=True, max_length=255, blank=True)
@@ -113,7 +137,7 @@ class AbstractCitizen(models.Model):
         return ' '.join([getattr(self, field) for field in fields])
     format_name.short_description = _('name')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.format_name()
 
     @property
@@ -194,6 +218,30 @@ class Citizen(BirthDateFormatterMixin, AbstractCitizen):
 
     def get_absolute_url(self):
         return reverse('read_citizen', args=[self.civil_registry_id])
+
+    def as_dict(self, **additional):
+        """
+        Return dictionary with data for this citizen with any parameters passed as ``additional``
+        overriding or adding to the items in the dictionary.
+        """
+        reg = self.registration
+        d = dict(  # Keep in alpha order
+            # Standard Libya date format is D/M/Y
+            birth_date=self.formatted_birth_date(),
+            center_id=reg.registration_center.center_id if reg else None,
+            center_name=reg.registration_center.name if reg else "",
+            creation_date=date_format(reg.creation_date, "SHORT_DATE_FORMAT") if reg else "",
+            family_name=self.family_name,
+            father_name=self.father_name,
+            first_name=self.first_name,
+            grandfather_name=self.grandfather_name,
+            mother_name=self.mother_name,
+            national_id=self.national_id,
+            person_id=self.civil_registry_id,
+            registry_number=self.fbr_number,
+        )
+        d.update(additional)
+        return d
 
 
 # Used during updating of our data

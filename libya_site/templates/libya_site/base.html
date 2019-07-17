@@ -1,4 +1,4 @@
-{% load i18n staticfiles %}<!DOCTYPE html>
+{% load i18n static staff_tags %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
   <head>
     <meta charset="utf-8">
@@ -16,7 +16,7 @@
   <body id="{% block body_id %}{% endblock %}">
 
     {# hidden form for changing language - https://docs.djangoproject.com/en/dev/topics/i18n/translation/#the-set-language-redirect-view #}
-    <form id="libya-set-language" action="{% url 'set_language' %}" method="post">
+    <form id="libya-set-language" action="{% url 'set_language' %}" method="post" novalidate>
       {% csrf_token %}
       <input name="language" id="language-code" type="hidden"/>
     </form>
@@ -25,7 +25,7 @@
       <div class="page-width">
         <nav class="cushion-sides">
           <div class="menu">
-            {% if user.is_staff %}
+            {% if user|can_see_staff_link %}
               <a href="{% url 'staff' %}"{% if staff_page %} class="selected"{% endif %}>{% trans "Staff" %}</a>
             {% endif %}
             <a href="{% url 'vr_dashboard:national' %}"{% if registration_stats_page %} class="selected"{% endif %}>{% trans "Registration Statistics" %}</a>
@@ -36,9 +36,9 @@
             {% if user.is_authenticated %}
               <img class="icon" src="{% static 'img/user.png' %}">
               <span class="username">{{ user.username }}</span>
-              | <a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a>
+              | <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
             {% else %}
-              <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+              <a href="{% url 'login' %}">{% trans "Log in" %}</a>
             {% endif %}
             | <a href="#" id="set-language-en">English</a>
             | <a href="#" id="set-language-ar">العربية</a>

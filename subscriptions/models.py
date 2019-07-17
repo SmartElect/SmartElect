@@ -8,13 +8,14 @@ from libya_elections.abstract import AbstractTimestampTrashBinModel
 class Subscription(AbstractTimestampTrashBinModel):
     DISCREPANCIES = 1
     TYPES = [
-        (DISCREPANCIES, _(u'SMS Discrepancies'))
+        (DISCREPANCIES, _('SMS Discrepancies'))
     ]
-    user = models.ForeignKey(User, verbose_name=_('user'))
+    user = models.ForeignKey(User, verbose_name=_('user'),
+                             on_delete=models.CASCADE)
     subscription_type = models.IntegerField(_('subscription type'), choices=TYPES,
                                             default=DISCREPANCIES)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.email
 
     class Meta:

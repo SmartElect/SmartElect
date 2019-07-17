@@ -9,8 +9,8 @@ from .tasks import upload_bulk_sms_file
 from .utils import save_uploaded_file, validate_uploaded_file
 
 
-INVALID_ENCODING = _(u'The uploaded file had invalid characters. '
-                     u'Please be sure that it is saved as UTF-8.')
+INVALID_ENCODING = _('The uploaded file had invalid characters. '
+                     'Please be sure that it is saved as UTF-8.')
 
 
 class UploadBulkSMSesForm(forms.ModelForm):
@@ -25,9 +25,9 @@ class UploadBulkSMSesForm(forms.ModelForm):
         model = Batch
         fields = ['name', 'description']
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': _(u'Name for this bulk SMS broadcast.')}),
+            'name': forms.TextInput(attrs={'placeholder': _('Name for this bulk SMS broadcast.')}),
             'description': forms.Textarea(
-                attrs={'placeholder': _(u'Describe this bulk SMS broadcast')}),
+                attrs={'placeholder': _('Describe this bulk SMS broadcast')}),
         }
 
     def clean_csv(self):
@@ -59,7 +59,7 @@ class UploadBulkSMSesForm(forms.ModelForm):
             created_by=batch.created_by,
             batch=batch,
             audience=Broadcast.CUSTOM,
-            message=u"Individual messages uploaded in CSV file."
+            message="Individual messages uploaded in CSV file."
         )
         upload_bulk_sms_file.delay(batch.id, self.temp_file_path)
         return batch
@@ -80,7 +80,7 @@ class BroadcastForm(forms.ModelForm):
         audience = self.cleaned_data.get('audience')
         center = self.cleaned_data.get('center')
         if audience == Broadcast.SINGLE_CENTER and not center:
-            raise forms.ValidationError(_(u"This field is required."))
+            raise forms.ValidationError(_("This field is required."))
         return center
 
     def save(self):

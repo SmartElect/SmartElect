@@ -30,6 +30,7 @@ class LibyaUserAdmin(UserAdmin):
         """Don't allow deletion of users. (Inactivate them instead)."""
         return False
 
+
 admin_site.register(User, LibyaUserAdmin)
 admin_site.register(Group, GroupAdmin)
 admin_site.register(Permission)

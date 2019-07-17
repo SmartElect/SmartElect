@@ -2,8 +2,9 @@ from datetime import timedelta
 
 # 3rd party imports
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.utils import override_settings
+from django.urls import reverse
 from django.utils.timezone import now
 
 from libya_site.tests.factories import DEFAULT_USER_PASSWORD, UserFactory
@@ -20,6 +21,7 @@ URI_NAMESPACE = 'vr_dashboard:'
 # all URIs which contain no parameters
 ALL_URI_NAMES = ('csv', 'daily-csv', 'election-day', 'election-day-center', 'national', 'offices',
                  'offices-detail', 'regions', 'sms', 'subconstituencies', 'weekly',
+                 'reports', 'center-csv',
                  'election-day-hq', 'election-day-preliminary')
 PUBLIC_URI_NAMES = ('national', 'offices', 'regions')
 # simple URIs that also support a CSV rendering
@@ -52,8 +54,8 @@ class TestElectionSelection(TestCase):
         self.assertEqual(self.client.session[ELECTION_SESSION_KEY], self.election_1.id)
         self.client.get(reverse('vr_dashboard:election-day-center'))
         self.assertEqual(self.client.session[ELECTION_SESSION_KEY], self.election_1.id)
-        self.client.get(reverse('vr_dashboard:election-day-center') +
-                        '?election=%d' % self.election_2.id)
+        self.client.get(reverse('vr_dashboard:election-day-center')
+                        + '?election=%d' % self.election_2.id)
         self.assertEqual(self.client.session[ELECTION_SESSION_KEY], self.election_2.id)
         self.client.get(reverse('vr_dashboard:election-day'))
         self.assertEqual(self.client.session[ELECTION_SESSION_KEY], self.election_2.id)
@@ -71,8 +73,31 @@ class TestRegistrationData(TestCase):
         self.staff_user.is_staff = True
         self.staff_user.save()
 
-    def test_auth(self):
-        """ Ensure that we get a redirect to the login page for non-public pages. """
+    @override_settings(HIDE_PUBLIC_DASHBOARD=True)
+    def test_auth_hiding_public(self):
+        """
+        When user not logged in,
+        ensure that we get a redirect to the login page for non-public pages.
+        and to the HNEC site for public pages.
+         """
+        for uri_name in ALL_URI_NAMES:
+            uri = reverse(URI_NAMESPACE + uri_name)
+            rsp = self.client.get(uri)
+            if uri_name in PUBLIC_URI_NAMES:
+                self.assertRedirects(rsp, settings.PUBLIC_REDIRECT_URL,
+                                     fetch_redirect_response=False,
+                                     msg_prefix='Path %s not handled properly' % uri)
+            else:
+                self.assertRedirects(rsp, reverse(settings.LOGIN_URL) + "?next=" + uri,
+                                     msg_prefix='Path %s not handled properly' % uri)
+
+    @override_settings(HIDE_PUBLIC_DASHBOARD=False)
+    def test_auth_not_hiding_public(self):
+        """
+        When user not logged in,
+        ensure that we get a redirect to the login page for non-public pages,
+        but not for public pages.
+        """
         for uri_name in ALL_URI_NAMES:
             uri = reverse(URI_NAMESPACE + uri_name)
             rsp = self.client.get(uri)
@@ -82,6 +107,19 @@ class TestRegistrationData(TestCase):
             else:
                 self.assertRedirects(rsp, reverse(settings.LOGIN_URL) + "?next=" + uri,
                                      msg_prefix='Path %s not handled properly' % uri)
+
+    @override_settings(HIDE_PUBLIC_DASHBOARD=True)
+    def test_staff_not_hiding_public(self):
+        """
+        When a staff user is logged in, they can view "public" pages
+        even if HIDE_PUBLIC_DASHBOARD is True.
+        """
+        assert self.client.login(username=self.staff_user.username, password=DEFAULT_USER_PASSWORD)
+        for uri_name in PUBLIC_URI_NAMES:
+            uri = reverse(URI_NAMESPACE + uri_name)
+            rsp = self.client.get(uri)
+            self.assertEqual(200, rsp.status_code,
+                             'Request to %s failed with status %d' % (uri, rsp.status_code))
 
     def test_basic_operation(self):
         """  For the time being, simply ensure that the VR dashboard pages don't blow up. """
@@ -146,7 +184,7 @@ class TestWithNoRegistrationData(TestCase):
 class TestWithNoGeneratedReports(TestCase):
 
     @classmethod
-    def setUpClass(cls):  # No database changes
+    def setUpTestData(cls):  # No database changes
         empty_report_store()
 
     def setUp(self):
@@ -185,6 +223,7 @@ class TestWithNoGeneratedReports(TestCase):
 
 class TestRedirects(TestCase):
 
+    @override_settings(HIDE_PUBLIC_DASHBOARD=False)
     def test_dashboard_root_redirects(self):
         """ /data goes to /data/ because it needs a trailing slash (via
         Django), and /data/ goes to /data/national/ because that's the
@@ -194,4 +233,5 @@ class TestRedirects(TestCase):
         self.assertRedirects(rsp, '/data/', status_code=301,
                              fetch_redirect_response=False)
         rsp = self.client.get('/data/')
-        self.assertRedirects(rsp, reverse(URI_NAMESPACE + 'national'))
+        self.assertRedirects(rsp, reverse(URI_NAMESPACE + 'national'),
+                             fetch_redirect_response=False)

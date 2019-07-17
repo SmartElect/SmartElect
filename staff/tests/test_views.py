@@ -1,10 +1,10 @@
-from httplib import FORBIDDEN
+from http.client import FORBIDDEN
 import os
 
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
+from django.urls import reverse
 
 from libya_site.tests.factories import UserFactory
 
@@ -27,8 +27,18 @@ class TestStaffView(TestCase):
         self.assertContains(rsp, self.httptester_url)
 
     @override_settings(ENVIRONMENT='production')
-    def test_production_settings_no_httptester(self):
+    def test_production_settings_no_httptester_on_index_page(self):
+        self.user.is_superuser = True
+        self.user.save()
         rsp = self.client.get(self.staff_url)
+        self.assertNotContains(rsp, self.httptester_url)
+
+    @override_settings(ENVIRONMENT='production')
+    def test_production_settings_no_httptester_on_other_pages(self):
+        self.user.is_superuser = True
+        self.user.save()
+        url = reverse('rollgen:overview')
+        rsp = self.client.get(url)
         self.assertNotContains(rsp, self.httptester_url)
 
     def test_rollgen_visible_for_superuser(self):
@@ -67,6 +77,17 @@ class TestStaffView(TestCase):
         self.user.save()
         rsp = self.client.get(self.staff_url)
         self.assertEqual(FORBIDDEN, rsp.status_code)
+
+    def test_staff_page_is_visible_to_non_staff_group_members(self):
+        """
+        A non-staff user who is a member of any group is allowed to see the staff interface.
+        """
+        self.user.is_staff = False
+        # Use the 'rollgen_view_job' as an example, since that group exists due to migrations
+        self.user.groups.add(Group.objects.get(name='rollgen_view_job'))
+        self.user.save()
+        rsp = self.client.get(self.staff_url)
+        self.assertContains(rsp, reverse('rollgen:overview'))
 
 
 class TestGitRevView(TestCase):

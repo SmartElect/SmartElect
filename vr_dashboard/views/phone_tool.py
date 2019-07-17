@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import user_passes_test
-from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
-from libya_elections.phone_numbers import is_phone_number_valid
+from libya_elections.phone_numbers import is_valid_phone_number
 from polling_reports.models import StaffPhone
 from register.models import RegistrationCenter, SMS, Whitelist
 from register.utils import is_center_id_valid
@@ -105,7 +105,7 @@ def phone_history(request):
         return get_bogus_arg_error(request)
 
     phone_number = request.GET['phone']
-    if not is_phone_number_valid(phone_number):
+    if not is_valid_phone_number(phone_number):
         return get_bogus_arg_error(request)  # user bypassed form validation
 
     try:
@@ -139,7 +139,7 @@ def phone_history(request):
 @user_passes_test(lambda user: user.is_staff)
 def whitelist_phone(request):
     phone_number = request.POST.get('phone')
-    if not phone_number or not is_phone_number_valid(phone_number):
+    if not phone_number or not is_valid_phone_number(phone_number):
         return get_bogus_arg_error(request)  # user bypassed form validation
 
     center_id = request.POST.get('center_id')

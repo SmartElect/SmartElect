@@ -1,5 +1,4 @@
 from datetime import datetime
-from optparse import make_option
 
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
@@ -16,51 +15,62 @@ DELETE_EXISTING_DATA_OPT = 'yes_delete_my_data'  # as an option key
 
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option(DELETE_EXISTING_DATA_ARG, action='store_const', const=True,
-                    default=False,
-                    help='Remove existing data first'),
-        make_option('--center-without-office', action='store_true',
-                    help='Make sure there is at least one center which is not in an office'),
-        make_option('--num-registrations',
-                    default=DEFAULT_NUM_REGISTRATIONS,
-                    type=int,
-                    help='Specify the number of registrations to create'),
-        make_option('--num-registration-dates',
-                    default=DEFAULT_NUM_REGISTRATION_DATES,
-                    type=int,
-                    help='Specify the number of dates with registrations'),
-        make_option('--num-centers',
-                    default=DEFAULT_NUM_REGISTRATION_CENTERS,
-                    type=int,
-                    help='Distribute registrations among this number of registration centers'),
-        make_option('--num-copy-centers',
-                    default=DEFAULT_NUM_COPY_CENTERS,
-                    type=int,
-                    help='Create copies of some centers used for registrations'),
-        make_option('--num-daily-reports',
-                    default=DEFAULT_NUM_DAILY_REPORTS,
-                    type=int,
-                    help='Number of daily reports'),
-        make_option('--num-subconstituencies',
-                    default=DEFAULT_NUM_SUBCONSTITUENCIES,
-                    type=int,
-                    help='Distribute registrations among this number of subconstituencies'),
-        make_option('--use-existing-infra', action='store_true',
-                    default=False,
-                    help='Use existing Offices, Constituencies, SubConstituencies, etc.'),
-        make_option('--election-dates',
-                    default=(),
-                    help='List of comma-separated election dates in the form YYYY-MM-DD'),
-        make_option('--num-inactive-per-election',
-                    default=DEFAULT_NUM_INACTIVE_PER_ELECTION,
-                    type=int,
-                    help='Mark some number of centers as inactive for each created election'),
-        make_option('--num-no-reg-centers',
-                    default=DEFAULT_NUM_NO_REG_CENTERS,
-                    type=int,
-                    help='Mark some number of centers as not supporting registrations'),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument(
+            DELETE_EXISTING_DATA_ARG, action='store_true',
+            default=False,
+            help='Remove existing data first')
+        parser.add_argument(
+            '--center-without-office', action='store_true',
+            help='Make sure there is at least one center which is not in an office')
+        parser.add_argument(
+            '--num-registrations',
+            default=DEFAULT_NUM_REGISTRATIONS,
+            type=int,
+            help='Specify the number of registrations to create')
+        parser.add_argument(
+            '--num-registration-dates',
+            default=DEFAULT_NUM_REGISTRATION_DATES,
+            type=int,
+            help='Specify the number of dates with registrations')
+        parser.add_argument(
+            '--num-centers',
+            default=DEFAULT_NUM_REGISTRATION_CENTERS,
+            type=int,
+            help='Distribute registrations among this number of registration centers')
+        parser.add_argument(
+            '--num-copy-centers',
+            default=DEFAULT_NUM_COPY_CENTERS,
+            type=int,
+            help='Create copies of some centers used for registrations')
+        parser.add_argument(
+            '--num-daily-reports',
+            default=DEFAULT_NUM_DAILY_REPORTS,
+            type=int,
+            help='Number of daily reports')
+        parser.add_argument(
+            '--num-subconstituencies',
+            default=DEFAULT_NUM_SUBCONSTITUENCIES,
+            type=int,
+            help='Distribute registrations among this number of subconstituencies')
+        parser.add_argument(
+            '--use-existing-infra', action='store_true',
+            default=False,
+            help='Use existing Offices, Constituencies, SubConstituencies, etc.')
+        parser.add_argument(
+            '--election-dates',
+            default=(),
+            help='List of comma-separated election dates in the form YYYY-MM-DD')
+        parser.add_argument(
+            '--num-inactive-per-election',
+            default=DEFAULT_NUM_INACTIVE_PER_ELECTION,
+            type=int,
+            help='Mark some number of centers as inactive for each created election')
+        parser.add_argument(
+            '--num-no-reg-centers',
+            default=DEFAULT_NUM_NO_REG_CENTERS,
+            type=int,
+            help='Mark some number of centers as not supporting registrations')
 
     def handle(self, *args, **options):
         if not options.pop(DELETE_EXISTING_DATA_OPT, False):

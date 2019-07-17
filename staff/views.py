@@ -3,21 +3,21 @@ import os
 
 # 3rd party imports
 from bread.bread import Bread, LabelValueReadView
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django import forms
 from django.forms.widgets import NullBooleanSelect
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
+from django.utils.formats import date_format
 from django.utils.translation import ugettext_lazy as _
 from dealer.git import GitRepo
 import django_filters
 
 # This project's imports
-from libya_elections.constants import LIBYA_DATETIME_FORMAT
 from libya_elections.libya_bread import PaginatedBrowseView, StaffBreadMixin
-from libya_elections.utils import get_comma_delimiter, get_verbose_name, format_tristate
+from libya_elections.utils import get_comma_delimiter, get_verbose_name, format_tristate, \
+    should_see_staff_view
 
 
 def gitrev_view(request):
@@ -28,10 +28,9 @@ def gitrev_view(request):
 
 @login_required()
 def staff_view(request):
-    if not request.user.is_staff:
+    if not should_see_staff_view(request.user):
         return HttpResponseForbidden()
     context = {
-        'ENVIRONMENT': settings.ENVIRONMENT,
         'staff_page': True,
     }
     return render(request, 'libya_site/staff.html', context)
@@ -88,10 +87,12 @@ class UserBrowse(PaginatedBrowseView):
         (_('Last name'), 'last_name'),
         (_('Staff'), 'is_staff'),
         (_('Active'), 'is_active'),
+        (_('Date joined'), 'date_joined'),
     ]
     filterset = UserFilterSet
     search_fields = ['username', 'email', 'first_name', 'last_name']
     search_terms = _('username, email, first name, or last name')
+    default_ordering = ['-date_joined']  # Newest first (by default)
 
 
 def groups_formatted(context):
@@ -101,7 +102,7 @@ def groups_formatted(context):
 
 def date_joined_formatted(context):
     user = context['object']
-    return user.date_joined.strftime(LIBYA_DATETIME_FORMAT)
+    return date_format(user.date_joined, "SHORT_DATETIME_FORMAT")
 
 
 class UserRead(LabelValueReadView):

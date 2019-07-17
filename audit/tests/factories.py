@@ -8,7 +8,8 @@ from register.tests.factories import SMSFactory
 
 
 class VumiLogFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.VumiLog
+    class Meta:
+        model = models.VumiLog
 
     uuid = factory.Sequence(lambda n: 'uuid-vumilog-%s' % n)
     logged_date = now()
@@ -20,13 +21,15 @@ class VumiLogFactory(factory.DjangoModelFactory):
 
 
 class SMSTrailFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.SMSTrail
+    class Meta:
+        model = models.SMSTrail
 
     sms = factory.SubFactory(SMSFactory)
     vumi = factory.SubFactory(VumiLogFactory)
 
 
 class DiscrepancyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Discrepancy
+    class Meta:
+        model = models.Discrepancy
 
     trail = factory.SubFactory(SMSTrailFactory)

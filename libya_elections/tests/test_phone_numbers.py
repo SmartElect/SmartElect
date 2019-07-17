@@ -3,7 +3,6 @@ import re
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import models
 from django.test import TestCase, override_settings
 from rapidsms.models import Connection, Backend
 from libya_elections.phone_numbers import format_phone_number, canonicalize_phone_number, \
@@ -14,14 +13,14 @@ from libya_elections.utils import get_random_number_string
 
 class TestFormatting(TestCase):
     def test_format_phone_number(self):
-        self.assertEqual(format_phone_number('218123456789'), '+218 (0)12-345-6789')
+        self.assertEqual(format_phone_number('218923456789'), '+218 (0)92-345-6789')
         self.assertEqual(format_phone_number('8821612340058'), '+88216-12340058')
         self.assertEqual(format_phone_number('882161234005'), '+88216-1234005')
 
     def test_canonicalize_phone_number(self):
         test_data = [
-            ('+218 (0)12-345-6789', '218123456789'),
-            ('+218 12-345-6789', '218123456789'),
+            ('+218 (0)91-345-6789', '218913456789'),
+            ('+218 91-345-6789', '218913456789'),
             ('0923456789', '218923456789'),
             ('0987654321', '218987654321'),
             ('+88216-12340058', '8821612340058'),
@@ -35,45 +34,51 @@ class TestFormatting(TestCase):
 
 
 class PhoneNumberModelFieldTest(TestCase):
+    """
+    We test field validation the way Django does: by calling the field's clean() method,
+    using None as the model instance.
+
+    Example:
+      https://github.com/django/django/blob/fdc936c9130cf4fb5d59869674b9a31cc79a7999/tests/model_fields/test_charfield.py#L38
+    """
+
     # relax the regex so that we're testing the max_length
     @override_settings(PHONE_NUMBER_REGEX='.*')
     def test_max_length(self):
         # Test validation of phone number length
-        # Create the model inside the context where we've overridden the regex
-        class TestModel1(models.Model):
-            phone_number = PhoneNumberField()
+        # Create the field inside the context where we've overridden the regex
+        phone_number_field = PhoneNumberField()
         exact_length_number = get_random_number_string(settings.MAX_PHONE_NUMBER_LENGTH)
-        TestModel1(phone_number=exact_length_number).full_clean()
+        self.assertEqual(phone_number_field.clean(exact_length_number, None),
+                         exact_length_number)
 
         too_long = get_random_number_string(1 + settings.MAX_PHONE_NUMBER_LENGTH)
         with self.assertRaises(ValidationError):
-            TestModel1(phone_number=too_long).full_clean()
+            phone_number_field.clean(too_long, None)
 
     @override_settings(PHONE_NUMBER_REGEX='^fred$')
     def test_regex_validation(self):
         # Test validation by the phone number regex in settings
-        # Create the model inside the context where we've overridden the regex
-        class TestModel2(models.Model):
-            phone_number = PhoneNumberField()
+        # Create the field inside the context where we've overridden the regex
+        phone_number_field = PhoneNumberField()
         with self.assertRaises(ValidationError):
-            TestModel2(phone_number='joe').full_clean()
-        TestModel2(phone_number='fred').full_clean()
+            phone_number_field.clean('joe', None)
+        self.assertEqual(phone_number_field.clean('fred', None), 'fred')
 
     def test_current_number_formats(self):
         # Test the number formats we're currently using in settings
         # The formats of phone numbers currently valid in Libya:
         #   218 + 9 digits  (Libyana, Al Madar)
         #   88216 + 8 digits  (Thuraya)
-        class TestModel3(models.Model):
-            phone_number = PhoneNumberField()
+        phone_number_field = PhoneNumberField()
         test_data = [
             # ('test number', whether should be valid)
-            ('218123456789', True),
+            ('218923456789', True),
             ('217123456789', False),
-            ('0218123456789', False),
-            ('21812345678', False),
-            ('218-123456789', False),
-            ('218123456789 x123', False),
+            ('0218923456789', False),
+            ('21892345678', False),
+            ('218-923456789', False),
+            ('218923456789 x123', False),
 
             ('8821612345678', True),
             ('8821512345678', False),
@@ -88,10 +93,10 @@ class PhoneNumberModelFieldTest(TestCase):
         ]
         for input, should_be_valid in test_data:
             if should_be_valid:
-                TestModel3(phone_number=input).full_clean()
+                self.assertEqual(phone_number_field.clean(input, None), input)
             else:
                 with self.assertRaises(ValidationError):
-                    TestModel3(phone_number=input).full_clean()
+                    phone_number_field.clean(input, None)
 
 
 class PhoneNumberFormFieldTest(TestCase):
@@ -117,12 +122,12 @@ class PhoneNumberFormFieldTest(TestCase):
             phone_number = PhoneNumberFormField()
         test_data = [
             # ('test number', whether should be valid)
-            ('218123456789', True),
+            ('218923456789', True),
             ('217123456789', False),
-            ('0218123456789', False),
-            ('21812345678', False),
-            ('218-123456789', True),
-            ('218123456789 x123', False),
+            ('0218923456789', False),
+            ('21892345678', False),
+            ('218-923456789', True),
+            ('218923456789 x123', False),
 
             ('8821612345678', True),
             ('8821512345678', False),
@@ -168,10 +173,10 @@ class BestConnectionTest(TestCase):
 
     @override_settings(INSTALLED_BACKENDS={
         'backend1': {
-            'number_regex': re.compile('^1\d+$'),
+            'number_regex': re.compile(r'^1\d+$'),
         },
         'backend2': {
-            'number_regex': re.compile('^2\d+$'),
+            'number_regex': re.compile(r'^2\d+$'),
         },
     })
     def test_matching_number(self):

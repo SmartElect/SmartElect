@@ -1,21 +1,23 @@
 """
 These tests are organized, quite deliberately, to parallel the
-logic as documented in the file LibyanVoterRegistration-PollingReportLogic.rst.
+logic as documented in the file docs/app/polling_report_logic.rst.
 
 Please keep them that way.
 """
 from datetime import timedelta
+from unittest.mock import patch
+
 from django.conf import settings
 from django.utils.timezone import now
 from django.utils.translation import override
-from mock import patch
 from factory import create_batch
+
 from libya_elections.constants import PHONE_NOT_ACTIVATED, NOT_WHITELISTED_NUMBER, \
     POLLING_REPORT_CENTER_MISMATCH, INVALID_CENTER_ID, PHONE_ACTIVATED, POLLING_REPORT_INVALID, \
     POLLING_NOT_OPEN, POLLING_REPORT_RECEIVED, CENTER_OPENING_NOT_AUTHORIZED, \
     PRELIMINARY_VOTES_REPORT, CENTER_OPENED, CENTER_OPEN_INDICATOR, FIRST_PERIOD_NUMBER, \
     LAST_PERIOD_NUMBER, POLLING_REPORT_RECEIVED_VERY_HIGH_TURNOUT, \
-    POLLING_REPORT_RECEIVED_NO_REGISTRANTS, RESPONSE_SERVER_ERROR
+    POLLING_REPORT_RECEIVED_NO_REGISTRANTS, RESPONSE_SERVER_ERROR, NO_SUCH_CENTER
 from libya_elections.phone_numbers import get_random_phone_number
 from polling_reports.handlers import ReportsShortCodeHandler
 from polling_reports.models import StaffPhone, PollingReport, CenterOpen, PreliminaryVoteCount
@@ -24,7 +26,6 @@ from register.tests.base import LibyaRapidTest
 from register.tests.factories import WhitelistFactory, RegistrationCenterFactory, \
     RegistrationFactory
 from text_messages.models import MessageText
-
 from text_messages.utils import get_message
 from voting.tests.factories import ElectionFactory
 
@@ -182,7 +183,7 @@ class PollingReportTestPhoneNotActivated(PollingReportLogicTestCase):
                           expect_center_opened=False)
 
     def test_no_such_center(self):
-        center_num = 99999
+        center_num = NO_SUCH_CENTER
         self.check_it_out("%d*%d" % (center_num, center_num),
                           INVALID_CENTER_ID,
                           SMS.POLLING_REPORT_INVALID,

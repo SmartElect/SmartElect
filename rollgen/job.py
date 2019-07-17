@@ -1,6 +1,5 @@
 # Python imports
-from __future__ import division
-from __future__ import unicode_literals
+import csv
 import os
 import logging
 import hashlib
@@ -26,7 +25,6 @@ from .models import Station, station_distributor
 from .utils import out_of_disk_space_handler_context, NoVotersError, NoOfficeError, NoElectionError
 from civil_registry.models import Citizen
 from libya_elections.constants import NO_NAMEDTHING, MALE, FEMALE, GENDER_ABBRS
-from libya_elections.csv_utils import UnicodeWriter
 from register.models import Registration, RegistrationCenter
 from voting.models import Election
 
@@ -122,7 +120,8 @@ class Job(object):
 
     def add(self, filename, n_pages):
         """Given a PDF filename and the number of pages in that PDF, add it to the tracker dict."""
-        content = open(filename, 'rb').read()
+        with open(filename, 'rb') as f:
+            content = f.read()
         size = len(content)
 
         # Before storing the filename I strip first part of output path which is the parent
@@ -319,18 +318,20 @@ class Job(object):
 
             filename = os.path.join(self.output_path, 'voters_by_national_id.csv')
             with out_of_disk_space_handler_context():
-                csv_writer = UnicodeWriter(open(filename, 'w'))
-                csv_writer.writerows(header)
-                csv_writer.writerows(self.voter_stations)
+                with open(filename, 'w') as f:
+                    csv_writer = csv.writer(f)
+                    csv_writer.writerows(header)
+                    csv_writer.writerows(self.voter_stations)
 
             # sort by center, station number
             self.voter_stations.sort(key=lambda voter_station: voter_station[1:])
 
             filename = os.path.join(self.output_path, 'voters_by_center_and_station.csv')
             with out_of_disk_space_handler_context():
-                csv_writer = UnicodeWriter(open(filename, 'w'))
-                csv_writer.writerows(header)
-                csv_writer.writerows(self.voter_stations)
+                with open(filename, 'w') as f:
+                    csv_writer = csv.writer(f)
+                    csv_writer.writerows(header)
+                    csv_writer.writerows(self.voter_stations)
 
         # Write the JSON metadata file
         metadata_filename = os.path.join(self.output_path, METADATA_FILENAME)
@@ -339,9 +340,11 @@ class Job(object):
                 json.dump(self.metadata, f, indent=2)
 
         # Write a hash of the metadata file
-        sha = hashlib.sha256(open(metadata_filename).read()).hexdigest()
+        with open(metadata_filename) as f:
+            sha = hashlib.sha256(f.read().encode()).hexdigest()
         with out_of_disk_space_handler_context():
-            open(metadata_filename + '.sha256', 'w').write(sha)
+            with open(metadata_filename + '.sha256', 'w') as f:
+                f.write(sha)
 
         logger.info('zipping output')
         for office_id in sorted(self.offices.keys()):

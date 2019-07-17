@@ -1,6 +1,5 @@
 # Python imports
 import sys
-sys.path.append('.')
 
 # 3rd party imports
 from django.conf import settings
@@ -14,6 +13,8 @@ from libya_elections.constants import OUTGOING
 from register.models import SMS, Registration
 from register.tests.base import PAST_DAY
 from register.tests.factories import SMSFactory
+
+sys.path.append('.')
 
 DELETE_EXISTING_DATA_ARG = '--yes-delete-my-data'
 NUM_INCOMING = NUM_OUTGOING = 10

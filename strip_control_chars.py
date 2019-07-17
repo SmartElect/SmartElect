@@ -14,16 +14,16 @@ import sys
 infile = sys.argv[1]
 outfile = sys.argv[2]
 
-print "reading %s" % infile
+print("reading %s" % infile)
 with open(infile, "rb") as f:
     data = f.read().decode('utf-8')
 
-LRE = u"\u202a"
-PDF = u"\u202c"
+LRE = "\u202a"
+PDF = "\u202c"
 
 data = data.replace(LRE, "")
 data = data.replace(PDF, "")
 
-print "writing %s" % outfile
+print("writing %s" % outfile)
 with open(outfile, "wb") as f:
     f.write(data.encode('utf-8'))

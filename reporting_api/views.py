@@ -61,7 +61,7 @@ def registrations_report(request):
         # task hasn't built it yet
         return report_unavailable()
 
-    legacy_report = dict(metadata.items() + stats.items())
+    legacy_report = {**metadata, **stats}
     legacy_report['by_subconstituency_id'] = by_subconstituency
     legacy_report['by_region'] = by_region
     legacy_report['by_polling_center_code'] = by_polling_center

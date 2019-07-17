@@ -1,5 +1,6 @@
 from datetime import date
 import random
+import string
 
 import factory
 import factory.fuzzy
@@ -29,14 +30,16 @@ class CitizenFactory(factory.DjangoModelFactory):
     """
     Create a Citizen for testing.
     """
-    FACTORY_FOR = Citizen
+    class Meta:
+        model = Citizen
 
     civil_registry_id = factory.LazyAttribute(get_unused_civil_registry_id)
     national_id = factory.LazyAttribute(get_nid)
     # Default to old enough to vote
     birth_date = date(1913, 2, 3)
     gender = MALE
-    fbr_number = factory.fuzzy.FuzzyInteger(1, 99999999)
+    # somewhat realistic fbr_number. The important feature is that it has trailing digits
+    fbr_number = factory.fuzzy.FuzzyText(prefix='se', chars=string.digits)
 
     first_name = factory.fuzzy.FuzzyText()
     father_name = factory.fuzzy.FuzzyText()
@@ -61,4 +64,5 @@ class CitizenFactory(factory.DjangoModelFactory):
 
 
 class TempCitizenFactory(CitizenFactory):
-    FACTORY_FOR = TempCitizen
+    class Meta:
+        model = TempCitizen

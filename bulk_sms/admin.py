@@ -1,7 +1,4 @@
-from __future__ import unicode_literals
-from __future__ import division
-
-from .models import Batch, Broadcast, BulkMessage
+from bulk_sms.models import Batch, Broadcast, BulkMessage
 from libya_elections.admin_models import LibyaAdminModel
 from libya_elections.admin_site import admin_site
 

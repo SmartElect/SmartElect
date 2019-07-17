@@ -1,5 +1,6 @@
 {% load i18n %}
 <form method="post"
+      novalidate
       action="{% url 'vr_dashboard:whitelist-phone' %}" {% if mode == "phone-list" %}class="inline-whitelist-form"{% endif %}>
     {% csrf_token %}
     {% if mode == "phone-list" %}

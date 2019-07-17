@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from bulk_sms.models import Batch, Broadcast
 from bulk_sms.tests.factories import BatchFactory
@@ -9,9 +9,9 @@ from libya_elections.tests.utils import ResponseCheckerMixin
 from libya_site.tests.factories import UserFactory
 from register.tests.base import LibyaTest
 
-CSV_DATA = """218123456789,A message
-218123456790,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
-"""
+CSV_DATA = """218923456789,A message
+218923456790,.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة
+""".encode()
 
 
 class BulkUploadViewTest(ResponseCheckerMixin, LibyaTest):
@@ -56,10 +56,10 @@ class BulkUploadViewTest(ResponseCheckerMixin, LibyaTest):
     def test_post_upload_valid(self):
         # post view valid -> no form, contains status about batch
         f = SimpleUploadedFile("batch_test.csv", CSV_DATA)
-        data = {'name': u'A name', 'csv': f, 'message': u'Upload'}
+        data = {'name': 'A name', 'csv': f, 'message': 'Upload'}
         rsp = self.client.post(reverse('upload_broadcast'), data=data, follow=True)
         self.assertNotIn('form', rsp.context)
-        self.assertContains(rsp, u'Messages are uploading in the background')
+        self.assertContains(rsp, 'Messages are uploading in the background')
 
     def test_uploaded_broadcast_same_user_cant_review(self):
         # uploaded batch, same user -> can't approve/reject

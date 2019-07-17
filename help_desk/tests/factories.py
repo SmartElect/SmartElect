@@ -23,13 +23,15 @@ class HelpDeskManagerFactory(HelpDeskUserFactory):
 
 
 class CaseFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Case
+    class Meta:
+        model = Case
 
     operator = factory.SubFactory(HelpDeskUserFactory)
 
 
 class FieldStaffFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = FieldStaff
+    class Meta:
+        model = FieldStaff
 
     # Staff ID's start at 100
     staff_id = factory.Sequence(lambda n: n + 100)

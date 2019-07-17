@@ -1,5 +1,5 @@
 {% extends "vr_dashboard/base.html" %}
-{% load humanize i18n staticfiles vr_dashboard_tags %}
+{% load humanize i18n static vr_dashboard_tags %}
 
 {% block right_chart %}
   <div class="chart-container half">
@@ -13,7 +13,7 @@
               <td>{{ global_info.total|intcomma }}</td>
             </tr>
             <tr>
-              <td>{% trans "Yesterday" %}</td>
+              <td>{% trans "Today" %}</td>
               <td>{{ global_info.yesterday|intcomma }}</td>
             </tr>
           </tbody>

@@ -7,12 +7,11 @@ from django.utils.translation import ugettext_lazy as _
 from captcha.fields import CaptchaField
 from civil_registry.utils import get_citizen_by_national_id
 from libya_elections import constants
+from libya_elections.constants import MIN_NATIONAL_ID, MAX_NATIONAL_ID
 from text_messages.utils import get_message
 
 from .utils import create_arabic_trans_table
 
-MIN_NATIONAL_ID = 100000000000
-MAX_NATIONAL_ID = 299999999999
 CONVERT_TO_WESTERN_DIGITS = create_arabic_trans_table()
 
 logger = logging.getLogger(__name__)
@@ -29,14 +28,25 @@ class EasternArabicIntegerField(forms.IntegerField):
         return super(EasternArabicIntegerField, self).to_python(value)
 
 
+class EasternArabicCharField(forms.CharField):
+    """
+    Subclass of CharField that accepts Eastern Arabic numeric
+    characters, but converts them to Western Arabic numerals before storing.
+    """
+    def to_python(self, value):
+        if value is not None:
+            value = value.translate(CONVERT_TO_WESTERN_DIGITS)
+        return super(EasternArabicCharField, self).to_python(value)
+
+
 def validate_national_id(number):
     """
     Write our own validator so we can use a more meaningful
     error message.
     """
-    msg_too_short = _(u"A National ID is a 12-digit number.")
-    msg_too_long = _(u"A valid National ID is at most 12 digits long.")
-    msg_first_char = _(u"A valid National ID starts with 1 or 2.")
+    msg_too_short = _("A National ID is a 12-digit number.")
+    msg_too_long = _("A valid National ID is at most 12 digits long.")
+    msg_first_char = _("A valid National ID starts with 1 or 2.")
 
     if number < MIN_NATIONAL_ID:
         raise ValidationError(msg_too_short)
@@ -49,13 +59,13 @@ def validate_national_id(number):
 class RegistrationQueryForm(forms.Form):
     national_id = EasternArabicIntegerField(
         validators=[validate_national_id],
-        label=_(u"National ID"),
+        label=_("National ID"),
     )
-    fbr_number = EasternArabicIntegerField(
-        label=_(u"Family Book Record Number")
+    fbr_number = EasternArabicCharField(
+        label=_("Family Book Record Number")
     )
     captcha = CaptchaField(
-        label=_(u"Please type these numbers"),
+        label=_("Please type these numbers"),
         output_format="""
         <div class="third">%(image)s</div>
         <div class="two-thirds">%(hidden_field)s %(text_field)s</div>
@@ -63,7 +73,7 @@ class RegistrationQueryForm(forms.Form):
     )
 
     def clean_national_id(self):
-        national_id = long(self.cleaned_data['national_id'])
+        national_id = int(self.cleaned_data['national_id'])
         citizen = get_citizen_by_national_id(national_id)
         if not citizen:
             raise ValidationError(get_message(constants.NID_INVALID).msg)

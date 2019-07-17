@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import division
-from __future__ import unicode_literals
 import os
 import codecs
 
@@ -22,7 +20,8 @@ def normalize_newlines(a_string):
 def load_strings():
     strings_path = os.path.join(settings.PROJECT_ROOT, 'rollgen', 'arabic_strings', 'ar.yml')
     locale_file = codecs.open(strings_path, 'r', encoding='utf-8')
-    locale_dict = yaml.load(locale_file)
+    locale_dict = yaml.safe_load(locale_file)
+    locale_file.close()
     out_dict = {}
     for (key, string) in locale_dict.items():
         # reshape, to fix ligatures
@@ -36,5 +35,6 @@ def load_strings():
         shaped = shaped.replace('\n', '<br/>')
         out_dict[key] = shaped
     return out_dict
+
 
 STRINGS = load_strings()

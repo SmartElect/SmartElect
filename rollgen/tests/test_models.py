@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import logging
 
 # Django imports
@@ -33,7 +31,7 @@ class TestStation(TestCase):
         """
         station = Station()
         # This must merely not blow up.
-        unicode(station)
+        str(station)
 
     def test_attrs_pre_roll(self):
         """Exercise some attrs before the roll is set"""

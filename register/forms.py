@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import logging
 
 from django import forms
@@ -42,33 +41,19 @@ class RegistrationCenterCSVForm(forms.ModelForm):
         # etc.) must be present in self.fields otherwise they won't be set when
         # RegistrationCenter.clean() is called. However they are not in the CSV and must be
         # inferred from the corresponding xxx_id field. We instruct Django to validate the _id
-        # field first so the clean_xxx_id() method can do the real work and make clean_xxx()
-        # almost a no-op.
+        # field first in the clean_xxx_id() method and then set the corresponding data['xxx']
+        # value so it looks to Django as if the user 'submitted the form' with the 'xxx' field
+        # set properly.
         fields = ['copy_of_id', 'copy_of', 'office_id', 'office', 'constituency_id', 'constituency',
                   'subconstituency_id', 'subconstituency', ]
         skip_these = fields + NONMODEL_FIELDS
-        fields += [f for f in CSV_FIELDS if f not in skip_these]
+        for f in CSV_FIELDS:
+            if f not in skip_these:
+                fields.append(f)
 
     # Note: These validators are specific to the RegistrationCenter CSV upload process.
     #       Additional validators exist in the RegistrationCenter model which are applied both here
     #       and for admin forms.
-
-    def __init__(self, *args, **kwargs):
-        super(RegistrationCenterCSVForm, self).__init__(*args, **kwargs)
-
-        # Ensure FK fields are not required, and look up their defaults.
-        self.fk_defaults = {}
-        for field_name, model in (('office', Office),
-                                  ('subconstituency', SubConstituency),
-                                  ('constituency', Constituency),
-                                  ('copy_of', RegistrationCenter),
-                                  ):
-            self.fields[field_name].required = False
-
-            default = RegistrationCenter._meta.get_field(field_name).get_default()
-            if default:
-                default = model.objects.get(pk=default)
-            self.fk_defaults[field_name] = default
 
     def clean(self):
         center_id = self.cleaned_data.get('center_id', 0)
@@ -111,7 +96,10 @@ class RegistrationCenterCSVForm(forms.ModelForm):
                     choice_names=', '.join(choice_names)))
 
     def clean_copy_of_id(self):
-        """Ensure that if the (optional) copy_of_id is provided, it points to an existing center"""
+        """
+        Ensure that if the (optional) copy_of_id is provided,
+        it points to an existing center
+        """
         # Note that in this context 'copy_of_id' refers to center.center_id, not center.id.
         proposed_copy_of_id = self.cleaned_data.get('copy_of_id', 0)
         proposed_copy_of_id = 0 if proposed_copy_of_id is None else proposed_copy_of_id
@@ -125,57 +113,76 @@ class RegistrationCenterCSVForm(forms.ModelForm):
             except RegistrationCenter.DoesNotExist:
                 raise forms.ValidationError(_('Copy centre does not exist.'))
 
-            self.cleaned_data['_copy_of'] = copy_of_center
+            # also set data['copy_of'] so Django doesn't try to use the default value
+            self.data['copy_of'] = copy_of_center.id
         else:
-            self.cleaned_data['_copy_of'] = None
-
+            self.data['copy_of'] = None
         return proposed_copy_of_id
-
-    def clean_copy_of(self):
-        """Return value created by clean_copy_of_id(), or default"""
-        return self.cleaned_data.get('_copy_of', self.fk_defaults['copy_of'])
 
     def clean_office_id(self):
         """Ensure that the office_id refers to an existing office"""
         office_id = self.cleaned_data['office_id']
         try:
-            office = Office.objects.get(id=office_id)
+            Office.objects.get(id=office_id)
         except Office.DoesNotExist:
             raise forms.ValidationError(_('Office does not exist.'))
-        self.cleaned_data['_office'] = office
+        # also set data['office'] so Django doesn't try to use the default value
+        self.data['office'] = office_id
         return office_id
-
-    def clean_office(self):
-        """Return value created by clean_office_id(), or default"""
-        return self.cleaned_data.get('_office', self.fk_defaults['office'])
 
     def clean_constituency_id(self):
         """Ensure that the constituency_id refers to an existing constituency"""
         constituency_id = self.cleaned_data['constituency_id']
         try:
-            constituency = Constituency.objects.get(id=constituency_id)
+            Constituency.objects.get(id=constituency_id)
         except Constituency.DoesNotExist:
             raise forms.ValidationError(_('Constituency does not exist.'))
-        self.cleaned_data['_constituency'] = constituency
+        # also set data['constituency'] so Django doesn't try to use the default value
+        self.data['constituency'] = constituency_id
         return constituency_id
-
-    def clean_constituency(self):
-        """Return value created by clean_constituency_id(), or default"""
-        return self.cleaned_data.get('_constituency', self.fk_defaults['constituency'])
 
     def clean_subconstituency_id(self):
         """Ensure that the subconstituency_id refers to an existing subconstituency"""
         subconstituency_id = self.cleaned_data['subconstituency_id']
         try:
-            subconstituency = SubConstituency.objects.get(id=subconstituency_id)
-        except:
+            SubConstituency.objects.get(id=subconstituency_id)
+        except SubConstituency.DoesNotExist:
             raise forms.ValidationError(_('Subconstituency does not exist.'))
-        self.cleaned_data['_subconstituency'] = subconstituency
+        # also set data['subconstituency'] so Django doesn't try to use the default value
+        self.data['subconstituency'] = subconstituency_id
         return subconstituency_id
 
-    def clean_subconstituency(self):
-        """Return value created by clean_subconstituency_id(), or default"""
-        return self.cleaned_data.get('_subconstituency', self.fk_defaults['subconstituency'])
+
+class NamedThingAbstractForm(forms.ModelForm):
+    def clean_name_english(self):
+        name = self.cleaned_data.get('name_english', '')
+        return name
+
+    def clean_name_arabic(self):
+        name = self.cleaned_data.get('name_arabic', '')
+        return name
+
+
+class OfficeForm(NamedThingAbstractForm):
+    class Meta:
+        model = Office
+        exclude = ('deleted',)
+
+    def __init__(self, *args, **kwargs):
+        super(OfficeForm, self).__init__(*args, **kwargs)
+        self.fields['region'].choices = Office.REGION_CHOICES
+
+
+class ConstituencyForm(NamedThingAbstractForm):
+    class Meta:
+        model = Constituency
+        exclude = ('deleted',)
+
+
+class SubConstituencyForm(NamedThingAbstractForm):
+    class Meta:
+        model = SubConstituency
+        exclude = ('deleted',)
 
 
 class RegistrationCenterEditForm(forms.ModelForm):
@@ -194,6 +201,10 @@ class RegistrationCenterEditForm(forms.ModelForm):
             # for copy_of is None. Any change the user would make to copy_of would result in an
             # error so it's best not to display it at all.
             del self.fields['copy_of']
+
+        for fieldname in ['office', 'constituency', 'subconstituency']:
+            self.fields[fieldname].queryset = self.fields[fieldname].queryset.all()
+        self.fields['center_type'].choices = RegistrationCenter.Types.CHOICES
 
 
 class BlackWhiteListedNumbersUploadForm(forms.Form):

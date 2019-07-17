@@ -1,3 +1,4 @@
+import csv
 import os
 import signal
 import logging
@@ -11,18 +12,17 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from libya_elections.csv_utils import UnicodeReader
-from libya_elections.phone_numbers import is_phone_number_valid
+from libya_elections.phone_numbers import is_valid_phone_number
 
 logger = logging.getLogger(__name__)
 
 FIELDS = ['number', 'message']
 Line = namedtuple("Line", FIELDS)
 
-PARSING_ERROR = _(u"Error found in line {line_number}: The row should only have the following "
-                  u"columns: {columns}.")
-INVALID_PHONE_ERROR = _(u"Unable to parse number {number} as a phone number on row {line_number}")
-BLANK_MESSAGE_ERROR = _(u"Message is blank on row {line_number}")
+PARSING_ERROR = _("Error found in line {line_number}: The row should only have the following "
+                  "columns: {columns}.")
+INVALID_PHONE_ERROR = _("Unable to parse number {number} as a phone number on row {line_number}")
+BLANK_MESSAGE_ERROR = _("Message is blank on row {line_number}")
 
 
 def can_approve_broadcast(user, raise_exception=True):
@@ -43,8 +43,8 @@ def validate_uploaded_file(file_path):
     If not, raises ValidationError
 
     """
-    with open(file_path, "rb") as f:
-        reader = UnicodeReader(f)
+    with open(file_path, encoding='utf-8') as f:
+        reader = csv.reader(f)
 
         line_number = 0
         for row in reader:
@@ -55,7 +55,7 @@ def validate_uploaded_file(file_path):
                 except TypeError:
                     raise ValidationError(PARSING_ERROR.format(line_number=line_number,
                                                                columns=", ".join(FIELDS)))
-                if not is_phone_number_valid(line.number):
+                if not is_valid_phone_number(line.number):
                     raise ValidationError(INVALID_PHONE_ERROR.format(number=line.number,
                                                                      line_number=line_number))
                 if not line.message.strip():
@@ -144,6 +144,7 @@ class SignalManager(object):
         current = signal.getsignal(signum)
         signal.signal(signum, self._saved_handlers[signum].pop())
         return current
+
 
 # singleton for managing signals
 signal_manager = SignalManager()

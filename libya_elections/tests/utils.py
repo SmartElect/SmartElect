@@ -1,11 +1,9 @@
 # utils for testing (as opposed to tests of utils)
-from __future__ import unicode_literals
-from __future__ import division
 
 # Django imports
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.urls import reverse
 from django.views.generic.base import View
 
 # This project's imports

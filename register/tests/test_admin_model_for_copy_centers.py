@@ -1,10 +1,7 @@
-from __future__ import unicode_literals
-from __future__ import division
+from unittest.mock import Mock
 
 from django.contrib import admin
 from django.test import TestCase
-
-from mock import Mock
 
 from register.admin import RegistrationCenterAdmin
 from register.models import RegistrationCenter

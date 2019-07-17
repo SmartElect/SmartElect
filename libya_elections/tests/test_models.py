@@ -1,4 +1,4 @@
-from django.db.models import get_models
+from django.apps import apps
 from django.test import TestCase
 
 
@@ -8,7 +8,6 @@ class FieldVerboseNameTest(TestCase):
     IGNORE_THESE_MODULES = [
         'captcha',
         'django',
-        'djcelery',
         'rapidsms',
         'registration',
     ]
@@ -27,7 +26,7 @@ class FieldVerboseNameTest(TestCase):
 
     def test_verbose_name_on_fields(self):
         """Ensure that all of our model fields have the verbose_name attr populated."""
-        for model in get_models():
+        for model in apps.get_models():
             if model.__module__.split('.')[0] not in self.IGNORE_THESE_MODULES:
                 model_name = model._meta.app_label + '.' + model._meta.object_name
                 if model_name not in self.IGNORE_THESE_MODELS:
@@ -41,7 +40,7 @@ class FieldVerboseNameTest(TestCase):
                             # will be django.utils.functional.__proxy__, or str/unicode if the
                             # author forgot to translate it. The latter is easier to test for and
                             # won't break if Django eventually changes its class hierarchy.
-                            self.assertFalse(isinstance(field.verbose_name, basestring), message)
+                            self.assertFalse(isinstance(field.verbose_name, str), message)
                             # We don't want Init Caps for verbose names.
                             self.assertEqual(lower_verbose_name[0], field.verbose_name[0], message)
                         # else:
@@ -55,7 +54,6 @@ class ModelVerboseNamesTest(TestCase):
     IGNORE_THESE_MODULES = [
         'captcha',
         'django',
-        'djcelery',
         'rapidsms',
         'registration',
     ]
@@ -76,7 +74,7 @@ class ModelVerboseNamesTest(TestCase):
 
     def test_verbose_names_on_models(self):
         """Ensure that all of our models have verbose_name and verbose_name_plural populated."""
-        for model in get_models():
+        for model in apps.get_models():
             if model.__module__.split('.')[0] not in self.IGNORE_THESE_MODULES:
                 model_name = model._meta.app_label + '.' + model._meta.object_name
                 if model_name not in self.IGNORE_THESE_MODELS:
@@ -92,6 +90,6 @@ class ModelVerboseNamesTest(TestCase):
                         # will be django.utils.functional.__proxy__, or str/unicode if the
                         # author forgot to translate it. The latter is easier to test for and
                         # won't break if Django eventually changes its class hierarchy.
-                        self.assertFalse(isinstance(name, basestring), message)
+                        self.assertFalse(isinstance(name, str), message)
                         # We don't want Init Caps for verbose names.
                         self.assertEqual(name[0].lower(), name[0], message)

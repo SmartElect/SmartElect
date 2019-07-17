@@ -121,7 +121,7 @@
           <tbody>
           {% for message in log %}
             <tr>
-              <td>{{ message.formatted_creation_date }}</td>
+              <td>{{ message.creation_date }}</td>
               <td class="phone">{{ message.phone_number|format_phone_number }}</td>
               <td>{{ message.type }}</td>
               <td>{{ message.period }}</td>

@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import os
 import shutil
 import tempfile
-import urlparse
+import urllib.parse
 
 # 3rd party imports
 from bidi.algorithm import get_display as apply_bidi
 
 # Django imports
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 # Project imports
 from .factories import create_voters, generate_arabic_place_name
@@ -46,7 +44,7 @@ class ResponseCheckerMixin(object):
     def assertResponseRedirectsToLogin(self, response):
         """Given a response, test that it is a redirect to the login page"""
         self.assertEqual(302, response.status_code)
-        self.assertEqual(urlparse.urlparse(response.url).path, reverse('auth_login'))
+        self.assertEqual(urllib.parse.urlparse(response.url).path, reverse(settings.LOGIN_URL))
 
 
 class TestJobBase(TestCase):
@@ -149,7 +147,7 @@ class TestGeneratePdfBase(TestCase):
         # transformations applied to get them to match what comes out of the PDF. First, they
         # need to be reversed (because the Arabic text is RtoL in the PDF) and second, the
         # HTML-ish <br> elements need to become newlines.
-        for key, value in STRINGS.iteritems():
+        for key, value in STRINGS.items():
             value = value.split('<br/>')
             value = [''.join(apply_bidi(line)) for line in value if line]
             # If this is a list of only one line, leave it as a simple string.
@@ -163,13 +161,11 @@ class TestGeneratePdfBase(TestCase):
 
     def setUp(self):
         subconstituency_name = os.environ.get('ROLLGEN_TEST_SUBCONSTITUENCY_NAME', '')
-        subconstituency_name = subconstituency_name.decode('utf-8')
 
         if not subconstituency_name:
             subconstituency_name = generate_arabic_place_name()
 
         center_name = os.environ.get('ROLLGEN_TEST_CENTER_NAME', '')
-        center_name = center_name.decode('utf-8')
 
         if not center_name:
             center_name = generate_arabic_place_name()

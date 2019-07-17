@@ -43,7 +43,8 @@ class MessageText(AbstractTimestampTrashBinModel):
     last_updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("last updated by"),
-        null=True)
+        null=True,
+        on_delete=models.CASCADE)
 
     class Meta(object):
         verbose_name = _("message text")

@@ -9,10 +9,11 @@ import string
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models.fields import FieldDoesNotExist
 from django.test import TestCase
+from django.test.utils import override_settings
+from django.urls import reverse
 from django.utils import translation
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -61,26 +62,26 @@ class UtilsTest(TestCase):
 
         def coord(degrees, minutes, seconds):
             # Return the Decimal equivalent of the given degrees, minutes, seconds coordinate
-            val = degrees + (minutes/60.0) + (seconds/3600.0)
+            val = degrees + (minutes / 60.0) + (seconds / 3600.0)
             return parse_latlong(val)
 
         for input, expected_output in [
-            (u"10ْ .05 30 63", coord(10, 5, 30.63)),
-            (u"10.1826", Decimal('10.18260000')),
-            (u"12.2", Decimal('12.2')),
-            (u"12° 2", coord(12, 2, 0)),
-            (u"12° 2'54.62\"", coord(12, 2, 54.62)),
-            (u"12ْ 14 23", coord(12, 14, 23)),
-            (u"12°37'7.00\"", coord(12, 37, 7.0)),
-            (u"12° 2'54.62\"", coord(12, 2, 54.62)),
-            (u"12°37'7.00\"", coord(12, 37, 7.00)),
-            (u"12°37'49.30\"", coord(12, 37, 49.30)),
-            (u"14ْ 25 816", None),
-            (u"204650", coord(20, 46, 50)),
-            (u"290250", coord(29, 2, 50)),
-            (u"32ْ 453 700", None),
-            (u"57 \" .579\" .12", None),
-            (u"1234", None),
+            ("10ْ .05 30 63", coord(10, 5, 30.63)),
+            ("10.1826", Decimal('10.18260000')),
+            ("12.2", Decimal('12.2')),
+            ("12° 2", coord(12, 2, 0)),
+            ("12° 2'54.62\"", coord(12, 2, 54.62)),
+            ("12ْ 14 23", coord(12, 14, 23)),
+            ("12°37'7.00\"", coord(12, 37, 7.0)),
+            ("12° 2'54.62\"", coord(12, 2, 54.62)),
+            ("12°37'7.00\"", coord(12, 37, 7.00)),
+            ("12°37'49.30\"", coord(12, 37, 49.30)),
+            ("14ْ 25 816", None),
+            ("204650", coord(20, 46, 50)),
+            ("290250", coord(29, 2, 50)),
+            ("32ْ 453 700", None),
+            ("57 \" .579\" .12", None),
+            ("1234", None),
         ]:
             result = cleanup_lat_or_long(input)
             if expected_output is None:
@@ -133,7 +134,7 @@ class GetVerboseNameTest(TestCase):
 
     def test_failure(self):
         """Ensure FieldDoesNotExist is raised no matter what trash is passed as the field name"""
-        for field_name in ('kjasfhkjdh', u'sfasfda', None, 42, False, complex(42), lambda: None,
+        for field_name in ('kjasfhkjdh', 'sfasfda', None, 42, False, complex(42), lambda: None,
                            ValueError(), _('English'), {}, [], tuple()):
             with self.assertRaises(FieldDoesNotExist):
                 get_verbose_name(Office, field_name)
@@ -148,30 +149,30 @@ class StandardizeInputTest(TestCase):
         expected = [nid, center_id]
         return [
             # test lots of spaces
-            (u"  %s   * %s  " % (nid, center_id), expected),
+            ("  %s   * %s  " % (nid, center_id), expected),
             # test mixed spaces
-            (u"%s* %s  " % (nid, center_id), expected),
+            ("%s* %s  " % (nid, center_id), expected),
             # test one number only
             (nid, [nid]),
             # test nid-first combinations
-            (u"%s %s" % (nid, center_id), expected),
-            (u"%s*%s" % (nid, center_id), expected),
-            (u"%s#%s" % (nid, center_id), expected),
-            (u"blah%sblah%sblah" % (nid, center_id), expected),
+            ("%s %s" % (nid, center_id), expected),
+            ("%s*%s" % (nid, center_id), expected),
+            ("%s#%s" % (nid, center_id), expected),
+            ("blah%sblah%sblah" % (nid, center_id), expected),
             # test short nid
-            (u"%s %s" % (nid[:-1], center_id), [nid[:-1], center_id]),
+            ("%s %s" % (nid[:-1], center_id), [nid[:-1], center_id]),
             # test long nid
-            (u"%s %s" % (nid + a_digit, center_id), [nid + a_digit, center_id]),
+            ("%s %s" % (nid + a_digit, center_id), [nid + a_digit, center_id]),
             # test short center_id
-            (u"%s %s" % (nid, center_id[:-1]), [nid, center_id[:-1]]),
+            ("%s %s" % (nid, center_id[:-1]), [nid, center_id[:-1]]),
             # test long center_id
-            (u"%s %s" % (nid, center_id + a_digit), [nid, center_id + a_digit]),
+            ("%s %s" % (nid, center_id + a_digit), [nid, center_id + a_digit]),
             # test both short
-            (u"%s %s" % (nid[:-1], center_id[-1]), [nid[:-1], center_id[-1]]),
+            ("%s %s" % (nid[:-1], center_id[-1]), [nid[:-1], center_id[-1]]),
             # test both long
-            (u"%s %s" % (nid + a_digit, center_id + a_digit), [nid + a_digit, center_id + a_digit]),
+            ("%s %s" % (nid + a_digit, center_id + a_digit), [nid + a_digit, center_id + a_digit]),
             # test 3 number input returns all numbers
-            (u"%s %s %s" % (nid, center_id, a_digit), [nid, center_id, a_digit]),
+            ("%s %s %s" % (nid, center_id, a_digit), [nid, center_id, a_digit]),
         ]
 
     def test_extract_arabic_numerals(self):
@@ -189,10 +190,10 @@ class StandardizeInputTest(TestCase):
             self.assertEqual(_extract_numerals(input), expected_output)
 
     def test_extract_mixed_language_numerals(self):
-        nid = (get_random_number_string(length=6, choices=EASTERN_ARABIC_DIGITS) +
-               get_random_number_string(length=6, choices=string.digits))
-        center_id = (get_random_number_string(length=3, choices=EASTERN_ARABIC_DIGITS) +
-                     get_random_number_string(length=3, choices=string.digits))
+        nid = (get_random_number_string(length=6, choices=EASTERN_ARABIC_DIGITS)
+               + get_random_number_string(length=6, choices=string.digits))
+        center_id = (get_random_number_string(length=3, choices=EASTERN_ARABIC_DIGITS)
+                     + get_random_number_string(length=3, choices=string.digits))
         nid = shuffle_string(nid)
         center_id = shuffle_string(center_id)
         io_table = self._build_io_table(nid, center_id, '3')
@@ -316,9 +317,9 @@ class OverlapUtiltest(TestCase):
         )
 
 
+@override_settings(ROOT_URLCONF='libya_elections.tests.urls')
 class LoginPermissionMixinTest(ResponseCheckerMixin, StaffUserMixin, TestCase):
     """Exercise the LoginPermissionRequiredMixin"""
-    urls = 'libya_elections.tests.urls'
 
     def setUp(self):
         # self.model is set for StaffUserMixin. There's nothing special about the Office model,
@@ -354,9 +355,9 @@ class LoginPermissionMixinTest(ResponseCheckerMixin, StaffUserMixin, TestCase):
             self.assertRedirectsToLogin(response)
 
 
+@override_settings(ROOT_URLCONF='libya_elections.tests.urls')
 class LoginMultiplePermissionMixinsTest(ResponseCheckerMixin, StaffUserMixin, TestCase):
     """Exercise the LoginMultiplePermissionsRequiredMixin"""
-    urls = 'libya_elections.tests.urls'
 
     def setUp(self):
         # See comments for LoginPermissionMixinsTest.

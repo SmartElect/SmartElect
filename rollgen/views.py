@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import collections
 from functools import total_ordering
 import json
@@ -15,9 +13,9 @@ import django_filters
 # Django imports
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden, Http404, HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.timezone import now as django_now
 from django.utils.translation import ugettext as _
 
@@ -162,7 +160,8 @@ class JobOverview(object):
             if not os.path.exists(filename):
                 self.in_progress = True
             else:
-                metadata = json.loads(open(filename, 'rb').read().decode('utf-8'))
+                with open(filename, 'rb') as f:
+                    metadata = json.loads(f.read().decode('utf-8'))
 
                 self.raw_metadata = metadata
 
@@ -178,7 +177,7 @@ class JobOverview(object):
 
                 self.user = metadata['user']
 
-                for filename, file_d in metadata['files'].iteritems():
+                for filename, file_d in metadata['files'].items():
                     office_id, center_id, filename = parse_filename(filename)
 
                     # Add to center==>office map
@@ -467,7 +466,7 @@ def serve_zip(request, dirname, office_id):
     if not os.path.exists(zipname):
         raise Http404
 
-    with open(zipname, 'r') as f:
+    with open(zipname, 'rb') as f:
         response = HttpResponse(content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename="{}.zip"'.format(office_id)
         response.write(f.read())
@@ -494,7 +493,7 @@ def new_view(request):
                 center_ids = form.cleaned_data['center_text_list']
                 centers = RegistrationCenter.objects.filter(center_id__in=center_ids)
 
-            centers = centers.filter(reg_open=True)
+            centers = centers.filter(reg_open=True).all()
 
             if not centers:
                 msg = _("The criteria you specified didn't match any active centres.")

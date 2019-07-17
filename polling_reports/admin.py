@@ -32,6 +32,7 @@ class CenterClosedForElectionAdmin(LibyaAdminModel):
     search_fields = ('registration_center__center_id', 'election__name_arabic',
                      'election__name_english')
 
+
 admin_site.register(StaffPhone, StaffPhoneAdmin)
 admin_site.register(CenterOpen, CenterOpenAdmin)
 admin_site.register(PollingReport, PollingReportAdmin)

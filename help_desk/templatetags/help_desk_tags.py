@@ -1,7 +1,6 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 from django import template
-from django.core.paginator import EmptyPage
 from django.template.defaultfilters import date as date_format_filter
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
@@ -9,39 +8,6 @@ from help_desk.forms import DATE_FORM_FORMAT
 
 
 register = template.Library()
-
-
-def build_page_link(request, page_number):
-    """
-    Returns a URL to go to the specified page.
-
-    Actually, returns "?" plus a query string that includes any
-    query string that was part of the current request, plus a
-    page=N parameter, without duplicating the page=N parameter if
-    the current request already had one.
-    """
-    # remove any old page number and add new page number
-    query_dict = request.GET.copy()  # Get a mutable copy of the query dict
-    if 'page' in query_dict:
-        del query_dict['page']
-    query_dict['page'] = page_number
-    return '?' + query_dict.urlencode()
-
-
-@register.simple_tag(takes_context=True)
-def next_page_link(context):
-    try:
-        return build_page_link(context['request'], context['page_obj'].next_page_number())
-    except EmptyPage:
-        return ''
-
-
-@register.simple_tag(takes_context=True)
-def previous_page_link(context):
-    try:
-        return build_page_link(context['request'], context['page_obj'].previous_page_number())
-    except EmptyPage:
-        return ''
 
 
 @register.inclusion_tag('help_desk/date_filters.html')

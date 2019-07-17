@@ -23,10 +23,9 @@
         {% endif %}
       {% endif %}
       <div class="spacer"></div>
-      <button onclick="history.go(-1);">{% trans "Back" %}</button>
+      <a class="button" href="{% url 'check_registration' %}">{% trans "Back" %}</a>
     </div>
     <div class="collapsing sixth"></div>
   </div>
 </div>
-
 {% endblock content %}

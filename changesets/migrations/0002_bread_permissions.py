@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import migrations
 from changesets.models import CHANGE_CHANGESETS_GROUP, APPROVE_CHANGESET_PERMISSION, \
     QUEUE_CHANGESET_PERMISSION, BROWSE_CHANGESETS_PERMISSION, READ_CHANGESET_PERMISSION, \

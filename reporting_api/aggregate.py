@@ -72,7 +72,7 @@ def aggregate_up(lesser_dicts, aggregate_key, lesser_key=None, skip_keys=(), cop
                 agg_dict[key_for_presence].append(lesser_dict[key_for_value])
 
         enumerate_key_for_presence = [i[0] for i in enumerate_keys]
-        for (key, val) in lesser_dict.iteritems():
+        for (key, val) in lesser_dict.items():
             if key not in skip_keys and key not in copy_keys and \
                key not in enumerate_key_for_presence:
 
@@ -84,7 +84,7 @@ def aggregate_up(lesser_dicts, aggregate_key, lesser_key=None, skip_keys=(), cop
                         agg_dict[key] = [agg_dict[key][0] + val[0],
                                          agg_dict[key][1] + val[1]]
 
-                elif type(val) in [int, float, long]:
+                elif type(val) in [int, float]:
                     # sum with previous values
                     agg_dict[key] += val
 
@@ -96,15 +96,15 @@ def aggregate_up(lesser_dicts, aggregate_key, lesser_key=None, skip_keys=(), cop
                     for inner_key in val.keys():
                         if inner_key in count_inner_keys:
                             # increment in agg_counts
-                            if isinstance(inner_key, basestring):
+                            if isinstance(inner_key, str):
                                 agg_counts[aggregate_val][key][inner_key] += 1
                             else:
-                                agg_counts[aggregate_val][key][str(inner_key)+'_count'] += 1
+                                agg_counts[aggregate_val][key][str(inner_key) + '_count'] += 1
                         if inner_key in sum_inner_keys:
                             # add it to agg_counts
                             agg_counts[aggregate_val][key][inner_key] += val[inner_key]
 
-                elif isinstance(val, basestring):
+                elif isinstance(val, str):
                     # This code started seeing unicode when migrating reporting the code
                     # from using psycopg2-provided cursor to Django-provided cursor and
                     # running inside the Django app
@@ -118,20 +118,20 @@ def aggregate_up(lesser_dicts, aggregate_key, lesser_key=None, skip_keys=(), cop
                                    (type(val), key))
 
     # copy agg_counts values to aggregate_dict
-    for (agg_key, agg_val) in agg_counts.iteritems():
-        for (date, date_val) in agg_val.iteritems():
-            for (inner_key, inner_val) in date_val.iteritems():
+    for (agg_key, agg_val) in agg_counts.items():
+        for (date, date_val) in agg_val.items():
+            for (inner_key, inner_val) in date_val.items():
                 aggregate_dicts[agg_key][date][inner_key] = inner_val
 
     # copy agg_rollup to aggregate_dict
-    for (agg_key, count) in agg_rollup.iteritems():
+    for (agg_key, count) in agg_rollup.items():
         if lesser_key:
-            aggregate_dicts[agg_key][str(lesser_key)+'_count'] = count
+            aggregate_dicts[agg_key][str(lesser_key) + '_count'] = count
         else:
             aggregate_dicts[agg_key]['count'] = count
 
     # convert nested defaultdicts back to regular dict for output
-    return {k: dict(v) for (k, v) in aggregate_dicts.iteritems()}
+    return {k: dict(v) for (k, v) in aggregate_dicts.items()}
 
 
 def aggregate_nested_key(d, d_key, nested_key):
@@ -152,13 +152,13 @@ def aggregate_nested_key(d, d_key, nested_key):
     logger.info("aggregating nested %s for %s" % (nested_key, d_key))
 
     agg = defaultdict(lambda: defaultdict(int))
-    for row in d.itervalues():
+    for row in d.values():
         row_key = row[d_key]
         for (val_key, val) in dict(row).items():
             if isinstance(val, dict):
                 agg[row_key][val_key] += val[nested_key]
 
-    return {k: dict(v) for (k, v) in agg.iteritems()}
+    return {k: dict(v) for (k, v) in agg.items()}
 
 
 def aggregate_dates(d, fields=None):
@@ -174,10 +174,10 @@ def aggregate_dates(d, fields=None):
     # log.info("aggregating dates")
 
     agg = defaultdict(int)
-    for row in d.itervalues():
+    for row in d.values():
         if isinstance(row, dict):
             if fields:
-                keys = filter(lambda x: x in fields, row.keys())
+                keys = [x for x in row.keys() if x in fields]
             else:
                 keys = row.keys()
             for key in keys:
@@ -213,7 +213,7 @@ def join_by_date(lesser_dict, on_key, date_key, copy_keys, major_dict, date_set=
                or isinstance(val, datetime.date):
                 val_d[copy_key] = val.isoformat()
             # convert longs from db back to int
-            elif isinstance(val, long):
+            elif isinstance(val, int):
                 val_d[copy_key] = int(val)
             else:
                 val_d[copy_key] = val
@@ -271,7 +271,7 @@ def join_by_date_nested(lesser_dict, on_key, date_key, copy_dict_map, major_dict
                or isinstance(val, datetime.date):
                 val_d[key] = val.isoformat()
             # convert longs from db back to int
-            elif isinstance(val, long):
+            elif isinstance(val, int):
                 val_d[key] = int(val)
             else:
                 val_d[key] = val

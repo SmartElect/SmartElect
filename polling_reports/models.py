@@ -4,22 +4,23 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from libya_elections.abstract import AbstractTimestampTrashBinModel
-from libya_elections.constants import FIRST_PERIOD_NUMBER, LAST_PERIOD_NUMBER
+from libya_elections.constants import FIRST_PERIOD_NUMBER, LAST_PERIOD_NUMBER, NO_LINKED_OBJECT
 from libya_elections.libya_bread import ElectionFormatterMixin, RegistrationCenterFormatterMixin
-from libya_elections.phone_numbers import FormattedPhoneNumberMixin
+from libya_elections.phone_numbers import FormattedPhoneNumberMixin, format_phone_number
 from libya_elections.utils import ensure_unique
 from register.models import RegistrationCenter
 
 
 class PollingReport(FormattedPhoneNumberMixin, ElectionFormatterMixin,
                     RegistrationCenterFormatterMixin, AbstractTimestampTrashBinModel):
-    # blank allowed until after a one-time migration has been performed on production
-    election = models.ForeignKey('voting.election', verbose_name=_('election'))
+    election = models.ForeignKey('voting.election', verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
     phone_number = models.CharField(_('phone number'),
                                     max_length=settings.MAX_PHONE_NUMBER_LENGTH,
                                     help_text=_("Received from this phone"))
     registration_center = models.ForeignKey(RegistrationCenter,
-                                            verbose_name=_('registration center'))
+                                            verbose_name=_('registration center'),
+                                            on_delete=models.CASCADE)
     period_number = models.IntegerField(
         _('period number'),
         validators=[
@@ -47,13 +48,14 @@ class PollingReport(FormattedPhoneNumberMixin, ElectionFormatterMixin,
 
 class CenterOpen(FormattedPhoneNumberMixin, ElectionFormatterMixin,
                  RegistrationCenterFormatterMixin, AbstractTimestampTrashBinModel):
-    # blank allowed until after a one-time migration has been performed on production
-    election = models.ForeignKey('voting.election', verbose_name=_('election'))
+    election = models.ForeignKey('voting.election', verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
     phone_number = models.CharField(_('phone number'),
                                     max_length=settings.MAX_PHONE_NUMBER_LENGTH,
                                     help_text=_("Received from this phone"))
     registration_center = models.ForeignKey(RegistrationCenter,
-                                            verbose_name=_('registration center'))
+                                            verbose_name=_('registration center'),
+                                            on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("center open record")
@@ -70,7 +72,17 @@ class StaffPhone(FormattedPhoneNumberMixin, RegistrationCenterFormatterMixin,
     phone_number = models.CharField(_('phone number'),
                                     max_length=settings.MAX_PHONE_NUMBER_LENGTH)
     registration_center = models.ForeignKey(RegistrationCenter,
-                                            verbose_name=_('registration center'))
+                                            verbose_name=_('registration center'),
+                                            on_delete=models.CASCADE)
+
+    def __str__(self):
+        try:
+            rc = str(self.registration_center)
+        except RegistrationCenter.DoesNotExist:
+            rc = NO_LINKED_OBJECT
+        return _('this staff phone {phone} from {center}').format(
+            center=rc, phone=format_phone_number(self.phone_number)
+        )
 
     def clean(self):
         ensure_unique(self._meta.model, self, 'phone_number')
@@ -87,11 +99,13 @@ class StaffPhone(FormattedPhoneNumberMixin, RegistrationCenterFormatterMixin,
 
 class PreliminaryVoteCount(FormattedPhoneNumberMixin, ElectionFormatterMixin,
                            RegistrationCenterFormatterMixin, AbstractTimestampTrashBinModel):
-    election = models.ForeignKey('voting.election', verbose_name=_('election'))
+    election = models.ForeignKey('voting.election', verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
     phone_number = models.CharField(_('phone number'), max_length=settings.MAX_PHONE_NUMBER_LENGTH,
                                     help_text=_("Received from this phone"))
     registration_center = models.ForeignKey(RegistrationCenter,
-                                            verbose_name=_('registration center'))
+                                            verbose_name=_('registration center'),
+                                            on_delete=models.CASCADE)
     # PositiveSmallIntegerField allows 0, so add a validator to require
     # it to be at least 1.
     option = models.PositiveSmallIntegerField(_('option'), validators=[MinValueValidator(1)])
@@ -112,12 +126,14 @@ class CenterClosedForElection(ElectionFormatterMixin, RegistrationCenterFormatte
                               AbstractTimestampTrashBinModel):
     # This model is used to note that a RegistrationCenter is/was inactive for a
     # particular election.
-    election = models.ForeignKey('voting.election', verbose_name=_('election'))
+    election = models.ForeignKey('voting.election', verbose_name=_('election'),
+                                 on_delete=models.CASCADE)
     registration_center = models.ForeignKey(RegistrationCenter,
-                                            verbose_name=_('registration center'))
+                                            verbose_name=_('registration center'),
+                                            on_delete=models.CASCADE)
 
-    def __unicode__(self):
-        return _(u'{center} closed for {election}').format(
+    def __str__(self):
+        return _('{center} closed for {election}').format(
             center=self.registration_center, election=self.election
         )
 

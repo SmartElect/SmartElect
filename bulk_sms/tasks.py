@@ -1,3 +1,4 @@
+import csv
 import datetime
 import logging
 import os
@@ -10,7 +11,6 @@ from django.utils.timezone import now
 
 from libya_elections.constants import REMINDER_CHECKIN, REMINDER_REPORT, \
     REMINDER_LAST_REPORT, REMINDER_CLOSE
-from libya_elections.csv_utils import UnicodeReader
 from polling_reports.models import CenterOpen, PollingReport, StaffPhone
 from register.models import Whitelist
 from text_messages.utils import get_message
@@ -33,8 +33,8 @@ def read_messages_from_file(file_path):
     # We don't currently enable customization of the from_shortcode via file upload.
     # Just use the default.
     from_shortcode = None
-    with open(file_path, "rb") as f:
-        reader = UnicodeReader(f)
+    with open(file_path, encoding='utf-8') as f:
+        reader = csv.reader(f)
         for row in reader:
             if any(row):
                 line = Line._make(row)
@@ -189,7 +189,7 @@ def message_reminder_task(message_number, reminder_number, audience, election):
         broadcast.message = msg.get_message_text()
         broadcast.save()
         logger.debug("Batch saved")
-    except:
+    except Exception:
         logger.exception("Error while creating message reminder batch")
         # If anything went wrong, don't leave partial batch lying around in unknown state
         batch.delete()

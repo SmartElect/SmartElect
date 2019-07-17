@@ -1,6 +1,7 @@
 # Python imports
 import codecs
 from collections import defaultdict, OrderedDict
+import csv
 from datetime import datetime, timedelta
 import json
 import logging
@@ -8,18 +9,20 @@ import numbers
 import re
 
 # 3rd party imports
+from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.template.defaultfilters import date as date_filter
+from django.urls import reverse
 from django.utils.timezone import now, utc
 from django.utils.translation import pgettext
 from django.utils.translation import ugettext as _
 
 # Project imports
-from libya_elections.csv_utils import UnicodeWriter
+from libya_elections.constants import LIBYA_DATE_FORMAT
 from libya_elections.phone_numbers import format_phone_number
+from libya_elections.utils import should_hide_public_view
 from libya_site.utils import intcomma, intcomma_if
 from register.models import Office, RegistrationCenter
 from register.utils import center_checkin_times
@@ -36,13 +39,15 @@ from reporting_api.reports import calc_yesterday, election_key, \
     REGISTRATION_POINTS_CR_BY_REGION_KEY, REGISTRATION_POINTS_NR_BY_REGION_KEY, \
     REGISTRATION_POINTS_CR_BY_SUBCONSTITUENCY_KEY, REGISTRATION_POINTS_NR_BY_SUBCONSTITUENCY_KEY, \
     REGISTRATIONS_BY_COUNTRY_KEY, REGISTRATIONS_BY_OFFICE_KEY, REGISTRATIONS_BY_REGION_KEY, \
+    REGISTRATIONS_BY_POLLING_CENTER_KEY, REGISTRATIONS_BY_PHONE_KEY, \
     REGISTRATIONS_BY_SUBCONSTITUENCY_KEY, REGISTRATIONS_CSV_COUNTRY_STATS_KEY, \
     REGISTRATIONS_CSV_OFFICE_STATS_KEY, REGISTRATIONS_CSV_REGION_STATS_KEY, \
     REGISTRATIONS_CSV_SUBCONSTITUENCY_STATS_KEY, REGISTRATIONS_METADATA_KEY, \
     REGISTRATIONS_OFFICE_STATS_KEY, REGISTRATIONS_REGION_STATS_KEY, REGISTRATIONS_STATS_KEY, \
-    REGISTRATIONS_DAILY_BY_OFFICE_KEY, REGISTRATIONS_SUBCONSTITUENCY_STATS_KEY
+    REGISTRATIONS_DAILY_BY_OFFICE_KEY, REGISTRATIONS_DAILY_BY_SUBCONSTITUENCY_KEY, \
+    REGISTRATIONS_SUBCONSTITUENCY_STATS_KEY
 from voting.models import Election
-
+from vr_dashboard.forms import StartEndReportForm
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +128,7 @@ def handle_missing_report(request, page_flags, extra_args=None, template='vr_das
         'error_msg': msg,
         'request': request
     }
-    if isinstance(page_flags, basestring):
+    if isinstance(page_flags, str):
         page_flags = [page_flags]
     for page_flag in page_flags:
         args[page_flag] = True
@@ -153,6 +158,8 @@ def redirect_to_national(request):
 
 # public page
 def national(request):
+    if should_hide_public_view(request):
+        return redirect(settings.PUBLIC_REDIRECT_URL)
     page_flag = 'national_page'
     by_country, metadata, raw_stats, nr_by_country, cr_by_country = \
         retrieve_report([REGISTRATIONS_BY_COUNTRY_KEY,
@@ -296,6 +303,8 @@ def finalize_offices_stats(stats):
 
 # public page
 def offices(request):
+    if should_hide_public_view(request):
+        return redirect(settings.PUBLIC_REDIRECT_URL)
     page_flag = 'offices_page'
     metadata, office_stats, raw_stats, nr_by_office, cr_by_office = \
         retrieve_report([REGISTRATIONS_METADATA_KEY,
@@ -499,8 +508,8 @@ def weekly(request):
             .append(cell_color_by_quartile("orange",
                                            global_info['last_seven'],
                                            global_info['last_seven'][i]))
-    row_totals = [oi['total'] for oi in office_info]
-    pct_female = [oi['pct_female'] for oi in office_info]
+    row_totals = [oi['total'] for _oi in office_info]
+    pct_female = [oi['pct_female'] for _oi in office_info]
     for oi in office_info:
         oi['total_color'] = cell_color_by_quartile("blue", row_totals, oi['total'])
         oi['pct_female_color'] = cell_color_by_quartile("pink", pct_female, oi['pct_female'])
@@ -513,7 +522,7 @@ def weekly(request):
                      'last_seven_actual': len(last_7_indexes),
                      'last_four_weeks': last_four_weeks_fmt,
                      'num_weeks': len(last_four_weeks),
-                     'num_weeks_range': range(len(last_four_weeks)),
+                     'num_weeks_range': list(range(len(last_four_weeks))),
                      page_flag: True,
                      'registration_stats_page': True,
                      'nr': nr_by_country,
@@ -596,6 +605,43 @@ def sms(request):
     return render(request, 'vr_dashboard/sms.html', template_args)
 
 
+@user_passes_test(lambda user: user.is_staff)
+def reports(request):
+    page_flag = 'reports_page'
+    raw_stats, metadata = retrieve_report([REGISTRATIONS_STATS_KEY,
+                                           REGISTRATIONS_METADATA_KEY])
+    if raw_stats is None:
+        return handle_missing_report(request, page_flag)
+
+    status_code = 200
+    if request.method == 'POST':
+        # Button on the reports page requests a date-limited daily csv report
+        form = StartEndReportForm(data=request.POST)
+        if form.is_valid():
+            url = reverse(
+                'vr_dashboard:daily-csv-with-dates',
+                kwargs={
+                    'from_date': form.cleaned_data['from_date'].strftime(LIBYA_DATE_FORMAT),
+                    'to_date': form.cleaned_data['to_date'].strftime(LIBYA_DATE_FORMAT),
+                }
+            )
+            return redirect(url)
+        status_code = 400
+    else:
+        form = StartEndReportForm()
+
+    last_updated = parse_iso_datetime(metadata['last_updated'])
+    headline = build_headline(last_updated, raw_stats['headline'])
+    template_args = {
+        'headline_stats': headline,
+        page_flag: True,
+        'registration_stats_page': True,
+        'last_updated': last_updated,
+        'start_end_report_form': form,
+    }
+    return render(request, 'vr_dashboard/reports.html', template_args, status=status_code)
+
+
 def cells_by_region(language_code, table, stats, metadata, page_flag):
     m_by_region = [stats[r]['m'] for r in stats.keys() if r != 'total']
     f_by_region = [stats[r]['f'] for r in stats.keys() if r != 'total']
@@ -650,18 +696,18 @@ def cells_by_region(language_code, table, stats, metadata, page_flag):
                                                     sum(t_by_region)),
                   'm_yesterday': sum(m_yesterday_by_region),
                   'm_yesterday_color': cell_color_by_quartile('blue',
-                                                              m_yesterday_by_region +
-                                                              [sum(m_yesterday_by_region)],
+                                                              m_yesterday_by_region
+                                                              + [sum(m_yesterday_by_region)],
                                                               sum(m_yesterday_by_region)),
                   'f_yesterday': sum(f_yesterday_by_region),
                   'f_yesterday_color': cell_color_by_quartile('pink',
-                                                              f_yesterday_by_region +
-                                                              [sum(f_yesterday_by_region)],
+                                                              f_yesterday_by_region
+                                                              + [sum(f_yesterday_by_region)],
                                                               sum(f_yesterday_by_region)),
                   't_yesterday': sum(t_yesterday_by_region),
                   't_yesterday_color': cell_color_by_quartile('purple',
-                                                              t_yesterday_by_region +
-                                                              [sum(t_yesterday_by_region)],
+                                                              t_yesterday_by_region
+                                                              + [sum(t_yesterday_by_region)],
                                                               sum(t_yesterday_by_region)),
                   }
 
@@ -698,6 +744,8 @@ def report_regional_grouping(request, grouping, region_stats, metadata, raw_stat
 
 # public page
 def regions(request):
+    if should_hide_public_view(request):
+        return redirect(settings.PUBLIC_REDIRECT_URL)
     page_flag = 'regions_page'
     grouping, metadata, raw_stats, region_stats, nr_by_region, cr_by_region = \
         retrieve_report([REGISTRATIONS_BY_REGION_KEY,
@@ -736,11 +784,11 @@ def get_csv_writer(response):
 
     Presumably there are other ways to make Excel happy, but that's what
     the previous Ruby implementation of this feature does, and omitting the
-    BOM and using the default UnicodeWriter is not sufficient.
+    BOM is not sufficient.
     (Tested with Excel from Office 2010 on Windows 8.1)
     """
     response.write(codecs.BOM_UTF16_LE)
-    return UnicodeWriter(response, encoding='utf-16le', delimiter='\t')
+    return csv.writer(response, delimiter='\t')
 
 
 @user_passes_test(lambda user: user.is_staff)
@@ -764,7 +812,7 @@ def csv_report(request):
     last_updated = parse_iso_datetime(metadata['last_updated'])
     last_updated_msg = get_last_updated_msg(last_updated)
 
-    response = HttpResponse(content_type='application/octet-stream')
+    response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
     client_filename = get_csv_filename(request, 'registrations')
 
     preferred_label = 'english_name' if request.LANGUAGE_CODE == 'en' else 'arabic_name'
@@ -776,7 +824,7 @@ def csv_report(request):
         w.writerow([_(table)])
         w.writerow(header)
         for row in data[table.lower()]:
-            if isinstance(row['label'], basestring):
+            if isinstance(row['label'], str):
                 assert row['label_translated']
                 label = _(row['label'])
             elif preferred_label in row['label']:
@@ -787,7 +835,6 @@ def csv_report(request):
                     row['yesterday'][0], row['yesterday'][1], row['yesterday'][2]]
             for age in age_groupings:
                 item.append(row[age])
-            # UnicodeWriter requires string fields; bundled csv converts to str as needed
             for i, field in enumerate(item):
                 if isinstance(field, numbers.Number):
                     item[i] = str(field)
@@ -798,10 +845,30 @@ def csv_report(request):
 
 
 @user_passes_test(lambda user: user.is_staff)
-def csv_daily_report(request):
+def csv_daily_report(request, from_date=None, to_date=None):
+    """
+    Return a csv file (actually tab separated) with a daily report,
+    headers indicating the browser should prompt the user to save
+    it rather than displaying it in the browser.
+
+    Should either include both from and to date, or neither.
+    If only one is given, it's ignored (but the URL patterns currently
+    won't even allow that request to get to this view).
+
+    NOTE: dates are in dd/mm/yyyy format, not the mm/dd/yyyy format
+    we're probably used to.
+
+    If either date isn't valid, or to is before from, returns 400.
+
+    :param request: HttpRequest
+    :param from_date: "DD/MM/YYYY" first date to include results for
+    :param to_date: "DD/MM/YYYY" last date to include results for
+    """
     page_flag = 'daily_csv_page'
-    daily_by_office, metadata = retrieve_report(
-        [REGISTRATIONS_DAILY_BY_OFFICE_KEY, REGISTRATIONS_METADATA_KEY]
+    daily_by_office, daily_by_subconstituency, metadata = retrieve_report(
+        [REGISTRATIONS_DAILY_BY_OFFICE_KEY,
+         REGISTRATIONS_DAILY_BY_SUBCONSTITUENCY_KEY,
+         REGISTRATIONS_METADATA_KEY]
     )
     if daily_by_office is None:
         return handle_missing_report(request, page_flag)
@@ -809,23 +876,142 @@ def csv_daily_report(request):
     last_updated = parse_iso_datetime(metadata['last_updated'])
     last_updated_msg = get_last_updated_msg(last_updated)
 
-    response = HttpResponse(content_type='application/octet-stream')
-    client_filename = get_csv_filename(request, 'daily_breakdown')
+    parse_date = lambda s: datetime.strptime(s, LIBYA_DATE_FORMAT).date()
+
+    response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
+    if from_date and to_date:
+        # For simplicity, use the strings to build the filename before we've
+        # validated them. If they turn out not to be valid date strings, we
+        # won't be using this filename anyway.
+        client_filename = get_csv_filename(
+            request,
+            'daily_breakdown_%s-%s' % (from_date.replace('/', '-'), to_date.replace('/', '-')))
+        try:
+            from_date = parse_date(from_date)
+            to_date = parse_date(to_date)
+        except ValueError:
+            return HttpResponseBadRequest("Bad date or dates")
+    else:
+        client_filename = get_csv_filename(request, 'daily_breakdown')
 
     response['Content-Disposition'] = 'attachment; filename="%s"' % client_filename
 
     w = get_csv_writer(response)
     w.writerow([last_updated_msg])
 
-    office_column = 0 if request.LANGUAGE_CODE == 'en' else 1
-    daily_by_office[0][office_column] = _('Office')
+    title_column = 0 if request.LANGUAGE_CODE == 'en' else 1
+    daily_by_office[0][title_column] = _('Office')
+    # include all columns by default
+    daily_by_office_columns_to_include = [
+        True for x in range(len(daily_by_office[0]))]
+    if from_date and to_date:
+        # If there are date limits, figure out which columns we
+        # should omit
+        for i, field in enumerate(daily_by_office[0]):
+            if i >= 2:
+                date_str, m_f = field.split(' ')
+                daily_by_office_columns_to_include[i] = \
+                    from_date <= parse_date(date_str) <= to_date
+
+    daily_by_subconstituency[0][title_column] = _('Subconstituency')
+    # include all columns by default
+    daily_by_subconstituency_columns_to_include = [
+        True for x in range(len(daily_by_subconstituency[0]))]
+    if from_date and to_date:
+        # If there are date limits, figure out which columns we
+        # should omit
+        for i, field in enumerate(daily_by_subconstituency[0]):
+            if i >= 2:
+                date_str, m_f = field.split(' ')
+                daily_by_subconstituency_columns_to_include[i] \
+                    = from_date <= parse_date(date_str) <= to_date
+
     for row in daily_by_office:
-        # UnicodeWriter requires string fields; bundled csv converts to str as needed
         for i, field in enumerate(row[2:]):
             if isinstance(field, numbers.Number):
                 row[i + 2] = str(field)
-        w.writerow([row[office_column]] + row[2:])
+        filtered_row = [
+            elt for i, elt in enumerate(row) if daily_by_office_columns_to_include[i]]
+        w.writerow([filtered_row[title_column]] + filtered_row[2:])
 
+    # Write empty row to separate the 2 tables
+    w.writerow('')
+
+    for row in daily_by_subconstituency:
+        for i, field in enumerate(row[2:]):
+            if isinstance(field, numbers.Number):
+                row[i + 2] = str(field)
+        filtered_row = [
+            elt for i, elt in enumerate(row) if daily_by_subconstituency_columns_to_include[i]]
+        w.writerow([filtered_row[title_column]] + filtered_row[2:])
+
+    return response
+
+
+@user_passes_test(lambda user: user.is_staff)
+def center_csv_report(request):
+    page_flag = 'center_csv_page'
+    metadata, polling_centers = \
+        retrieve_report([REGISTRATIONS_METADATA_KEY, REGISTRATIONS_BY_POLLING_CENTER_KEY])
+    if metadata is None:
+        return handle_missing_report(request, page_flag)
+
+    header = [_("Center ID"), _("Name"), _("Total Registrations")]
+    last_updated = parse_iso_datetime(metadata['last_updated'])
+    last_updated_msg = get_last_updated_msg(last_updated)
+
+    # convert list of dictionaries to a single dictionary with polling center
+    # code as key, and total registrations for that center as value
+    registrations_by_center_id = {
+        center[POLLING_CENTER_CODE]: center['total']
+        for center in polling_centers
+    }
+
+    response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
+    client_filename = get_csv_filename(request, 'registrations_by_polling_center')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % client_filename
+    w = get_csv_writer(response)
+    w.writerow([last_updated_msg])
+    w.writerow(header)
+
+    # get a list of centers ordered by center_id (model default ordering),
+    # excluding any centers which are not in our report
+    centers_in_report = RegistrationCenter.objects.filter(
+        center_id__in=registrations_by_center_id.keys())
+
+    for center in centers_in_report:
+        w.writerow([
+            str(center.center_id),
+            center.name,
+            str(registrations_by_center_id[center.center_id])
+        ])
+    return response
+
+
+@user_passes_test(lambda user: user.is_staff)
+def phone_csv_report(request):
+    page_flag = 'phone_csv_page'
+    metadata, registrations_by_phone = \
+        retrieve_report([REGISTRATIONS_METADATA_KEY, REGISTRATIONS_BY_PHONE_KEY])
+    if metadata is None:
+        return handle_missing_report(request, page_flag)
+
+    header = [_("Phone Number"), _("Total Registrations")]
+    last_updated = parse_iso_datetime(metadata['last_updated'])
+    last_updated_msg = get_last_updated_msg(last_updated)
+
+    response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
+    client_filename = get_csv_filename(request, 'registrations_by_phone')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % client_filename
+    w = get_csv_writer(response)
+    w.writerow([last_updated_msg])
+    w.writerow(header)
+
+    for phone_number, registration_count in registrations_by_phone:
+        w.writerow([
+            str(phone_number),
+            str(registration_count)
+        ])
     return response
 
 
@@ -902,7 +1088,7 @@ def get_last_updated_msg(last_updated):
 
 
 def emphasized_data(s):
-    return u'<span class="emphasized-data">{}</span>'.format(s) if s else ''
+    return '<span class="emphasized-data">{}</span>'.format(s) if s else ''
 
 
 @user_passes_test(lambda user: user.is_staff)
@@ -963,7 +1149,7 @@ def election_day(request):
                }
 
     if response_format == 'csv':
-        response = HttpResponse(content_type='application/octet-stream')
+        response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
         client_filename = get_csv_filename(request, 'election_day_overview')
         response['Content-Disposition'] = 'attachment; filename="%s"' % client_filename
         w = get_csv_writer(response)
@@ -1070,7 +1256,7 @@ def election_day_preliminary(request):
     last_updated = parse_iso_datetime(metadata['last_updated'])
     last_updated_msg = get_last_updated_msg(last_updated)
 
-    country_name = country_table.keys()[0]
+    country_name = list(country_table.keys())[0]
     country_prelim_counts = country_table[country_name].get(PRELIMINARY_VOTE_COUNTS, dict())
 
     # If this is for an old election prior to preliminary vote counts, or no
@@ -1123,7 +1309,7 @@ def election_day_center(request):
     last_updated_msg = get_last_updated_msg(last_updated)
 
     if response_format == 'csv':
-        response = HttpResponse(content_type='application/octet-stream')
+        response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
         client_filename = get_csv_filename(request, 'election_day_centers')
         response['Content-Disposition'] = 'attachment; filename="%s"' % client_filename
         w = get_csv_writer(response)
@@ -1284,9 +1470,10 @@ def election_day_center_n(request, center_id):
         # See if the center report wasn't returned because we don't have data on it.
         # (If all_centers is None, the report is missing from Redis.)
         if center is None and all_centers:
-            all_centers = json.loads(all_centers)  # un-JSON skipped on retrieve_report failure
+            # un-JSON skipped on retrieve_report failure
+            all_centers = json.loads(all_centers.decode())
             if center_id not in [c[POLLING_CENTER_CODE] for c in all_centers]:
-                logger.warn('URL contains unrecognized center id')
+                logger.warning('URL contains unrecognized center id')
                 args = {
                     'error_msg': _("Center id %s is not valid.") % center_id,
                     page_flag: True,
@@ -1384,7 +1571,7 @@ def election_day_office_n(request, office_id):
     office_in_list = [office for office in office_table if office['office_id'] == office_id]
 
     if not office_in_list:  # invalid office id
-        logger.warn('URL contains unrecognized office id')
+        logger.warning('URL contains unrecognized office id')
         args = {
             'error_msg': _("Office id %s is not valid.") % office_id,
             page_flag: True,
@@ -1392,7 +1579,7 @@ def election_day_office_n(request, office_id):
         }
         return render(request, 'vr_dashboard/polling_error.html', args, status=404)
 
-    assert len(office_in_list) is 1, 'Office %d is in table more than once' % office_id
+    assert len(office_in_list) == 1, 'Office %d is in table more than once' % office_id
     office = office_in_list[0]
     if request.LANGUAGE_CODE == 'ar':
         office_name = office['arabic_name']
@@ -1438,7 +1625,7 @@ def election_day_office_n(request, office_id):
             center['tr_class'] = 'inactive_for_election'
 
     if response_format == 'csv':
-        response = HttpResponse(content_type='application/octet-stream')
+        response = HttpResponse(content_type='application/octet-stream', charset='utf-16le')
         client_filename = get_csv_filename(request, 'election_day_office_%d' % office_id)
         response['Content-Disposition'] = 'attachment; filename="%s"' % client_filename
         w = get_csv_writer(response)

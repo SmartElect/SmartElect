@@ -1,12 +1,14 @@
-from __future__ import division
 import codecs
 import logging
+import string
 
 from django.db import transaction
+from django.utils import six
 from django.utils.timezone import now
 
 from civil_registry.models import TempCitizen, Citizen, CitizenMetadata
 from civil_registry.parsing import get_records
+from libya_elections.constants import NID_LENGTH, MIN_NATIONAL_ID, MAX_NATIONAL_ID
 from libya_elections.db_mirror import mirror_database
 from libya_elections.db_utils import delete_all, BatchOperations
 
@@ -92,3 +94,37 @@ def get_citizen_by_national_id(national_id):
     so we don't need to explicitly filter those out.
     """
     return Citizen.objects.filter(national_id=national_id).first()
+
+
+def is_valid_national_id(national_id):
+    """
+    Given a national ID in string or integer form, return True if it's a syntactically
+    valid ID - 12 digits, first digits 1 or 2.
+    """
+    if isinstance(national_id, six.string_types):
+        if not national_id.isdigit():
+            return False
+        if NID_LENGTH != len(national_id):
+            return False
+        national_id = int(national_id)
+    return MIN_NATIONAL_ID <= national_id <= MAX_NATIONAL_ID
+
+
+def is_valid_person_id(person_id):
+    """
+    Given a person ID in string or integer form, return True if it's a syntactically
+    valid ID - all numeric
+    """
+    if isinstance(person_id, six.string_types):
+        return person_id.isdigit()
+    return True
+
+
+def is_valid_fbr_number(fbr_number):
+    """
+    Given a fbr_number in string or integer form, return True if it's syntactically valid. Either
+    all numeric or a string of alphabetic characters followed by a string of integers.
+    """
+    if isinstance(fbr_number, six.string_types):
+        return fbr_number.lstrip(string.ascii_letters).isdigit()
+    return True
