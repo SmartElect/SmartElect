@@ -1,5 +1,5 @@
 dealer==1.1.1
-Django==2.2.1
+Django==2.2.3
     sqlparse==0.3.0
 django-braces==1.13.0
 celery==4.3.0
