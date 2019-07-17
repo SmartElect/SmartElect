@@ -1,6 +1,9 @@
 SmartElect
 ==========
 
+.. image:: https://circleci.com/gh/SmartElect/SmartElect/tree/develop.svg?style=svg
+           :target: https://circleci.com/gh/SmartElect/SmartElect/tree/develop
+
 Below you will find basic setup and deployment instructions for the SmartElect
 project. To begin you should have the following applications installed on your
 local development system:
