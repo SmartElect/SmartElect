@@ -7,7 +7,8 @@ DEFAULT_USER_PASSWORD = 'password'
 
 
 class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_user_model()
+    class Meta:
+        model = get_user_model()
 
     username = factory.Sequence(lambda n: 'user%s' % n)
     password = DEFAULT_USER_PASSWORD

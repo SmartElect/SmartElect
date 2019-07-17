@@ -1,8 +1,6 @@
 import logging
 import sys
 
-from optparse import make_option
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -30,27 +28,27 @@ class Command(BaseCommand):
     args = ''
     help = "Sends bulk_sms messages."
 
-    option_list = BaseCommand.option_list + (
-        make_option('--messages-per-second',
-                    action='store',
-                    type='int',
-                    dest='msgs_per_sec',
-                    default=settings.BULKSMS_DEFAULT_MESSAGES_PER_SECOND,
-                    help='Maximum message send rate (msgs/s)'),
-        make_option('--concurrent-workers',
-                    action='store',
-                    type='int',
-                    dest='concurrent_workers',
-                    default=settings.BULKSMS_DEFAULT_CONCURRENT_WORKERS,
-                    help='Number of worker threads or processes to use when '
-                         'sending messages (count)'),
-        make_option('--forever',
-                    action='store_true',
-                    dest='send_forever',
-                    default=False,
-                    help='Set this option to loop indefinitely sending messages '
-                         'as they become available'),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--messages-per-second',
+            action='store',
+            type=int,
+            dest='msgs_per_sec',
+            default=settings.BULKSMS_DEFAULT_MESSAGES_PER_SECOND,
+            help='Maximum message send rate (msgs/s)')
+        parser.add_argument(
+            '--concurrent-workers',
+            action='store',
+            type=int,
+            dest='concurrent_workers',
+            default=settings.BULKSMS_DEFAULT_CONCURRENT_WORKERS,
+            help='Number of worker threads or processes to use when sending messages (count)')
+        parser.add_argument(
+            '--forever',
+            action='store_true',
+            dest='send_forever',
+            default=False,
+            help='Set this option to loop indefinitely sending messages as they become available')
 
     def handle(self, *args, **options):
         msgs_per_sec = options['msgs_per_sec']

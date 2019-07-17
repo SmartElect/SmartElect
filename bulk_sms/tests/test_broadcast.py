@@ -1,10 +1,10 @@
+from unittest.mock import patch, Mock
+
 from django.conf import settings
 from django.contrib.auth.models import Permission
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-
-from mock import patch, Mock
 
 from bulk_sms.models import Broadcast, Batch
 from bulk_sms.tests.factories import BroadcastFactory
@@ -94,7 +94,7 @@ class BroadcastBreadTest(ResponseCheckerMixin, BroadcastHelper, TestCase):
 
     def test_add_broadcast_via_csv_upload(self):
         perms = ['add_broadcast']
-        mock_file = Mock(spec=file)
+        mock_file = Mock()
         mock_file.read.return_value = "218911234567,the quick brown fox etc.\n"
         mock_file.name = 'foo.csv'
         data = {'name': 'test_batch', 'description': 'test broadcasting description',
@@ -201,8 +201,8 @@ class BroadcastModelTest(BroadcastHelper, TestCase):
         with patch.object(Broadcast, 'get_numbers_for_staff') as staff_numbers:
             phone_numbers = ['1', '2', '3']
             staff_numbers.return_value = phone_numbers
-            messages = self.broadcast.get_messages()
-            staff_numbers.assert_called_once_wth()
+            messages = [message for message in self.broadcast.get_messages()]
+            staff_numbers.assert_called_once_with()
             for index, (phone_number, message, shortcode) in enumerate(messages):
                 self.assertEqual(phone_number, phone_numbers[index])
                 self.assertEqual(message, broadcasting_message)
@@ -216,8 +216,8 @@ class BroadcastModelTest(BroadcastHelper, TestCase):
         with patch.object(Broadcast, 'get_numbers_for_all_centers') as all_registrants:
             phone_numbers = ['1', '2', '3']
             all_registrants.return_value = phone_numbers
-            messages = self.broadcast.get_messages()
-            all_registrants.assert_called_once_wth()
+            messages = [message for message in self.broadcast.get_messages()]
+            all_registrants.assert_called_once_with()
             for index, (phone_number, message, shortcode) in enumerate(messages):
                 self.assertEqual(phone_number, phone_numbers[index])
                 self.assertEqual(message, broadcasting_message)
@@ -232,8 +232,8 @@ class BroadcastModelTest(BroadcastHelper, TestCase):
         with patch.object(Broadcast, 'get_numbers_for_single_center') as single_center:
             phone_numbers = ['1', '2', '3']
             single_center.return_value = phone_numbers
-            messages = self.broadcast.get_messages()
-            single_center.assert_called_once_wth()
+            messages = [message for message in self.broadcast.get_messages()]
+            single_center.assert_called_once_with()
             for index, (phone_number, message, shortcode) in enumerate(messages):
                 self.assertEqual(phone_number, phone_numbers[index])
                 self.assertEqual(message, broadcasting_message)

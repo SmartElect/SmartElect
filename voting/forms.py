@@ -1,5 +1,4 @@
 # Python imports
-from __future__ import unicode_literals
 import datetime
 import logging
 
@@ -17,6 +16,34 @@ from libya_elections.form_utils import DateFieldWithPicker, TimeFieldWithPicker
 
 
 logger = logging.getLogger(__name__)
+
+
+def validate_headers(reader, expected):
+    """
+    Validate the CSV DictReader has the expected headers.
+
+    :param reader: A csv DictReader
+    :param expected: list of header titles
+    :return: a list of error messages. If list is empty, the headers are all valid.
+    """
+    err_msgs = []
+    headers = reader.fieldnames
+
+    if len(headers) != len(expected):
+        err_msgs.append(
+            _("Found {} header columns, but expected {}.").format(
+                len(headers), len(expected)))
+        return err_msgs
+
+    for i, expected_header in enumerate(expected):
+        header = headers[i]
+        if header.lower() != expected_header.lower():
+            err_msgs.append(
+                _("Expected header {} but found {}.").format(
+                    expected_header, header))
+    # normalize headers in case capitalization is different
+    reader.fieldnames = expected
+    return err_msgs
 
 
 def split_datetime(a_datetime):

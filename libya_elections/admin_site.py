@@ -1,8 +1,8 @@
 from functools import update_wrapper
 
 from django.contrib.admin import AdminSite
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -32,7 +32,7 @@ class LibyaAdminSite(AdminSite):
                 # importing django.contrib.auth.models.User (unrelated model).
                 from django.contrib.auth.views import redirect_to_login
                 # Begin overriden portion here
-                if not request.user.is_authenticated():
+                if not request.user.is_authenticated:
                     return redirect_to_login(
                         request.get_full_path(),
                         reverse('admin:login', current_app=self.name)
@@ -48,5 +48,6 @@ class LibyaAdminSite(AdminSite):
         if not getattr(view, 'csrf_exempt', False):
             inner = csrf_protect(inner)
         return update_wrapper(inner, view)
+
 
 admin_site = LibyaAdminSite(name='admin')

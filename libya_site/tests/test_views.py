@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
 
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.utils import override_settings
+from django.urls import reverse
 from django.utils.timezone import now
-from mock import patch
 
 from civil_registry.tests.factories import CitizenFactory
 from libya_elections import constants
@@ -13,6 +13,33 @@ from register.tests.base import PAST_DAY, FUTURE_DAY
 from register.tests.factories import RegistrationFactory
 from text_messages.utils import get_message
 from voting.tests.factories import ElectionFactory, RegistrationPeriodFactory
+
+
+class TestHomeview(TestCase):
+    def setUp(self):
+        self.url = reverse('home')
+
+    @override_settings(HIDE_PUBLIC_DASHBOARD=False)
+    def test_home_redirects_to_national_stats(self):
+        # Normally, the home page redirects to the national stats
+        rsp = self.client.get(self.url)
+        self.assertRedirects(
+            rsp,
+            reverse('vr_dashboard:national'),
+            fetch_redirect_response=False,
+            msg_prefix='Home did not redirect to national stats'
+        )
+
+    @override_settings(HIDE_PUBLIC_DASHBOARD=True)
+    def test_home_redirects_to_check_registration(self):
+        # When hiding the public dashboard, the home page redirects to check registration
+        rsp = self.client.get(self.url)
+        self.assertRedirects(
+            rsp,
+            reverse('check_registration'),
+            fetch_redirect_response=False,
+            msg_prefix='Home did not redirect to check_registration'
+        )
 
 
 @override_settings(LANGUAGE_CODE='en')
@@ -40,7 +67,7 @@ class TestCheckRegistrationPageView(TestCase):
         context = rsp.context
         self.assertIn('form', context)
         form = context['form']
-        self.assertNotIn('INVALID_TEMPLATE_STRING', rsp.content)
+        self.assertNotIn('INVALID_TEMPLATE_STRING', rsp.content.decode('utf-8'))
         # No errors
         self.assertFalse(form.errors)
 
@@ -86,7 +113,7 @@ class TestCheckRegistrationPageView(TestCase):
             'national_id': '123456789013',
             'fbr_number': '1234'
         }
-        CitizenFactory(fbr_number=long(data['fbr_number']), national_id=long(data['national_id']))
+        CitizenFactory(fbr_number=int(data['fbr_number']), national_id=int(data['national_id']))
         post_data = data.copy()
         post_data.update(self.captcha)
         post_data['fbr_number'] = ''
@@ -194,3 +221,19 @@ class TestCheckRegistrationPageView(TestCase):
         self.assertEqual(200, rsp.status_code)
         context = rsp.context
         self.assertIn('citizen', context)
+
+
+class TestSiteRegistration(TestCase):
+
+    def test_successful_site_registration(self):
+        url = reverse('registration_register')
+        data = {
+            'username': 'foo',
+            'password1': 'fake-password',
+            'password2': 'fake-password',
+            'email': 'foo@example.com',
+        }
+        rsp = self.client.post(url, data=data, follow=True)
+        # registration is successful and they are redirected to a page telling
+        # them to check their email
+        self.assertContains(rsp, 'Check your email account')

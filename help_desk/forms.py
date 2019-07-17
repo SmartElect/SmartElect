@@ -6,11 +6,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 
 from dateutil.relativedelta import relativedelta
 
-from .models import Case, FieldStaff, Update, CASE_ACTIONS, ALLOWED_ACTIONS
-from .utils import get_group_choices
+from libya_elections.phone_numbers import PhoneNumberFormField
+from help_desk.models import Case, FieldStaff, Update, CASE_ACTIONS, ALLOWED_ACTIONS, ActiveRange
+from help_desk.utils import get_group_choices
 from civil_registry.utils import get_citizen_by_national_id
 from libya_site.forms import validate_national_id, EasternArabicIntegerField
 from libya_elections.form_utils import DateFieldWithPicker
@@ -41,7 +43,13 @@ GROUP_BY_CHOICES = [(opt.key, opt.translated_name) for opt in GROUP_BY_OPTIONS]
 GROUP_BY_DICT = {opt.key: opt for opt in GROUP_BY_OPTIONS}
 
 
-class GetStaffIDForm(forms.Form):
+class HelpDeskForm(forms.Form):
+    def __init__(self, case, *args, **kwargs):
+        self.case = case
+        super(HelpDeskForm, self).__init__(*args, **kwargs)
+
+
+class GetStaffIDForm(HelpDeskForm):
     staff_id = forms.CharField(
         label=_('Staff ID number'),
         min_length=3, max_length=3,
@@ -55,25 +63,28 @@ class GetStaffIDForm(forms.Form):
                 raise ValidationError(_('Invalid staff ID format'))
 
             try:
-                self.field_staff = FieldStaff.objects.get(
+                staff = FieldStaff.objects.get(
                     staff_id=staff_id,
                     suspended=False,
                 )
             except FieldStaff.DoesNotExist:
                 raise ValidationError(_('No active field staff with that ID'))
-            else:
-                return staff_id
+            if staff.phone_number != self.case.phone_number:
+                raise ValidationError(_('Staff ID does not match caller phone number'))
 
-    def update_case(self, case):
-        case.field_staff = self.field_staff
-        case.current_screen.input = self.cleaned_data['staff_id']
+            self.field_staff = staff
+            return staff_id
 
-    def undo(self, case):
-        case.field_staff = None
-        case.current_screen.input = None
+    def update_case(self):
+        self.case.field_staff = self.field_staff
+        self.case.current_screen.input = self.cleaned_data['staff_id']
+
+    def undo(self):
+        self.case.field_staff = None
+        self.case.current_screen.input = None
 
 
-class GetNIDForm(forms.Form):
+class GetNIDForm(HelpDeskForm):
     national_id = EasternArabicIntegerField(
         label=_('National ID'),
         validators=[validate_national_id],
@@ -95,16 +106,28 @@ class GetNIDForm(forms.Form):
         self.citizen = citizen
         return national_id
 
-    def update_case(self, case):
+    def update_case(self):
         assert self.citizen
+        case = self.case
         case.citizen = self.citizen
         case.current_screen.input = str(self.cleaned_data['national_id'])
         case.registration = self.citizen.registration
 
-    def undo(self, case):
+    def undo(self):
+        case = self.case
         case.citizen = None
         case.current_screen.input = ''
         case.registration = None
+
+
+class GetCallerPhoneForm(HelpDeskForm):
+    phone_number = PhoneNumberFormField()
+
+    def update_case(self):
+        self.case.phone_number = self.cleaned_data['phone_number']
+
+    def undo(self):
+        self.case.phone_number = None
 
 
 class SetUserGroupsMixin(object):
@@ -124,7 +147,36 @@ class SetUserGroupsMixin(object):
                     self.instance.groups.remove(group)
 
 
-class NewUserForm(SetUserGroupsMixin, UserCreationForm):
+class ActiveRangeMixin(object):
+    end_date = DateFieldWithPicker(label=_('End date'), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(ActiveRangeMixin, self).__init__(*args, **kwargs)
+        self.fields['end_date'] = self.end_date
+        if self.instance and hasattr(self.instance, 'active_range'):
+            self.initial['end_date'] = self.instance.active_range.end_date
+
+    def clean_end_date(self):
+        "Validate that end_date is in future."
+        end_date = self.cleaned_data['end_date']
+        if end_date:
+            today = now().date()
+            if end_date < today:
+                raise ValidationError(_("End date cannot be in the past"))
+        return end_date
+
+    def save(self, commit=True):
+        user = super(ActiveRangeMixin, self).save(commit)
+        ActiveRange.objects.update_or_create(
+            user=user,
+            defaults={
+                'end_date': self.cleaned_data['end_date']
+            }
+        )
+        return user
+
+
+class NewUserForm(ActiveRangeMixin, SetUserGroupsMixin, UserCreationForm):
     help_desk_group = forms.fields.TypedChoiceField(
         required=False,
         choices=[
@@ -149,13 +201,13 @@ class NewUserForm(SetUserGroupsMixin, UserCreationForm):
         self.fields['help_desk_group'].choices = get_group_choices(user)
 
     def save(self, commit=True):
-        retval = super(NewUserForm, self).save(commit)
+        user = super(NewUserForm, self).save(commit)
         if commit:
             self.set_user_groups()
-        return retval
+        return user
 
 
-class UpdateUserForm(SetUserGroupsMixin, forms.ModelForm):
+class UpdateUserForm(ActiveRangeMixin, SetUserGroupsMixin, forms.ModelForm):
     """Form for updating a help desk user. Just like add user, except no password field."""
     help_desk_group = forms.fields.TypedChoiceField(
         required=False,
@@ -186,10 +238,10 @@ class UpdateUserForm(SetUserGroupsMixin, forms.ModelForm):
             self.initial['help_desk_group'] = initial_help_desk_groups[0]
 
     def save(self, commit=True):
-        retval = super(UpdateUserForm, self).save(commit)
+        user = super(UpdateUserForm, self).save(commit)
         if commit:
             self.set_user_groups()
-        return retval
+        return user
 
 
 class AddCaseUpdateForm(forms.ModelForm):
@@ -307,6 +359,6 @@ class IndividualCasesReportForm(BaseCaseForm):
         widget=forms.SelectMultiple(
             attrs={
                 'size': len(Case.CALL_OUTCOME_CHOICES),
-                }
+            }
         )
     )

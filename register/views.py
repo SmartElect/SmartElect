@@ -1,18 +1,17 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
+import csv
 import datetime
 
 # Django imports
+from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required, login_required
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse_lazy
-from django.db.models.loading import get_model
 from django import forms
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 # 3rd party imports
@@ -22,16 +21,18 @@ from django_filters import Filter, FilterSet
 from vanilla import FormView
 
 # This project's imports
-from .forms import CSV_FIELDS, UploadCenterForm, BlackWhiteListedNumbersUploadForm, \
-    BlacklistedNumberEditForm, WhitelistedNumberEditForm, RegistrationCenterEditForm
-from .models import Blacklist, Whitelist, Registration, RegistrationCenter, Office, Constituency, \
-    SubConstituency, SMS
-from .utils import process_blackwhitelisted_numbers_file
 from civil_registry.models import Citizen
-from libya_elections.csv_utils import UnicodeWriter
+from civil_registry.utils import is_valid_national_id
+from register.forms import CSV_FIELDS, UploadCenterForm, BlackWhiteListedNumbersUploadForm, \
+    BlacklistedNumberEditForm, WhitelistedNumberEditForm, RegistrationCenterEditForm, \
+    SubConstituencyForm, ConstituencyForm, OfficeForm
+from register.models import Blacklist, Whitelist, Registration, RegistrationCenter, Office, \
+    Constituency, SubConstituency, SMS
+from register.utils import process_blackwhitelisted_numbers_file
 from libya_elections.filters import LibyaChoiceFilter
-from libya_elections.libya_bread import PaginatedBrowseView, SoftDeleteBread, SoftDeleteDeleteView, \
-    StaffBreadMixin
+from libya_elections.libya_bread import PaginatedBrowseView, SoftDeleteBread, \
+    SoftDeleteDeleteView, StaffBreadMixin
+from libya_elections.phone_numbers import is_valid_phone_number
 from libya_elections.utils import LoginPermissionRequiredMixin, get_verbose_name, format_tristate, \
     get_comma_delimiter
 from polling_reports.models import StaffPhone
@@ -107,12 +108,12 @@ def format_field(center, field):
     of the field formatted to export in a CSV file.
     """
     if field == 'center_type':
-        return unicode(center.get_center_type_display())
+        return str(center.get_center_type_display())
     # We never want to print "None", but "0" is okay.
     val = getattr(center, field, None)
     if val is None:
         val = ''
-    return unicode(val)
+    return str(val)
 
 
 def prepare_csv_response(filename_prefix):
@@ -128,7 +129,7 @@ def prepare_csv_response(filename_prefix):
 def download_centers_csv(request):
     """View to handle 'download centers as CSV' link"""
     response = prepare_csv_response('centers')
-    writer = UnicodeWriter(response)
+    writer = csv.writer(response)
     # write header row
     writer.writerow(CSV_FIELDS)
     for center in RegistrationCenter.objects.all():
@@ -150,8 +151,8 @@ class AllNamedThingsFilter(LibyaChoiceFilter):
         if 'filter_by_model' not in kwargs:
             raise ValueError("filter_by_model must be passed in kwargs")
         filter_by_model = kwargs.pop('filter_by_model')
-        if isinstance(filter_by_model, basestring):
-            filter_by_model = get_model(filter_by_model)
+        if isinstance(filter_by_model, str):
+            filter_by_model = apps.get_model(filter_by_model)
 
         self.filter_by_model = filter_by_model
         self._choices = None
@@ -271,7 +272,7 @@ def download_blackwhitelisted_numbers(list_type):
     # a CSV will make it easier to use with Excel, etc.
 
     response = prepare_csv_response('{}list'.format(list_type))
-    writer = UnicodeWriter(response)
+    writer = csv.writer(response)
     model = Blacklist if list_type == 'black' else Whitelist
     for number in model.objects.all():
         writer.writerow([number.phone_number])
@@ -487,6 +488,7 @@ class SMSBread(StaffBreadMixin, SoftDeleteBread):
 
 class RegistrationCenterFilterset(FilterSet):
     """FilterSet for browsing registration centers."""
+
     center_type = LibyaChoiceFilter(choices=RegistrationCenter.Types.CHOICES)
     office = AllNamedThingsFilter(filter_by_model=Office)
     constituency = AllNamedThingsFilter(filter_by_model=Constituency)
@@ -518,6 +520,9 @@ class RegistrationCenterBrowseView(PaginatedBrowseView):
     filterset = RegistrationCenterFilterset
     search_fields = ['center_id', 'name']
     search_terms = _('Center Id, Center name')
+
+    def get_queryset(self):
+        return super(RegistrationCenterBrowseView, self).get_queryset().all()
 
 
 def get_copied_by_formatted(context):
@@ -627,6 +632,7 @@ class OfficeBread(StaffBreadMixin, SoftDeleteBread):
     browse_view = OfficeBrowseView
     read_view = OfficeReadView
     model = Office
+    form_class = OfficeForm
 
 
 class ConstituencyBrowseView(PaginatedBrowseView):
@@ -655,6 +661,7 @@ class ConstituencyBread(StaffBreadMixin, SoftDeleteBread):
     read_view = ConstituencyReadView
     model = Constituency
     plural_name = 'constituencies'
+    form_class = ConstituencyForm
 
 
 class SubconstituencyBrowseView(PaginatedBrowseView):
@@ -684,6 +691,7 @@ class SubconstituencyBread(StaffBreadMixin, SoftDeleteBread):
     read_view = SubconstituencyReadView
     model = SubConstituency
     plural_name = 'subconstituencies'
+    form_class = SubConstituencyForm
 
 
 class ArchiveTimeNotNoneFilter(Filter):
@@ -701,9 +709,9 @@ class RegistrationFilterSet(FilterSet):
 
     archived = ArchiveTimeNotNoneFilter(
         widget=forms.widgets.Select(choices=(
-            (None, _(u'Any')),
-            (True, _(u'Yes')),
-            (False, _(u'No'))
+            (None, _('Any')),
+            (True, _('Yes')),
+            (False, _('No'))
         ))
     )
 
@@ -720,29 +728,85 @@ def get_registration_bread_queryset():
 class RegistrationBrowse(PaginatedBrowseView):
     filterset = RegistrationFilterSet
     queryset = get_registration_bread_queryset()
+    count_cache_timeout = 300
     columns = (
         (get_verbose_name(Citizen, 'national_id'), 'citizen__national_id'),
         (get_verbose_name(Registration, 'citizen'), 'citizen', False),
         (get_verbose_name(Registration, 'registration_center'), 'registration_center'),
         (get_verbose_name(Registration, 'archive_time'), 'formatted_archive_time'),
+        (get_verbose_name(SMS, 'from_number'), 'sms__from_number'),
     )
-    search_fields = ('citizen__national_id', 'citizen__first_name', 'citizen__father_name',
+    # In addition to these search_fields, we also search for national_id and from_number, but we do
+    # that manually in get_search_results()
+    search_fields = ('citizen__first_name', 'citizen__father_name',
                      'citizen__grandfather_name', 'citizen__family_name')
-    search_terms = _('national ID, first name, father name, grandfather name, family name ')
+    search_terms = _(
+        'ENTIRE national ID or phone number WITHOUT any spaces or punctuation, first name, father '
+        'name, grandfather name')
 
     def get_queryset(self, *args, **kwargs):
         queryset = super(RegistrationBrowse, self).get_queryset(*args, **kwargs)
 
         if not queryset.ordered:
-            queryset = queryset.order_by('registration_center__center_id', '-modification_date')
+            # Sort query to show most recent registrations first
+            # Note: sorting by more than one column here dramatically slows down the query;
+            # see issue #1970.
+            queryset = queryset.order_by('-modification_date')
         # else:
             # The queryset is already ordered according to the user's preference.
 
-        # Fetch related entities in a single query rather than executing 1 query for each related
-        # enitity for each registration.
-        queryset = queryset.select_related('citizen', 'registration_center')
+        # Do NOT use select_related to get 'citizen' or 'sms'. Each of those is a large table
+        # (million plus records), so joining with the registration table (million plus records) is
+        # very expensive. Since we only show 20 rows at a time on the frontend, and since each
+        # related query is super-fast (sub 1 ms), it's actually more efficient to do the single
+        # query for registrations, and then do individual queries for each of the 20 records.
 
-        return queryset
+        # Using select_related for registration_center (thousand records) is fine:
+        return queryset.select_related('registration_center')
+
+    def get_search_results(self, request, queryset, search_term):
+        """
+        Override get_search_results in order to improve performance.
+
+        We first identify if the search_term is all digits. If not, then it cannot be a phone number
+        or a National ID, so we just pass it to the superclass. If it is all digits, then we first
+        query the SMS table for matching phone numbers, and then the Citizen table for matching
+        National IDs. We then filter our queryset by those FK ids. This results in a faster query
+        because it avoids JOINs between million-row tables.
+        """
+        search_term = search_term.strip()
+        if search_term.isdigit():
+            # django-bread uses `use_distinct` to determine whether to call .distinct() on the
+            # queryset. The format of from_number and national_id are just different enough that
+            # duplicate registrations from a single search term should never happen in practice, so
+            # we can set it to False
+            use_distinct = False
+
+            # Search for search_term as a phone number
+            if is_valid_phone_number(search_term):
+                sms_pks = SMS.objects.filter(from_number=search_term).values_list('pk', flat=True)
+                from_number_qs = queryset.filter(sms_id__in=sms_pks)
+            else:
+                from_number_qs = queryset.none()
+
+            # Search for search_term as a National ID
+
+            if is_valid_national_id(search_term):
+                # cast search_term to int() so the existing citizen__national_id index gets used (If
+                # we use a string, then PG casts national_id to 'text' and the index doesn't get
+                # used)
+                citizen_pks = Citizen.objects.filter(national_id=int(search_term)) \
+                                             .values_list('pk', flat=True)
+                national_id_qs = queryset.filter(citizen_id__in=citizen_pks)
+            else:
+                national_id_qs = queryset.none()
+
+            # Return the 2 querysets joined
+            return from_number_qs | national_id_qs, use_distinct
+        else:
+            # there are nondigits in the search term... do the regular search of the name fields
+            return super(RegistrationBrowse, self) \
+                .get_search_results(request, queryset, search_term)
 
 
 class RegistrationRead(BreadLabelValueReadView):

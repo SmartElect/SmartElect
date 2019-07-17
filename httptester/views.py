@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from random import randint
 
 from django.conf import settings as django_settings
@@ -69,7 +67,7 @@ def message_tester(request, identity, to_addr=None):
             else:
                 if "bulk" in request.FILES:
                     for line in request.FILES["bulk"]:
-                        line = line.rstrip("\n")
+                        line = line.rstrip(b"\n").decode()
                         storage.store_and_queue(identity, line, to_addr)
                     messages.success(request, _("Sent bulk messages"))
                 else:
@@ -83,7 +81,7 @@ def message_tester(request, identity, to_addr=None):
         form = forms.MessageForm({"identity": identity, "to_addr": to_addr})
 
     messages_table = MessageTable(storage.get_messages(),
-                                  template="httptester/table.html")
+                                  template_name="httptester/table.html")
     RequestConfig(request,
                   paginate={"per_page": settings.PAGINATOR_OBJECTS_PER_PAGE})\
         .configure(messages_table)

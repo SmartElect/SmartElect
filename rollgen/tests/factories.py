@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import os
 import random
 
@@ -15,12 +13,14 @@ from libya_elections.constants import MALE, FEMALE
 from register.tests.factories import RegistrationFactory, SMSFactory
 
 filename = os.path.join(os.path.dirname(__file__), '_random_arabic_person_names.txt')
-words = open(filename, 'rb').read().decode('utf-8')
+with open(filename, 'rb') as f:
+    words = f.read().decode('utf-8')
 # Remove blank lines and extraneous whitespace.
 person_names = [word.strip() for word in words.split('\n') if word.strip()]
 
 filename = os.path.join(os.path.dirname(__file__), '_random_arabic_place_names.txt')
-words = open(filename, 'rb').read().decode('utf-8')
+with open(filename, 'rb') as f:
+    words = f.read().decode('utf-8')
 # Remove blank lines and extraneous whitespace.
 place_names = [word.strip() for word in words.split('\n') if word.strip()]
 

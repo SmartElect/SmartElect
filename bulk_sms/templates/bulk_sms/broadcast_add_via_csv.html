@@ -10,7 +10,7 @@
 
   <div class="milk">
     <div class="page-width cushion">
-      <form method="post" action="" class="two-thirds" enctype="multipart/form-data">
+      <form method="post" action="" class="two-thirds" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         {% for field in form %}
           <label for="id_{{ field.name }}" class="{% if field.field.required %}required{% endif %}">{{ field.label }}</label>

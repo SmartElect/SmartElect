@@ -1,7 +1,9 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from libya_elections.constants import CENTER_ID_MAX_INT_VALUE, CENTER_ID_MIN_INT_VALUE
+from libya_elections.form_utils import DateFieldWithPicker
 from libya_elections.phone_numbers import PhoneNumberFormField
 from register.models import RegistrationCenter
 
@@ -36,3 +38,15 @@ class PhoneAndMessageQueryForm(forms.Form):
         if center_id and not RegistrationCenter.objects.filter(center_id=center_id).exists():
             raise forms.ValidationError(get_invalid_center_error_string(center_id))
         return center_id
+
+
+class StartEndReportForm(forms.Form):
+    from_date = DateFieldWithPicker(label=_('From date'), required=True)
+    to_date = DateFieldWithPicker(label=_('To date'), required=True)
+
+    def clean(self):
+        data = super(StartEndReportForm, self).clean()
+        if 'from_date' in data and 'to_date' in data:
+            if data['to_date'] < data['from_date']:
+                raise ValidationError(_("From date cannot be after end date"))
+        return data

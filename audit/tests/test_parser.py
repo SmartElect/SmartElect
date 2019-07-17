@@ -19,25 +19,25 @@ from libya_elections.constants import INCOMING, OUTGOING
         # file does not exist
         os.path.join(settings.PROJECT_ROOT, 'audit', 'tests', 'fake.txt'),
     ),
-    SHORT_CODES={'10010', '10030', '10050'}
+    SHORT_CODES={'15015', '10030', '10050'}
 )
 class LogParserTest(test.TestCase):
     def setUp(self):
         self.date = now()
         self.uuid = 'b5c53932-b13b-4453-8b99-728e66d23062'
-        self.raw_text = '2014-04-15 20:04:31+0200 [VumiRedis,client] Processed ' \
-                        'inbound message for almadar_smpp_transport_10010: ' \
-                        '{"transport_name": "almadar_smpp_transport_10010", ' \
+        self.raw_text = '2014-04-15T20:04:31+0200 [VumiRedis,client] Processed ' \
+                        'inbound message for almadar_smpp_transport_15015: ' \
+                        '{"transport_name": "almadar_smpp_transport_15015", ' \
                         '"in_reply_to": null, "group": null, "from_addr": ' \
                         '"218918510226", "timestamp": "2014-04-15 18:04:31.964560", ' \
-                        '"to_addr": "10010", "content": "903039#1981", ' \
+                        '"to_addr": "15015", "content": "903039#1981", ' \
                         '"session_event": null, "routing_metadata": {}, ' \
                         '"message_version": "20110921", "transport_type": "sms", ' \
                         '"helper_metadata": {"rapidsms": {"rapidsms_msg_id": ' \
                         '"8b34b0971f9c412d84a2c58a9af5ed68"}}, "transport_metadata": {}, ' \
                         '"message_type": "user_message", ' \
                         '"message_id": "b5c53932-b13b-4453-8b99-728e66d23062"}'
-        self.kwargs = {'message_id': self.uuid, 'to_addr': '10010'}
+        self.kwargs = {'message_id': self.uuid, 'to_addr': '15015'}
         self.parser = LogParser(direction=INCOMING)
 
     def test_save(self):
@@ -66,7 +66,25 @@ class LogParserTest(test.TestCase):
         self.assertEqual(log_entries.count(), 1)
         entry = log_entries[0]
         self.assertEqual(entry.uuid, self.uuid)
-        self.assertEqual(entry.to_addr, '10010')
+        self.assertEqual(entry.to_addr, '15015')
+        self.assertEqual(entry.from_addr, '218918510226')
+        self.assertEqual(entry.content, '903039#1981')
+
+    def test_parse_line_old_format(self):
+        # previous versions of Vumi/Twistd/Ubuntu logged the timestamp differently.
+        # old: YYYY-MM-DD HH:MM:SS+0000
+        # new  YYYY-MM-DDTHH:MM:SS+0000
+        # Make sure we test the old format as well.
+
+        # Put a space in location 10, replacing the 'T'
+        old_text = self.raw_text[:10] + ' ' + self.raw_text[11:]
+        self.parser = LogParser(direction=INCOMING)
+        self.parser.parse_line(old_text)
+        log_entries = VumiLog.objects.all()
+        self.assertEqual(log_entries.count(), 1)
+        entry = log_entries[0]
+        self.assertEqual(entry.uuid, self.uuid)
+        self.assertEqual(entry.to_addr, '15015')
         self.assertEqual(entry.from_addr, '218918510226')
         self.assertEqual(entry.content, '903039#1981')
 

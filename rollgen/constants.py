@@ -1,10 +1,3 @@
-# Python imports
-from __future__ import division
-from __future__ import unicode_literals
-
-# Django imports
-
-
 # METADATA_FILENAME is the file to which generate_rolls() writes job metadata
 METADATA_FILENAME = 'job_metadata.json'
 # JOB_FAILURE_FILENAME is the file to which the Celery task writes failure info if an exception
@@ -19,7 +12,7 @@ ROLLGEN_FLAG_FILENAME_CONTENT = \
 # Job name must be at least one character long, may not start with a dot, and may not contain
 # backslash nor forward slash in any position.
 JOB_NAME_REGEX = r"""(?P<dirname>[^./\\]{1}[^/\\]*)"""
-OFFICE_ID_REGEX = r"""(?P<office_id>\d{1,4})"""
+OFFICE_ID_REGEX = r"""(?P<office_id>\d{1,5})"""
 ZIP_FILENAME_REGEX = OFFICE_ID_REGEX + '[.]zip'
 PDF_FILENAME_REGEX = r"""(?P<filename>.*[.]pdf)"""
 

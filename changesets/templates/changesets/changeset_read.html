@@ -5,17 +5,17 @@
 {% block read_fields %}
 {# Custom read-fields for this view #}
 
-{% for field, value, link in read_rows %}
-  {% if value != None %}
-    {% if link %}
-          <label><a href="{{ link }}">{{ field.verbose_name|capfirst }}</a></label>
-          <div class="read-value"><a href="{{ link }}">{{ value }}</a></div>
+{% for row in read_rows %}{# field=row.0, value=row.1, link=row.2 #}
+  {% if row.1 != None %}
+    {% if row.2 %}
+          <label><a href="{{ row.2 }}">{{ row.0.verbose_name|capfirst }}</a></label>
+          <div class="read-value"><a href="{{ row.2 }}">{{ row.1 }}</a></div>
     {% else %}
-          <label>{{ field.verbose_name|capfirst }}</label>
-          <div class="read-value">{{ value }}</div>
+          <label>{{ row.0.verbose_name|capfirst }}</label>
+          <div class="read-value">{{ row.1 }}</div>
     {% endif %}
-    {% if field.help_text %}
-      <div class="helptext">{{ field.help_text }}</div>
+    {% if row.0.help_text %}
+      <div class="helptext">{{ row.0.help_text }}</div>
     {% endif %}
   {% endif %}
 {% endfor %}
@@ -23,7 +23,7 @@
 
 {% block actions %}
   {% if may_approve or can_queue %}
-      <form method="POST" action="{% url 'approve_changeset' changeset.pk %}">
+      <form method="POST" action="{% url 'approve_changeset' changeset.pk %}" novalidate>
         {% csrf_token %}
   {% endif %}
 

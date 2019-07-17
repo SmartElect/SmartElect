@@ -1,8 +1,8 @@
+from unittest.mock import patch, MagicMock
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpRequest
 from django.test import TestCase
-
-from mock import patch, MagicMock
 
 from civil_registry.models import Citizen
 from civil_registry.tests.factories import CitizenFactory
@@ -112,8 +112,8 @@ class ChangesetFormTest(TestCase):
         # We stop reporting upload errors beyond MAX_ERRORS
         data = self.data
         data['how_to_select'] = str(Changeset.SELECT_UPLOADED_NIDS)
-        filetext = "1\n2\n3\n4\n"
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = b"1\n2\n3\n4\n"
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=MagicMock())
         with patch('changesets.forms.MAX_ERRORS', 1):
             self.assertFalse(form.is_valid())
@@ -127,8 +127,9 @@ class ChangesetFormTest(TestCase):
         data['how_to_select'] = str(Changeset.SELECT_UPLOADED_NIDS)
         citizen1 = CitizenFactory()
         citizen2 = CitizenFactory()
-        filetext = "{nid1}\n\n{nid2}\n".format(nid1=citizen1.national_id, nid2=citizen2.national_id)
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = "{nid1}\n\n{nid2}\n".format(nid1=citizen1.national_id,
+                                                nid2=citizen2.national_id).encode()
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         mock_request = MagicMock(user=UserFactory())
         form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=mock_request)
         self.assertTrue(form.is_valid(), msg=str(form.errors))
@@ -144,8 +145,8 @@ class ChangesetFormTest(TestCase):
         citizen2 = CitizenFactory()
         nid1 = str(citizen1.national_id)
         nid1 = nid1[0] + '.' + nid1[2:]
-        filetext = "{nid1}\n{nid2}\n".format(nid1=nid1, nid2=citizen2.national_id)
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = "{nid1}\n{nid2}\n".format(nid1=nid1, nid2=citizen2.national_id).encode()
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=MagicMock())
         self.assertFalse(form.is_valid())
         self.assertIn('upload_file', form.errors)
@@ -158,8 +159,8 @@ class ChangesetFormTest(TestCase):
         citizen2 = CitizenFactory()
         nid1 = str(citizen1.national_id)
         nid1 = '3' + nid1[1:]
-        filetext = "{nid1}\n{nid2}\n".format(nid1=nid1, nid2=citizen2.national_id)
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = "{nid1}\n{nid2}\n".format(nid1=nid1, nid2=citizen2.national_id).encode()
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=MagicMock())
         self.assertFalse(form.is_valid())
         self.assertIn('upload_file', form.errors)
@@ -170,9 +171,9 @@ class ChangesetFormTest(TestCase):
         data['how_to_select'] = str(Changeset.SELECT_UPLOADED_NIDS)
         citizen1 = CitizenFactory()
         citizen2 = CitizenFactory()
-        filetext = "{nid1}\n{nid2}\n".format(nid1=citizen1.national_id + 27,
-                                             nid2=citizen2.national_id)
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = "{nid1}\n{nid2}\n".format(nid1=citizen1.national_id + 27,
+                                              nid2=citizen2.national_id).encode()
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         with patch('changesets.forms.get_citizen_by_national_id') as mock_get_citizen:
             mock_get_citizen.return_value = None  # No such citizen
             form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=MagicMock())
@@ -185,8 +186,8 @@ class ChangesetFormTest(TestCase):
         data = self.data
         data['how_to_select'] = str(Changeset.SELECT_UPLOADED_NIDS)
         nid1 = "199999999999"
-        filetext = "{nid1}\n".format(nid1=nid1)
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = "{nid1}\n".format(nid1=nid1).encode()
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         with patch('changesets.forms.get_citizen_by_national_id') as mock_get_citizen:
             # Make a Citizen but don't save it in the database, so the form validation
             # won't initially find it
@@ -201,8 +202,9 @@ class ChangesetFormTest(TestCase):
         data['how_to_select'] = str(Changeset.SELECT_UPLOADED_NIDS)
         citizen1 = CitizenFactory()
         citizen2 = CitizenFactory()
-        filetext = "1{nid1}\n{nid2}\n".format(nid1=citizen1.national_id, nid2=citizen2.national_id)
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = "1{nid1}\n{nid2}\n".format(nid1=citizen1.national_id,
+                                               nid2=citizen2.national_id).encode()
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=MagicMock())
         self.assertFalse(form.is_valid())
         self.assertIn('upload_file', form.errors)
@@ -211,8 +213,8 @@ class ChangesetFormTest(TestCase):
         # We don't allow an empty file
         data = self.data
         data['how_to_select'] = str(Changeset.SELECT_UPLOADED_NIDS)
-        filetext = ""
-        upload_file = SimpleUploadedFile('my_filename', filetext)
+        filebytes = b""
+        upload_file = SimpleUploadedFile('my_filename', filebytes)
         form = ChangesetForm(data=data, files={'upload_file': upload_file}, request=MagicMock())
         self.assertFalse(form.is_valid())
         self.assertIn('upload_file', form.errors)

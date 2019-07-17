@@ -7,11 +7,9 @@ from django.utils.formats import number_format
 from libya_elections import constants
 
 
-def random_alphanumeric_string(
-        size=8,
-        chars=string.ascii_uppercase + string.digits +
-        string.ascii_lowercase):
-    return ''.join(random.choice(chars) for __ in range(size))
+def random_alphanumeric_string(size=8, chars=None):
+    chars = chars or string.ascii_uppercase + string.digits + string.ascii_lowercase
+    return ''.join(random.choice(chars) for __ in list(range(size)))
 
 
 def random_digit_challenge():
@@ -29,8 +27,8 @@ def create_arabic_trans_table():
     which can be used by the unicode-string.translate() function.
     """
     eastern = [ord(char) for char in constants.EASTERN_ARABIC_DIGITS]
-    western = unicode(string.digits)
-    return dict(zip(eastern, western))
+    western = str(string.digits)
+    return dict(list(zip(eastern, western)))
 
 
 def intcomma(value):

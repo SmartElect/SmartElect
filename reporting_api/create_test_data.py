@@ -49,7 +49,7 @@ DAYS_BETWEEN_REGISTRATIONS = 1
 # Libyan satellite phone: 88216????????
 # Note: phone numbers may not contain whitespace
 VOTER_PHONE_NUMBER_PATTERN = '88216%08d'
-STAFF_PHONE_NUMBER_PATTERN = '218%09d'
+STAFF_PHONE_NUMBER_PATTERN = '2189%08d'
 # destination phone numbers for various types of messages (value not critical)
 REGISTRATION_PHONE_NUMBER = '12345678'
 POLLING_REPORT_PHONE_NUMBER = '23456789'
@@ -112,7 +112,9 @@ def create(center_without_office=False,
            num_inactive_centers_per_election=DEFAULT_NUM_INACTIVE_PER_ELECTION,
            num_no_reg_centers=DEFAULT_NUM_NO_REG_CENTERS,
            election_dates=()):
+
     assert settings.ENVIRONMENT not in ('production', 'testing')
+
     delete(delete_infra=not use_existing_infra)
     empty_report_store()  # Remove any old data from Redis
 
@@ -157,7 +159,7 @@ def create(center_without_office=False,
 
     if use_existing_infra:
         # Pick centers that support registrations at random.
-        centers = RegistrationCenter.objects.filter(reg_open=True)\
+        ordinary_centers = RegistrationCenter.objects.filter(reg_open=True)\
             .exclude(center_type=RegistrationCenter.Types.COPY)\
             .order_by('?')[:num_registration_centers]
         if num_copy_centers:  # user wants some, but there might not be any
@@ -169,25 +171,29 @@ def create(center_without_office=False,
                 filter(reg_open=False).order_by('?')[:num_no_reg_centers]
         # why like this? sliced queries and/or list
         all_kinds_of_centers = \
-            list(centers) + list(copy_centers) + list(no_reg_centers)
+            list(ordinary_centers) + list(copy_centers) + list(no_reg_centers)
     else:
         subconstituencies = SubConstituency.objects.exclude(pk=SPLIT_CENTER_SUBCONSTITUENCY_ID)
         subconstituencies = subconstituencies[:num_subconstituencies]
 
-        centers = []
+        constituencies = Constituency.objects.all()
+
+        ordinary_centers = []
         for i in range(num_registration_centers):
-            constituency = Constituency.objects.filter(name_english='first')[0]
+            constituency = random.choice(constituencies)
             subconstituency = random.choice(subconstituencies)
 
             rc = RegistrationCenter(name='polling-center-%d' % i,
-                                    center_id=CENTER_ID_MIN_INT_VALUE+i, constituency=constituency,
-                                    subconstituency=subconstituency, office=random.choice(offices))
+                                    center_id=CENTER_ID_MIN_INT_VALUE + i,
+                                    constituency=constituency,
+                                    subconstituency=subconstituency,
+                                    office=random.choice(offices))
             rc.full_clean()
             rc.save()
-            centers.append(rc)
+            ordinary_centers.append(rc)
 
         for i in range(num_copy_centers):
-            original = random.choice(centers)
+            original = random.choice(ordinary_centers)
             # XXX This doesn't handle accidentally making too many copies of the same
             #     center, so make sure --num-centers is "big enough" w.r.t. --num-copy-centers.
             new_center_id = CENTER_ID_MIN_INT_VALUE + num_registration_centers + i
@@ -203,7 +209,7 @@ def create(center_without_office=False,
             copy_centers.append(copy)
 
         for i in range(num_no_reg_centers):
-            constituency = Constituency.objects.filter(name_english='first')[0]
+            constituency = random.choice(constituencies)
             subconstituency = random.choice(subconstituencies)
             center_id = CENTER_ID_MIN_INT_VALUE + num_registration_centers + num_copy_centers + i
             rc = RegistrationCenter(name='no-reg-polling-center-%d' % i,
@@ -214,8 +220,10 @@ def create(center_without_office=False,
                                     reg_open=False)
             rc.full_clean()
             rc.save()
+            no_reg_centers.append(rc)
 
-        all_kinds_of_centers = centers + copy_centers + no_reg_centers
+        all_kinds_of_centers = \
+            ordinary_centers + copy_centers + no_reg_centers
 
     if center_without_office:
         try:
@@ -321,11 +329,12 @@ def create(center_without_office=False,
 
     # tz.normalize fixes up the date arithmetic when crossing DST boundaries
     creation_dates = \
-        [tz.normalize((today_fragile -
-                       datetime.timedelta(days=DAYS_BETWEEN_REGISTRATIONS * i)).astimezone(tz))
+        [tz.normalize((today_fragile
+                       - datetime.timedelta(days=DAYS_BETWEEN_REGISTRATIONS * i)).astimezone(tz))
          for i in range(num_registration_dates)]
 
     citizens = []
+    existing_civil_registry_ids = []
     for i in range(num_registrations):
         # about 60% of registrations are for males, just as with actual data
         gender = MALE if random.randint(1, 100) <= 60 else FEMALE
@@ -341,6 +350,9 @@ def create(center_without_office=False,
         yesterday = datetime.datetime.now().replace(tzinfo=tz) - datetime.timedelta(days=1)
         birth_date = datetime.date(yesterday.year - voter_age, yesterday.month, yesterday.day)
         civil_registry_id = random.randint(1, 99999999)
+        # make sure we don't generate a duplicate key error
+        while civil_registry_id in existing_civil_registry_ids:
+            civil_registry_id = random.randint(1, 99999999)
         citizen = CitizenFactory(civil_registry_id=civil_registry_id, national_id=nat_id,
                                  gender=gender, birth_date=birth_date)
         citizens.append(citizen)
@@ -351,7 +363,7 @@ def create(center_without_office=False,
         s.full_clean()
         s.save()
 
-        rc = random.choice(centers)
+        rc = random.choice(list(ordinary_centers))
 
         confirmed = random.randint(1, 100) <= 80  # most are confirmed
         if confirmed:
@@ -378,7 +390,7 @@ def create(center_without_office=False,
             s.save()
 
         for election in elections:
-            for rc in centers:
+            for rc in ordinary_centers:
                 i = random.randint(8888, 9999)
                 staff_phone_number = STAFF_PHONE_NUMBER_PATTERN % i
                 ensure_staff_phone_exists(staff_phone_number, rc, staff_phones,

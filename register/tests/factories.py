@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import division
 import random
 
 from django.conf import settings
@@ -15,6 +13,13 @@ from civil_registry.tests.factories import CitizenFactory
 from libya_elections.constants import MALE, INCOMING
 from libya_elections.utils import random_string
 from register import models
+
+
+def first_unused_id(model):
+    id = 1
+    while model.objects.filter(id=id).exists():
+        id += 1
+    return id
 
 
 def get_unused_gender_appropriate_national_id(stub):
@@ -34,7 +39,8 @@ def get_unused_gender_appropriate_national_id(stub):
 
 
 class PersonFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Person
+    class Meta:
+        model = models.Person
 
     # If no civil_registry_id was provided, create a Citizen.
     citizen = factory.SubFactory(CitizenFactory)
@@ -56,10 +62,11 @@ class PersonFactory(factory.DjangoModelFactory):
 
 
 class BackendFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = rapidsms_models.Backend
+    class Meta:
+        model = rapidsms_models.Backend
 
     # Pick a valid backend name each time
-    name = factory.LazyAttribute(lambda o: random.choice(settings.INSTALLED_BACKENDS.keys()))
+    name = factory.LazyAttribute(lambda o: random.choice(list(settings.INSTALLED_BACKENDS.keys())))
 
     # Don't really create a new one if one exists with the backend name
     @classmethod
@@ -68,14 +75,16 @@ class BackendFactory(factory.DjangoModelFactory):
 
 
 class ConnectionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = rapidsms_models.Connection
+    class Meta:
+        model = rapidsms_models.Connection
 
     identity = factory.LazyAttribute(lambda o: random_string(12))
     backend = factory.SubFactory(BackendFactory)
 
 
 class SMSFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.SMS
+    class Meta:
+        model = models.SMS
 
     from_number = factory.Sequence(lambda n: ('1111111111-%s' % n)[:15])
     to_number = factory.Sequence(lambda n: ('2222222222-%s' % n)[:15])
@@ -88,41 +97,36 @@ class SMSFactory(factory.DjangoModelFactory):
 
 
 class OfficeFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Office
+    class Meta:
+        model = models.Office
 
-    id = factory.sequence(lambda n: n)
+    id = factory.LazyAttribute(lambda o: first_unused_id(models.Office))
     region = models.Office.REGION_WEST
-
-
-def come_up_with_unique_id_for_constituency(obj):
-    max_in_use = models.Constituency.objects.aggregate(max=Max('id'))['max'] or 0
-    return 1 + max_in_use
+    name_english = factory.LazyAttribute(lambda o: "Office %d" % o.id)
 
 
 class ConstituencyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Constituency
+    class Meta:
+        model = models.Constituency
 
     # 'id' is the primary key but it's not an auto field so we
     # need to come up with a unique value for it if it
     # wasn't specified in the factory call
-    id = factory.LazyAttribute(come_up_with_unique_id_for_constituency)
-
-
-def come_up_with_unique_id_for_subconstituency(obj):
-    max_in_use = models.SubConstituency.objects.aggregate(max=Max('id'))['max'] or 0
-    return 1 + max_in_use
+    id = factory.LazyAttribute(lambda o: first_unused_id(models.Constituency))
 
 
 class SubConstituencyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.SubConstituency
+    class Meta:
+        model = models.SubConstituency
 
-    id = factory.LazyAttribute(come_up_with_unique_id_for_subconstituency)
+    id = factory.LazyAttribute(lambda o: first_unused_id(models.SubConstituency))
     name_arabic = factory.Sequence(lambda n: 'الدائرة الفرعية ' + str(n))
     name_english = factory.Sequence(lambda n: 'Subconstituency ' + str(n))
 
 
 class RegistrationCenterFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.RegistrationCenter
+    class Meta:
+        model = models.RegistrationCenter
 
     # Center IDs are 5 digits
     center_id = factory.Sequence(lambda n: n + 10000)
@@ -143,7 +147,8 @@ class RegistrationCenterFactory(factory.DjangoModelFactory):
 
 
 class RegistrationFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Registration
+    class Meta:
+        model = models.Registration
 
     citizen = factory.SubFactory(CitizenFactory)
     registration_center = factory.SubFactory(RegistrationCenterFactory)
@@ -152,8 +157,12 @@ class RegistrationFactory(factory.DjangoModelFactory):
 
 
 class BlacklistFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Blacklist
+    class Meta:
+        model = models.Blacklist
+    phone_number = factory.Sequence(lambda n: str(n))
 
 
 class WhitelistFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Whitelist
+    class Meta:
+        model = models.Whitelist
+    phone_number = factory.Sequence(lambda n: str(n))

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django import template
 
 from libya_elections.phone_numbers import formatted_phone_number_tag

@@ -1,20 +1,16 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 from collections import OrderedDict
 import os.path
 import shutil
 import tempfile
+from unittest.mock import Mock
 
 # Django imports
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.test import override_settings, TestCase, RequestFactory
+from django.urls import reverse
 from django.utils.timezone import now as django_now
-
-# 3rd party imports
-from mock import Mock
 
 # Project imports
 from .base import TestJobBase, ResponseCheckerMixin
@@ -308,9 +304,7 @@ class ViewsNonEmptyTestCase(ResponseCheckerMixin, TestJobBase):
         """Pass criteria that generate no centers to the new job form and test output"""
         # This is the only validation that happens at the view level. All other validation happens
         # in the form.
-        no_reg_center = RegistrationCenterFactory.build()
-        no_reg_center.reg_open = False
-        no_reg_center.save()
+        no_reg_center = RegistrationCenterFactory(reg_open=False)
         with override_settings(ROLLGEN_OUTPUT_DIR=self.faux_output_dir):
             response = self.client.post(reverse('rollgen:new'),
                                         {'name': 'kjghdhjdhjghfkjhgdf',
@@ -463,7 +457,7 @@ class ViewsNonEmptyTestCase(ResponseCheckerMixin, TestJobBase):
         self.assertEqual('application/pdf', response['Content-Type'])
         self.assertEqual('attachment; filename="{}"'.format(pdf_filename),
                          response['Content-Disposition'])
-        self.assertEqual('%PDF', response.content[:4])
+        self.assertEqual(b'%PDF', response.content[:4])
         self.assertGreaterEqual(300000, len(response.content))
         self.assertLessEqual(100000, len(response.content))
 
@@ -500,7 +494,9 @@ class ViewsNonEmptyTestCase(ResponseCheckerMixin, TestJobBase):
         self.assertEqual('application/zip', response['Content-Type'])
         self.assertEqual('attachment; filename="{}"'.format(zip_filename),
                          response['Content-Disposition'])
-        self.assertEqual('PK' + chr(03) + chr(04), response.content[:4])
+        # OK to ignore errors since this is a zipfile so we don't expect it to be in UTF-8. We only
+        # care about the first 4 characters
+        self.assertEqual('PK' + chr(0o3) + chr(0o4), response.content.decode(errors='ignore')[:4])
         # I don't know exactly how many bytes the ZIP file will be, but I want to at least verify
         # that it's in a sane range.
         self.assertGreaterEqual(500000, len(response.content))
@@ -515,6 +511,7 @@ class ViewsNonEmptyTestCase(ResponseCheckerMixin, TestJobBase):
     def test_serve_metadata_csv(self):
         """Generate an view for the metadata CSV and test the response, including headers"""
         response = self.client.get(reverse('rollgen:polling_csv'))
+        content = response.content.decode()
 
         expected_filename = 'metadata_polling_{}.csv'.format(django_now().strftime('%Y_%m_%d'))
 
@@ -522,9 +519,9 @@ class ViewsNonEmptyTestCase(ResponseCheckerMixin, TestJobBase):
         self.assertEqual('text/csv', response['Content-Type'])
         self.assertEqual('attachment; filename="{}"'.format(expected_filename),
                          response['Content-Disposition'])
-        self.assertEqual('Centre #,', response.content[:9])
-        self.assertGreaterEqual(500, len(response.content))
-        self.assertLessEqual(100, len(response.content))
+        self.assertEqual('Centre #,', content[:9])
+        self.assertGreaterEqual(500, len(content))
+        self.assertLessEqual(100, len(content))
 
 
 class LoginTestCase(ResponseCheckerMixin, TestCase):

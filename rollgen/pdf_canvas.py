@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import division
-from __future__ import unicode_literals
 import os
 
 # Django imports
@@ -53,7 +51,7 @@ class NumberedCanvas(canvas.Canvas):
             self.setFont("Arabic", 10)
             # The page # args are backwards to what one might expect because of RTL.
             # Subtract 1, because we're not counting cover
-            self.drawCentredString(A4[0]/2, 10*mm,
+            self.drawCentredString(A4[0] / 2, 10 * mm,
                                    "%d / %d" % (page_count - 1, self._pageNumber - 1))
         else:
             # cover page, don't print footer
@@ -249,19 +247,20 @@ def getTableStyleThreeCol():
     return ts
 
 
-def hnec_logo(greyscale=False):
+def get_hnec_logo_fname(greyscale=False):
     filename = "hnec_logo_grey.png" if greyscale else "hnec_logo.png"
-    return open(os.path.join(ASSETS_PATH, filename), 'r')
+    return os.path.join(ASSETS_PATH, filename)
 
 
-def cda_logo():
-    return open(os.path.join(ASSETS_PATH, "cda_logo.png"), 'r')
+def get_cda_logo_fname():
+    return os.path.join(ASSETS_PATH, "cda_logo.png")
 
 
 def drawHnecLogo(canvas, doc):
     # draws the greyscale hnec logo
     # on the canvas directly, so we don't have to deal with flowables
     canvas.saveState()
-    canvas.drawImage(ImageReader(hnec_logo(greyscale=True)), 3.5*cm, A4[1]-3.8*cm, width=4*cm,
-                     height=1*cm)
+    with open(get_hnec_logo_fname(greyscale=True), 'rb') as hnec_logo_f:
+        canvas.drawImage(ImageReader(hnec_logo_f), 3.5 * cm, A4[1] - 3.8 * cm,
+                         width=4 * cm, height=1 * cm)
     canvas.restoreState()

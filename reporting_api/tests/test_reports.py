@@ -3,11 +3,14 @@ import base64
 import json
 
 # 3rd party imports
+from django.db import connection
 from django.test import TestCase
 
 # Project imports
 from register.models import RegistrationCenter
+from register.tests.factories import RegistrationFactory
 from reporting_api import create_test_data, reports, tasks, views
+from reporting_api.data_pull import registrations_by_phone
 
 BASE_URI = '/reporting/'
 ELECTION_DAY_REPORT_REL_URI = 'election_day.json'
@@ -29,24 +32,24 @@ class TestReports(TestCase):
                                 num_no_reg_centers=NUM_NO_REG_CENTERS)
         tasks.election_day()
         tasks.registrations()
-        credentials = base64.b64encode(TEST_USERNAME + ':' + TEST_PASSWORD)
-        self.client.defaults['HTTP_AUTHORIZATION'] = 'Basic ' + credentials
+        credentials = base64.b64encode((TEST_USERNAME + ':' + TEST_PASSWORD).encode())
+        self.client.defaults['HTTP_AUTHORIZATION'] = b'Basic ' + credentials
         views.REPORT_USER_DB[TEST_USERNAME] = TEST_PASSWORD
 
     def test_log(self):
         rsp = self.client.get(BASE_URI + ELECTION_DAY_LOG_REL_URI)
         self.assertEqual(200, rsp.status_code)
         self.assertEqual('application/json', rsp['Content-Type'])
-        self.assertNotEqual('{}', rsp.content)
+        self.assertNotEqual('{}', rsp.content.decode())
         allowable_phone_keys = {'phone_number', 'type', 'center_code',
                                 'creation_date', 'data'}
-        log = json.loads(rsp.content)
+        log = json.loads(rsp.content.decode())
         for key in log.keys():
             int(key)  # shouldn't raise
             for phone in log[key]:
                 actual_phone_keys = set(phone.keys())
                 self.assertTrue(actual_phone_keys.issubset(allowable_phone_keys))
-                self.assertEquals(int(key), phone['center_code'])
+                self.assertEqual(int(key), phone['center_code'])
 
     def _check_slice(self, d, key_for_slice, required_item_keys=(), forbidden_item_keys=()):
         self.assertIn(key_for_slice, d)
@@ -75,7 +78,7 @@ class TestReports(TestCase):
         rsp = self.client.get(BASE_URI + ELECTION_DAY_REPORT_REL_URI)
         self.assertEqual(200, rsp.status_code)
         self.assertEqual('application/json', rsp['Content-Type'])
-        d = json.loads(rsp.content)
+        d = json.loads(rsp.content.decode())
         self._check_slice(d, 'by_country',
                           required_item_keys=('country', 'office_count', 'polling_center_count',
                                               'region_count', 'registration_count'),
@@ -101,7 +104,7 @@ class TestReports(TestCase):
         rsp = self.client.get(BASE_URI + REGISTRATIONS_REL_URI)
         self.assertEqual(200, rsp.status_code)
         self.assertEqual('application/json', rsp['Content-Type'])
-        d = json.loads(rsp.content)
+        d = json.loads(rsp.content.decode())
         self._check_slice(d, 'by_country',
                           required_item_keys=('country', 'office_count', 'polling_center_count',
                                               'region_count', 'total'),
@@ -130,7 +133,7 @@ class TestReports(TestCase):
         reported_centers = [
             center_info['polling_center_code'] for center_info in d['by_polling_center_code']
         ]
-        self.assertEquals(NUM_NO_REG_CENTERS, no_reg_centers.count())
+        self.assertEqual(NUM_NO_REG_CENTERS, no_reg_centers.count())
         for center in no_reg_centers:
             self.assertNotIn(center.center_id, reported_centers)
 
@@ -165,14 +168,67 @@ class TestReports(TestCase):
         self.assertFalse(bool(r2))
 
 
+class TestRegistrationsByPhone(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        # create a registration and record the phone number
+        cls.reg = RegistrationFactory(archive_time=None)
+        cls.phone_number = cls.reg.sms.from_number
+        cls.cursor = connection.cursor()
+
+    def test_registrations_by_phone_report_is_correct(self):
+        # create a second registration with the same phone number
+        RegistrationFactory(sms__from_number=self.phone_number, archive_time=None)
+        report = registrations_by_phone(self.cursor)
+        self.assertEqual(report, [(self.phone_number, 2)])
+
+    def test_multiple_rows(self):
+        # create a second registration with the same phone number
+        RegistrationFactory(sms__from_number=self.phone_number, archive_time=None)
+        # create 3 more registrations sharing a phone number (but different than the previous two)
+        reg_group_2 = RegistrationFactory(archive_time=None)
+        second_phone_number = reg_group_2.sms.from_number
+        RegistrationFactory(sms__from_number=second_phone_number, archive_time=None)
+        RegistrationFactory(sms__from_number=second_phone_number, archive_time=None)
+        report = registrations_by_phone(self.cursor)
+        expected_report = [
+            (self.phone_number, 2),
+            (second_phone_number, 3),
+        ]
+        self.assertEqual(sorted(report), sorted(expected_report))
+
+    def test_ignore_singletons(self):
+        "Phone numbers with only 1 registration are not included in the report."
+        report = registrations_by_phone(self.cursor)
+        self.assertEqual(report, [])
+
+    def test_ignore_deleted_sms(self):
+        RegistrationFactory(sms__from_number=self.phone_number, sms__deleted=True,
+                            archive_time=None)
+        report = registrations_by_phone(self.cursor)
+        self.assertEqual(report, [])
+
+    def test_ignore_deleted_registration(self):
+        RegistrationFactory(sms__from_number=self.phone_number, deleted=True,
+                            archive_time=None)
+        report = registrations_by_phone(self.cursor)
+        self.assertEqual(report, [])
+
+    def test_ignore_archived_registration(self):
+        RegistrationFactory(sms__from_number=self.phone_number)
+        report = registrations_by_phone(self.cursor)
+        self.assertEqual(report, [])
+
+
 class TestMissingReports(TestCase):
 
     def setUp(self):
         # The client in this test class can log in okay but reports aren't
         # present.
         reports.empty_report_store()
-        credentials = base64.b64encode(TEST_USERNAME + ':' + TEST_PASSWORD)
-        self.client.defaults['HTTP_AUTHORIZATION'] = 'Basic ' + credentials
+        credentials = base64.b64encode((TEST_USERNAME + ':' + TEST_PASSWORD).encode())
+        self.client.defaults['HTTP_AUTHORIZATION'] = b'Basic ' + credentials
         views.REPORT_USER_DB[TEST_USERNAME] = TEST_PASSWORD
 
     def test(self):
@@ -197,8 +253,8 @@ class TestBadAuth(TestCase):
     def setUp(self):
         views.REPORT_USER_DB.clear()
         views.REPORT_USER_DB['validuser'] = 'validpass'
-        credentials = base64.b64encode('invaliduser:invalidpass')
-        self.client.defaults['HTTP_AUTHORIZATION'] = 'Basic ' + credentials
+        credentials = base64.b64encode('invaliduser:invalidpass'.encode())
+        self.client.defaults['HTTP_AUTHORIZATION'] = b'Basic ' + credentials
 
     def test_election_day_log(self):
         rsp = self.client.get(BASE_URI + ELECTION_DAY_LOG_REL_URI)
@@ -213,8 +269,8 @@ class TestNoAuthDB(TestCase):
 
     def setUp(self):
         views.REPORT_USER_DB.clear()
-        credentials = base64.b64encode('anyuser:anypass')
-        self.client.defaults['HTTP_AUTHORIZATION'] = 'Basic ' + credentials
+        credentials = base64.b64encode('anyuser:anypass'.encode())
+        self.client.defaults['HTTP_AUTHORIZATION'] = b'Basic ' + credentials
 
     def test_election_day_log(self):
         rsp = self.client.get(BASE_URI + ELECTION_DAY_LOG_REL_URI)

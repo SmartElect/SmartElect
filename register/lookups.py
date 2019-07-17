@@ -11,5 +11,8 @@ class RegistrationCenterLookup(ModelLookup):
     model = RegistrationCenter
     search_fields = ('name__icontains', 'center_id__icontains')
 
+    def get_queryset(self):
+        return super().get_queryset().all()
+
 
 registry.register(RegistrationCenterLookup)

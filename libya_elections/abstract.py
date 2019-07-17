@@ -2,10 +2,9 @@ from functools import total_ordering
 
 from django.db import models
 from django.db.models.query import QuerySet
+from django.utils.formats import date_format
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
-
-from libya_elections.constants import LIBYA_DATETIME_FORMAT
 
 
 @total_ordering
@@ -25,7 +24,6 @@ class AbstractBaseModel(models.Model):
 
 class TrashBinManager(models.Manager):
     queryset = QuerySet
-    use_for_related_fields = True
 
     def get_queryset(self):
         """Default queries return only undeleted objects."""
@@ -88,11 +86,11 @@ class AbstractTimestampModel(AbstractBaseModel):
 
     @property
     def formatted_creation_date(self):
-        return self.creation_date.strftime(LIBYA_DATETIME_FORMAT)
+        return date_format(self.creation_date, "SHORT_DATETIME_FORMAT")
 
     @property
     def formatted_modification_date(self):
-        return self.modification_date.strftime(LIBYA_DATETIME_FORMAT)
+        return date_format(self.modification_date, "SHORT_DATETIME_FORMAT")
 
 
 class AbstractTimestampTrashBinModel(AbstractTimestampModel, AbstractTrashBinModel):
@@ -101,7 +99,6 @@ class AbstractTimestampTrashBinModel(AbstractTimestampModel, AbstractTrashBinMod
 
 
 class ArchivableTrashBinManager(TrashBinManager):
-    use_for_related_fields = True
 
     def get_queryset(self):
         """Default queries return only undeleted, unarchived objects."""
@@ -153,4 +150,4 @@ class AbstractArchivableTimestampTrashBinModel(AbstractTimestampTrashBinModel):
 
     @property
     def formatted_archive_time(self):
-        return self.archive_time.strftime(LIBYA_DATETIME_FORMAT) if self.archive_time else ''
+        return date_format(self.archive_time, "SHORT_DATETIME_FORMAT") if self.archive_time else ''

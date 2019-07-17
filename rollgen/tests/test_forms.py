@@ -1,14 +1,7 @@
-# Python imports
-from __future__ import unicode_literals
-from __future__ import division
+from unittest.mock import patch
 
-# Django imports
 from django.test import TestCase
 
-# 3rd party imports
-from mock import patch
-
-# Project imports
 from ..forms import NewJobForm
 from libya_elections.constants import CENTER_ID_LENGTH
 
@@ -33,8 +26,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['name'], form.errors.keys())
-        self.assertEqual([['"." is not a valid job name.']], form.errors.values())
+        self.assertEqual(['name'], list(form.errors.keys()))
+        self.assertEqual([['"." is not a valid job name.']], list(form.errors.values()))
 
     @patch('rollgen.forms.is_rollgen_output_dir')
     def test_job_name_must_be_unused(self, mock_is_rollgen_output_dir):
@@ -47,8 +40,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['name'], form.errors.keys())
-        self.assertEqual([['There is already a job named "Sue".']], form.errors.values())
+        self.assertEqual(['name'], list(form.errors.keys()))
+        self.assertEqual([['There is already a job named "Sue".']], list(form.errors.values()))
 
     def test_center_type_required(self):
         """Ensure center type is required"""
@@ -58,8 +51,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['center_selection_type'], form.errors.keys())
-        self.assertEqual([['This field is required.']], form.errors.values())
+        self.assertEqual(['center_selection_type'], list(form.errors.keys()))
+        self.assertEqual([['This field is required.']], list(form.errors.values()))
 
     def test_office_required(self):
         """Ensure one or more offices must be selected w/center_selection_type=by_office"""
@@ -70,8 +63,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['offices'], form.errors.keys())
-        self.assertEqual([['You must select at least one office.']], form.errors.values())
+        self.assertEqual(['offices'], list(form.errors.keys()))
+        self.assertEqual([['You must select at least one office.']], list(form.errors.values()))
 
     def test_constituency_required(self):
         """Ensure 1+ constituencies must be selected w/center_selection_type=by_constituency"""
@@ -82,8 +75,9 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['constituencies'], form.errors.keys())
-        self.assertEqual([['You must select at least one constituency.']], form.errors.values())
+        self.assertEqual(['constituencies'], list(form.errors.keys()))
+        self.assertEqual([['You must select at least one constituency.']],
+                         list(form.errors.values()))
 
     def test_center_select_list_required(self):
         """Ensure 1+ centers must be selected w/center_selection_type=by_center_select_list"""
@@ -94,8 +88,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['center_select_list'], form.errors.keys())
-        self.assertEqual([['You must select at least one centre.']], form.errors.values())
+        self.assertEqual(['center_select_list'], list(form.errors.keys()))
+        self.assertEqual([['You must select at least one centre.']], list(form.errors.values()))
 
     def test_center_text_list_required(self):
         """Ensure 1+ centers must be selected w/center_selection_type=by_center_text_list"""
@@ -106,8 +100,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['center_text_list'], form.errors.keys())
-        self.assertEqual([['You must enter at least one centre.']], form.errors.values())
+        self.assertEqual(['center_text_list'], list(form.errors.keys()))
+        self.assertEqual([['You must enter at least one centre.']], list(form.errors.values()))
 
     def test_center_text_list_valid(self):
         """Ensure center ids in center_text_list are checked for validity"""
@@ -119,8 +113,8 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['center_text_list'], form.errors.keys())
-        self.assertEqual([['These ids are invalid: abc']], form.errors.values())
+        self.assertEqual(['center_text_list'], list(form.errors.keys()))
+        self.assertEqual([['These ids are invalid: abc']], list(form.errors.values()))
 
     def test_center_text_list_real_center_id(self):
         """Ensure center ids in center_text_list are checked to ensure they exist"""
@@ -133,6 +127,6 @@ class NewJobFormTestCase(TestCase):
         }
         form = NewJobForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(['center_text_list'], form.errors.keys())
+        self.assertEqual(['center_text_list'], list(form.errors.keys()))
         self.assertEqual([['These centre ids are invalid: {}'.format(center_id)]],
-                         form.errors.values())
+                         list(form.errors.values()))

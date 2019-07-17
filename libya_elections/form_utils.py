@@ -1,11 +1,5 @@
-# Python imports
-from __future__ import division
-from __future__ import unicode_literals
-
 # Django imports
 from django.forms import DateInput, DateField, TimeField, TimeInput
-
-# 3rd party imports
 
 # Project imports
 from libya_elections.constants import LIBYA_DATE_FORMAT

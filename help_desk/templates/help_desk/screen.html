@@ -40,7 +40,7 @@
 
   {% include text_template %}
 
-  <form method="POST" id="id_form">
+  <form method="POST" id="id_form" novalidate>
     {% csrf_token %}
 
     {% if form %}

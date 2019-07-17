@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from bread.bread import EditView, AddView, LabelValueReadView
 from django import forms
 from django.utils.translation import ugettext_lazy as _

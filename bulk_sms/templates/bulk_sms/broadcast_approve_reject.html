@@ -3,7 +3,7 @@
 
 {% block actions %}
 
-  <form method="POST" action="{{ approve_reject_url }}">
+  <form method="POST" action="{{ approve_reject_url }}" novalidate>
     {% csrf_token %}
     {% if show_approve %}
       <input class="button" type="submit" value="{% trans 'Approve' %}" name="approve" />

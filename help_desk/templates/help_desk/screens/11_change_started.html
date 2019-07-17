@@ -9,7 +9,7 @@
   {% endif %}
 </blockquote>
 <p>
-  {% trans "The procedure: SMS 'NID#PC' to 10010" %}
+  {% trans "The procedure: SMS 'NID#PC' to 15015" %}
 </p>
 <p>
   {% trans "Please advise the citizen to use their own phone (not a staff or relative’s phone)." %}
@@ -17,7 +17,7 @@
 
 <div class="spacer"></div>
 
-<form method="POST">
+<form method="POST" novalidate>
   {% csrf_token %}
   <p>
     {% trans "If the citizen wants to check whether another phone number can still be used for registrations, enter it here" %}:

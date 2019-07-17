@@ -1,11 +1,13 @@
 from operator import attrgetter
+from unittest.mock import patch
+
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseForbidden, HttpResponseBadRequest, HttpResponseBase, \
     HttpResponseNotAllowed
 from django.test import TestCase
-from mock import patch
+from django.urls import reverse
+
 from changesets.views_uploadedcitizens import UploadedCitizenBrowse
 from civil_registry.tests.factories import CitizenFactory
 from libya_elections.tests.utils import assert_in_messages
@@ -24,7 +26,7 @@ NOT_ALLOWED = HttpResponseNotAllowed.status_code
 
 class GroupsMixin(object):
     @classmethod
-    def setUpClass(cls):
+    def setUpTestData(cls):
         cls.change_group = Group.objects.get(name=CHANGE_CHANGESETS_GROUP)
         cls.approve_group = Group.objects.get(name=APPROVE_CHANGESETS_GROUP)
         cls.queue_group = Group.objects.get(name=QUEUE_CHANGESETS_GROUP)
@@ -220,7 +222,9 @@ class ViewViewTest(GroupsMixin, TestCase):
 
     def test_view_view(self):
         self.center1 = RegistrationCenterFactory(name='Centero Uno')
-        self.center2 = RegistrationCenterFactory(name='Centra Dua')
+        # Try a non-ASCII center to exercise the view. See issue 1966:
+        # https://github.com/hnec-vr/libya-elections/issues/1966
+        self.center2 = RegistrationCenterFactory(name='Centre Tv\xe5')
         changeset = ChangesetFactory(
             name='My Changeset',
             change=Changeset.CHANGE_CENTER,
@@ -233,8 +237,8 @@ class ViewViewTest(GroupsMixin, TestCase):
         url = reverse('read_changeset', kwargs={'pk': changeset.pk})
         rsp = self.client.get(url)
         self.assertEqual(OK, rsp.status_code)
-        self.assertContains(rsp, self.center1.pk)
-        self.assertContains(rsp, self.center2.pk)
+        self.assertContains(rsp, self.center1.center_id)
+        self.assertContains(rsp, self.center2.center_id)
         self.assertContains(rsp, 'Just because')
         self.assertContains(rsp, 'My Changeset')
 
@@ -340,7 +344,7 @@ class ApproveViewTest(GroupsMixin, TestCase):
         self.login(self.queuer)
         with patch.object(Changeset, 'queue') as mock_queue:
             rsp = self.client.post(self.url, data={'queue': True})
-        mock_queue.assert_called()
+        assert mock_queue.called
         # queue redirects to the view page
         self.assertRedirects(rsp, self.read_url)
 

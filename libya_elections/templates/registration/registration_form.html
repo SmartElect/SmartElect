@@ -5,7 +5,7 @@
 {% block page_title %}{% trans "Fill in this form to create an account" %}{% endblock %}
 
 {% block registration_content %}
-  <form method="post" action="{% url 'registration_register' %}">
+  <form method="post" action="{% url 'registration_register' %}" novalidate>
     {% csrf_token %}
 
     {{ form.username.label_tag }}

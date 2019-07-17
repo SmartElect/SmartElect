@@ -1,5 +1,5 @@
 {% extends "libya_site/base.html" %}
-{% load i18n staticfiles %}
+{% load i18n static %}
 
 {% block extra_css %}
   <link href="{% static 'css/charts.css' %}" rel="stylesheet" type="text/css">
@@ -60,6 +60,7 @@
         </a>
         <a {% if weekly_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:weekly' %}">{% trans "Weekly" %}</a>
         <a {% if sms_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:sms' %}">{% trans "SMS" %}</a>
+        <a {% if reports_page %} class="selected" {% endif %} href="{% url 'vr_dashboard:reports' %}">{% trans "Reports" %}</a>
     {% endif %}
 </nav>
 <div class="plum" style="overflow:auto">

@@ -1,5 +1,5 @@
 {% extends 'bread/edit.html' %}
-{% load i18n staticfiles %}
+{% load i18n static %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static "css/jquery/jquery-ui.css" %}" type="text/css">
@@ -75,6 +75,7 @@
       } else {
         $('div#div_id_other_changeset').removeClass('requiredField');
       }
+      $('div#div_id_other_changeset').toggle(false);
     }
   }
   $('select#id_how_to_select').on('change', show_hide);

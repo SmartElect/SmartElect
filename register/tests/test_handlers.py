@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch, Mock
+
 from django.conf import settings
 from django.test.utils import override_settings
-
-from mock import patch, Mock
 from rapidsms.contrib.handlers import PatternHandler
 
 from civil_registry.tests.factories import CitizenFactory
@@ -29,6 +29,7 @@ class HandlerTest(LibyaRapidTest):
         self.reg_period = RegistrationPeriodFactory(start_time=PAST_DAY, end_time=FUTURE_DAY)
         self.election = ElectionFactory(polling_start_time=PAST_DAY, polling_end_time=FUTURE_DAY)
 
+    @override_settings(MAX_REGISTRATIONS_PER_PHONE=5)
     def test_new_logic_rename_me(self):
         phone1 = get_random_number_string(length=10)
         phone2 = get_random_number_string(length=10)
@@ -131,17 +132,17 @@ class HandlerTest(LibyaRapidTest):
                 self.assertEqual(int(expected_center_id), reg.registration_center.center_id)
 
     def test_input_triggers_proper_response(self):
-        short_center_id = u'%s*%s' % (
+        short_center_id = '%s*%s' % (
             self.good_nid, get_random_number_string(length=constants.CENTER_ID_LENGTH - 1))
-        long_center_id = u'%s*%s' % (
+        long_center_id = '%s*%s' % (
             self.good_nid, get_random_number_string(length=constants.CENTER_ID_LENGTH + 1))
-        short_nid = u"%s*%s" % (
+        short_nid = "%s*%s" % (
             get_random_number_string(length=constants.NID_LENGTH - 1), self.good_center_id)
-        long_nid = u"%s*%s" % (
+        long_nid = "%s*%s" % (
             get_random_number_string(length=constants.NID_LENGTH + 1), self.good_center_id)
-        three_ids = u"%s*%s*123" % (self.good_nid, self.good_center_id)
+        three_ids = "%s*%s*123" % (self.good_nid, self.good_center_id)
         io_table = [
-            (u"garbage", constants.MESSAGE_INCORRECT),
+            ("garbage", constants.MESSAGE_INCORRECT),
             (get_random_number_string(), constants.VOTER_QUERY_NID_WRONG_LENGTH),
             (short_center_id, constants.RESPONSE_CENTER_ID_WRONG_LENGTH),
             (long_center_id, constants.RESPONSE_CENTER_ID_WRONG_LENGTH),
@@ -166,9 +167,9 @@ class HandlerTest(LibyaRapidTest):
 
     @patch('register.handlers.process_registration_request', autospec=True)
     def test_valid_nid(self, mock_prr):
-        center_name = u"A Random Center"
-        person_name = u"A Random Name"
-        msg = u"%s*%s" % (self.good_nid, self.good_center_id)
+        center_name = "A Random Center"
+        person_name = "A Random Name"
+        msg = "%s*%s" % (self.good_nid, self.good_center_id)
         mock_prr.return_value = Result('', constants.RESPONSE_VALID_REGISTRATION,
                                        dict(person=person_name,
                                             centre=center_name,
@@ -185,7 +186,7 @@ class HandlerTest(LibyaRapidTest):
 
     @patch('register.processors.process_registration_request', autospec=True)
     def test_invalid_center_id(self, mock_prr):
-        msg = u"%s*%s" % (self.good_nid, self.good_center_id)
+        msg = "%s*%s" % (self.good_nid, self.good_center_id)
         mock_prr.return_value = Result('', constants.RESPONSE_CENTER_ID_INVALID)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.RESPONSE_CENTER_ID_INVALID)
@@ -194,7 +195,7 @@ class HandlerTest(LibyaRapidTest):
     def test_outside_registration_period(self, mock_is_open):
         mock_is_open.return_value = False
         RegistrationCenterFactory(center_id=self.good_center_id)
-        msg = u"%s*%s" % (self.good_nid, self.good_center_id)
+        msg = "%s*%s" % (self.good_nid, self.good_center_id)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.REGISTRATION_NOT_OPEN)
 
@@ -202,7 +203,7 @@ class HandlerTest(LibyaRapidTest):
         self.reg_period.start_time = FUTURE_DAY
         self.reg_period.save()
         RegistrationCenterFactory(center_id=self.good_center_id)
-        msg = u"%s*%s" % (self.good_nid, self.good_center_id)
+        msg = "%s*%s" % (self.good_nid, self.good_center_id)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.REGISTRATION_NOT_OPEN)
 
@@ -212,12 +213,12 @@ class HandlerTest(LibyaRapidTest):
         self.election.polling_end_time = PAST_DAY
         self.election.save()
         RegistrationCenterFactory(center_id=self.good_center_id)
-        msg = u"%s*%s" % (self.good_nid, self.good_center_id)
+        msg = "%s*%s" % (self.good_nid, self.good_center_id)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.REGISTRATION_NOT_OPEN)
 
     def test_we_only_handle_our_shortcode(self):
-        msg = u"garbage"
+        msg = "garbage"
         not_our_shortcode = '11111'
         self.receive(msg, self.conn, fields={'to_addr': not_our_shortcode})
         # We do send a default response, but we test that more below.
@@ -228,7 +229,7 @@ class HandlerTest(LibyaRapidTest):
         self.reg_period.save()
         self.election.polling_start_time = FUTURE_DAY
         self.election.save()
-        msg = u"garbage"
+        msg = "garbage"
         for shortcode in set((settings.REGISTRATION_SHORT_CODE,
                               settings.VOTER_QUERY_SHORT_CODE, settings.REPORTS_SHORT_CODE)):
             self.receive(msg, self.conn, fields={'to_addr': shortcode})
@@ -247,7 +248,7 @@ class QueryDuringRegistration(LibyaRapidTest):
         self.conn = self.lookup_connections(identities='111')[0]
         self.good_nid = get_random_number_string(length=constants.NID_LENGTH)
         self.fields = {'to_addr': settings.REGISTRATION_SHORT_CODE}
-        self.msg = u"%s" % (self.good_nid)
+        self.msg = "%s" % (self.good_nid)
         self.election = ElectionFactory(polling_start_time=PAST_DAY, polling_end_time=FUTURE_DAY)
 
     def test_query_before_reg_opens(self, mock_lookup):
@@ -286,19 +287,19 @@ class PreprocessAppTest(LibyaRapidTest):
         self.fields = {'to_addr': settings.REGISTRATION_SHORT_CODE}
 
     def test_incoming_message_phone_numbers(self):
-        self.receive(u"garbage", self.conn, fields=self.fields)
+        self.receive("garbage", self.conn, fields=self.fields)
         sms = SMS.objects.filter(from_number=self.conn.identity)[0]
         self.assertNotEqual(sms.from_number, '')
         self.assertNotEqual(sms.to_number, '')
 
     def test_outgoing_message_phone_numbers(self):
-        self.send(u"garbage", self.conn)
+        self.send("garbage", self.conn)
         sms = SMS.objects.filter(to_number=self.conn.identity)[0]
         self.assertNotEqual(sms.from_number, '')
         self.assertNotEqual(sms.to_number, '')
 
     def test_outgoing_response_has_same_msg_type(self):
-        self.receive(u"garbage", self.conn, fields=self.fields)
+        self.receive("garbage", self.conn, fields=self.fields)
         incoming_msg_type = SMS.objects.get(from_number=self.conn.identity).msg_type
         # could be multiple outgoing msgs, if split
         outgoing_msgs = SMS.objects.filter(to_number=self.conn.identity)
@@ -306,38 +307,38 @@ class PreprocessAppTest(LibyaRapidTest):
             self.assertEqual(incoming_msg_type, outgoing_msg.msg_type)
 
     def test_outgoing_message_code_is_copied_to_incoming_sms(self):
-        self.receive(u"garbage", self.conn, fields=self.fields)
+        self.receive("garbage", self.conn, fields=self.fields)
         incoming_msg = SMS.objects.get(from_number=self.conn.identity)
         outgoing_msg = SMS.objects.get(to_number=self.conn.identity)
         self.assertEqual(incoming_msg.message_code, outgoing_msg.message_code)
         self.assertNotEqual(incoming_msg.message_code, 0)
 
     def test_nonreply_outgoing_have_zero_message_code(self):
-        self.send(u"garbage", self.conn, fields=self.fields)
+        self.send("garbage", self.conn, fields=self.fields)
         outgoing_msg = SMS.objects.get(to_number=self.conn.identity)
         self.assertEqual(outgoing_msg.message_code, 0)
 
     def test_replies_have_link_to_incoming_sms(self):
-        self.receive(u"garbage", self.conn, fields=self.fields)
+        self.receive("garbage", self.conn, fields=self.fields)
         incoming_msg = SMS.objects.get(from_number=self.conn.identity)
         outgoing_msg = SMS.objects.get(to_number=self.conn.identity)
         self.assertEqual(outgoing_msg.in_response_to, incoming_msg)
 
     def test_nonreplies_dont_have_link_to_incoming_sms(self):
-        self.send(u"garbage", self.conn, fields=self.fields)
+        self.send("garbage", self.conn, fields=self.fields)
         outgoing_msg = SMS.objects.get(to_number=self.conn.identity)
         self.assertEqual(outgoing_msg.in_response_to, None)
 
     def test_outgoing_nonreplies_have_default_from_number(self):
         # By default, nonreplies should have from_number=REGISTRATION_SHORT_CODE
-        self.send(u"garbage", self.conn, fields=self.fields)
+        self.send("garbage", self.conn, fields=self.fields)
         outgoing_msg = SMS.objects.get(to_number=self.conn.identity)
         self.assertEqual(outgoing_msg.from_number, settings.REGISTRATION_SHORT_CODE)
 
     def test_outgoing_nonreplies_have_customizable_from_number(self):
         # from_number can be customized by setting msg.fields['endpoint']
         self.fields['endpoint'] = 'my-shortcode'
-        self.send(u"garbage", self.conn, fields=self.fields)
+        self.send("garbage", self.conn, fields=self.fields)
         outgoing_msg = SMS.objects.get(to_number=self.conn.identity)
         self.assertEqual(outgoing_msg.from_number, 'my-shortcode')
 
@@ -350,9 +351,9 @@ class PreprocessAppTest(LibyaRapidTest):
 
     @override_settings(SPLIT_LONG_MESSAGES=False)
     def test_91_char_message_is_not_split(self):
-        ascii_text = u'garbage'
-        arabic_text = u'قمامة'
-        long_text = (u'%s %s' % (ascii_text, arabic_text)) * 7
+        ascii_text = 'garbage'
+        arabic_text = 'قمامة'
+        long_text = ('%s %s' % (ascii_text, arabic_text)) * 7
         assert 91 == len(long_text)
         self.send(long_text, self.conn)
         # test that only 1 message gets sent (no splitting)
@@ -365,9 +366,9 @@ class PreprocessAppTest(LibyaRapidTest):
 
     @override_settings(SPLIT_LONG_MESSAGES=True)
     def test_91_char_message_is_split_into_two(self):
-        ascii_text = u'garbage'
-        arabic_text = u'قمامة'
-        long_text = (u'%s %s' % (ascii_text, arabic_text)) * 7
+        ascii_text = 'garbage'
+        arabic_text = 'قمامة'
+        long_text = ('%s %s' % (ascii_text, arabic_text)) * 7
         assert 91 == len(long_text)
         self.send(long_text, self.conn)
         # test that there are 2 messages sent
@@ -409,7 +410,7 @@ class BlacklistTest(LibyaRapidTest):
     @patch.object(handlers.DefaultHandler, 'handle')
     def test_blacklisted_number_gets_rejected(self, default_handler):
         # create a blacklisted number
-        blacklisted_number = '218123456789'
+        blacklisted_number = '218923456789'
         self.fields['from_addr'] = blacklisted_number
         BlacklistFactory(phone_number=blacklisted_number)
         blacklisted_conn = self.create_connection(data={'identity': blacklisted_number})
@@ -422,7 +423,7 @@ class BlacklistTest(LibyaRapidTest):
     @patch.object(handlers.DefaultHandler, 'handle')
     def test_deleted_blacklisted_number_gets_accepted(self, default_handler):
         # create an un-blacklisted number
-        un_blacklisted_number = '218123456789'
+        un_blacklisted_number = '218923456789'
         self.fields['from_addr'] = un_blacklisted_number
         BlacklistFactory(phone_number=un_blacklisted_number, deleted=True)
         blacklisted_conn = self.create_connection(data={'identity': un_blacklisted_number})
@@ -437,7 +438,7 @@ class VoterQueryInputOutputTest(LibyaRapidTest):
         self.bad_nid = get_random_number_string(length=constants.NID_LENGTH + 1)
         self.conn = self.create_connection()
         self.fields = {'to_addr': settings.VOTER_QUERY_SHORT_CODE}
-        self.garbage = u"PING"
+        self.garbage = "PING"
         self.good_nid = get_random_number_string(length=constants.NID_LENGTH)
         self.good_center_id = get_random_number_string(length=constants.CENTER_ID_LENGTH)
 
@@ -450,8 +451,8 @@ class VoterQueryInputOutputTest(LibyaRapidTest):
         processor.return_value = result
         io_table = [
             (self.garbage, constants.MESSAGE_INCORRECT),
-            (unicode(self.bad_nid), constants.VOTER_QUERY_NID_WRONG_LENGTH),
-            (unicode(self.good_nid), constants.VOTER_QUERY_REGISTERED_AT),
+            (str(self.bad_nid), constants.VOTER_QUERY_NID_WRONG_LENGTH),
+            (str(self.good_nid), constants.VOTER_QUERY_REGISTERED_AT),
         ]
         for incoming_message, expected_code in io_table:
             self.receive(incoming_message, self.conn, fields=self.fields)
@@ -464,8 +465,8 @@ class VoterQueryInputOutputTest(LibyaRapidTest):
         ElectionFactory(polling_start_time=FUTURE_DAY, polling_end_time=FUTURE_DAY)
         io_table = [
             (self.garbage, constants.REGISTRATION_NOT_OPEN),
-            (unicode(self.bad_nid), constants.VOTER_QUERY_NID_WRONG_LENGTH),
-            (unicode(self.good_nid), constants.VOTER_QUERY_REGISTERED_AT),
+            (str(self.bad_nid), constants.VOTER_QUERY_NID_WRONG_LENGTH),
+            (str(self.good_nid), constants.VOTER_QUERY_REGISTERED_AT),
         ]
         result = Mock(message="success", message_code=constants.VOTER_QUERY_REGISTERED_AT)
         processor.return_value = result
@@ -480,8 +481,8 @@ class VoterQueryInputOutputTest(LibyaRapidTest):
         ElectionFactory(polling_start_time=PAST_DAY, polling_end_time=PAST_DAY)
         io_table = [
             (self.garbage, constants.REGISTRATION_NOT_OPEN),
-            (unicode(self.bad_nid), constants.VOTER_QUERY_NID_WRONG_LENGTH),
-            (unicode(self.good_nid), constants.VOTER_QUERY_REGISTERED_AT),
+            (str(self.bad_nid), constants.VOTER_QUERY_NID_WRONG_LENGTH),
+            (str(self.good_nid), constants.VOTER_QUERY_REGISTERED_AT),
         ]
         result = Mock(message="success", message_code=constants.VOTER_QUERY_REGISTERED_AT)
         processor.return_value = result
@@ -498,7 +499,7 @@ class VoterQueryBlacklistTest(LibyaRapidTest):
     @patch.object(handlers.DefaultHandler, 'handle')
     def test_blacklisted_number_gets_rejected(self, default_handler):
         # create a blacklisted number
-        blacklisted_number = '218123456789'
+        blacklisted_number = '218923456789'
         self.fields['from_addr'] = blacklisted_number
         BlacklistFactory(phone_number=blacklisted_number)
         blacklisted_conn = self.create_connection(data={'identity': blacklisted_number})

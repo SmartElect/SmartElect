@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Python imports
-from __future__ import unicode_literals
 import errno
 import os
 import shutil
@@ -70,7 +69,7 @@ class TestUtilsMisc(TestCase):
 
     def test_chunker(self):
         """tests utils.chunker()"""
-        data = range(100)
+        data = list(range(100))
 
         # Test chunking w/evenly-sized chunks
         chunked = list(chunker(data, 5))
@@ -119,7 +118,7 @@ class TestUtilsMisc(TestCase):
 
     def test_even_chunker(self):
         """tests utils.even_chunker()"""
-        data = range(100)
+        data = list(range(100))
 
         # Test chunking w/same-sized chunks
         chunked = even_chunker(data, 5)
@@ -239,7 +238,7 @@ class TestUtilsMisc(TestCase):
         self.assertFalse(is_iterable(42))
         self.assertFalse(is_iterable(object()))
         self.assertTrue(is_iterable([]))
-        self.assertTrue(is_iterable(range(5)))
+        self.assertTrue(is_iterable(list(range(5))))
         self.assertTrue(is_iterable({}))
         self.assertTrue(is_iterable(tuple()))
         self.assertTrue(is_iterable('foo', True))
@@ -279,10 +278,10 @@ class TestUtilsMisc(TestCase):
         """exercise find_invalid_center_ids()"""
         centers = [RegistrationCenterFactory(), RegistrationCenterFactory()]
         center_ids = [center.center_id for center in centers]
-        center_ids += [99999, 88888]
+        center_ids += [88888, 77777]
 
         # Note that order is preserved
-        self.assertEqual([99999, 88888], find_invalid_center_ids(center_ids))
+        self.assertEqual([88888, 77777], find_invalid_center_ids(center_ids))
 
     def test_find_longest_string_in_list_english(self):
         """exercise find_longest_string_in_list() with simple English strings"""
@@ -296,36 +295,36 @@ class TestUtilsMisc(TestCase):
 
     def test_find_longest_string_in_list_arabic(self):
         """exercise find_longest_string_in_list() with Arabic strings"""
-        strings = ('', reshape(u'\ufe9a'), reshape('\ufe8d' * 3))
+        strings = ('', reshape('\ufe9a'), reshape('\ufe8d' * 3))
         longest = strings[1]
         self.assertEqual(find_longest_string_in_list(strings), longest)
 
-        strings = (u'\u0637\u0628\u0631\u0642',
-                   u'\u0627\u0644\u0642\u0628\u0629',
-                   u'\u062f\u0631\u0646\u0629',
-                   u'\u0634\u062d\u0627\u062a',
-                   u'\u0627\u0644\u0628\u064a\u0636\u0627\u0621',
-                   u'\u0627\u0644\u0645\u0631\u062c',
-                   u'\u0642\u0635\u0631 \u0644\u064a\u0628\u064a\u0627',
-                   u'\u0628\u0646\u063a\u0627\u0632\u064a',
-                   u'\u062a\u0648\u0643\u0631\u0627',
-                   u'\u0627\u0644\u0627\u0628\u064a\u0627\u0631',
-                   u'\u0642\u0645\u064a\u0646\u0633',
-                   u'\u0633\u0644\u0648\u0642',
-                   u'\u0627\u062c\u062f\u0627\u0628\u064a\u0627',
-                   u'\u0627\u0644\u0628\u0631\u064a\u0642\u0629',
-                   u'\u0623\u0648\u062c\u0644\u0629',
-                   u'\u062c\u0627\u0644\u0648 - \u062c\u062e\u0631\u0629',
-                   u'\u062a\u0627\u0632\u0631\u0628\u0648\u0627',
-                   u'\u0627\u0644\u0643\u0641\u0631\u0629',
-                   u'\u0627\u0644\u0633\u062f\u0631\u0629',
-                   u'\u0633\u0631\u062a',
-                   u'\u0627\u0644\u062c\u0641\u0631\u0629',
-                   u'\u0633\u0628\u0647\u0627',
-                   u'\u0627\u0644\u0634\u0627\u0637\u0626',
-                   u'\u0627\u0648\u0628\u0627\u0631\u064a',
-                   u'\u063a\u0627\u062a',
-                   u'\u0648\u0627\u062f\u064a \u0639\u062a\u0628\u0629',
+        strings = ('\u0637\u0628\u0631\u0642',
+                   '\u0627\u0644\u0642\u0628\u0629',
+                   '\u062f\u0631\u0646\u0629',
+                   '\u0634\u062d\u0627\u062a',
+                   '\u0627\u0644\u0628\u064a\u0636\u0627\u0621',
+                   '\u0627\u0644\u0645\u0631\u062c',
+                   '\u0642\u0635\u0631 \u0644\u064a\u0628\u064a\u0627',
+                   '\u0628\u0646\u063a\u0627\u0632\u064a',
+                   '\u062a\u0648\u0643\u0631\u0627',
+                   '\u0627\u0644\u0627\u0628\u064a\u0627\u0631',
+                   '\u0642\u0645\u064a\u0646\u0633',
+                   '\u0633\u0644\u0648\u0642',
+                   '\u0627\u062c\u062f\u0627\u0628\u064a\u0627',
+                   '\u0627\u0644\u0628\u0631\u064a\u0642\u0629',
+                   '\u0623\u0648\u062c\u0644\u0629',
+                   '\u062c\u0627\u0644\u0648 - \u062c\u062e\u0631\u0629',
+                   '\u062a\u0627\u0632\u0631\u0628\u0648\u0627',
+                   '\u0627\u0644\u0643\u0641\u0631\u0629',
+                   '\u0627\u0644\u0633\u062f\u0631\u0629',
+                   '\u0633\u0631\u062a',
+                   '\u0627\u0644\u062c\u0641\u0631\u0629',
+                   '\u0633\u0628\u0647\u0627',
+                   '\u0627\u0644\u0634\u0627\u0637\u0626',
+                   '\u0627\u0648\u0628\u0627\u0631\u064a',
+                   '\u063a\u0627\u062a',
+                   '\u0648\u0627\u062f\u064a \u0639\u062a\u0628\u0629',
                    )
         strings = [reshape(s) for s in strings]
         longest = strings[15]

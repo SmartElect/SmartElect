@@ -14,7 +14,7 @@
         <div class="spacer"></div>
 
         {% if perms.help_desk.cancel_registration_change and case.registration_unlocked %}
-          <form action="{% url 'case_relock' pk=object.pk %}" method="post">
+          <form action="{% url 'case_relock' pk=object.pk %}" method="post" novalidate>
             {% csrf_token %}
             <button class="warning" type="submit">{% trans "Re-lock" %}</button>
           </form>

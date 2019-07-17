@@ -1,7 +1,8 @@
 # coding: utf-8
+from unittest.mock import MagicMock, patch
+
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import MagicMock, patch
 
 from libya_elections.db_utils import delete_all, BatchOperations
 from civil_registry.models import Citizen
@@ -115,8 +116,8 @@ class BatchDeleteTest(TestCase):
             assert kwargs == {'pk__in': [pk]}
             return filter_return
 
-        model = MagicMock(side_effect=our_callback)
+        model.objects.filter.side_effect = our_callback
         batch = BatchOperations(model)
         batch.delete(pk)
         batch.flush()
-        filter_return.delete.assert_called()
+        assert filter_return.delete.called

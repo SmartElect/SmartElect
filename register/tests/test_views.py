@@ -1,20 +1,22 @@
-from StringIO import StringIO
+from io import StringIO
+import csv
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
+from django.utils.timezone import now
 
-from ..forms import CSV_FIELDS, BlacklistedNumberEditForm, WhitelistedNumberEditForm
-from ..models import Blacklist, Whitelist, RegistrationCenter
-from .base import LibyaTest
-from .factories import WhitelistFactory, BlacklistFactory, RegistrationCenterFactory
-from .test_center_csv import CenterFileTestMixin
-from libya_elections.csv_utils import UnicodeReader
+from register.forms import CSV_FIELDS, BlacklistedNumberEditForm, WhitelistedNumberEditForm
+from register.models import Blacklist, Whitelist, RegistrationCenter, Registration
+from register.tests.base import LibyaTest
+from register.tests.factories import WhitelistFactory, BlacklistFactory, \
+    RegistrationCenterFactory, RegistrationFactory
+from register.tests.test_center_csv import CenterFileTestMixin
 from libya_elections.phone_numbers import get_random_phone_number, format_phone_number
 from libya_elections.tests.utils import ResponseCheckerMixin
-from libya_site.tests.factories import UserFactory
+from libya_site.tests.factories import UserFactory, DEFAULT_USER_PASSWORD
 from polling_reports.models import StaffPhone
 from polling_reports.tests.factories import StaffPhoneFactory
 from staff.tests.base import StaffUserMixin
@@ -48,12 +50,12 @@ class ImportBlackWhitelistViewMixin(StaffUserMixin, ResponseCheckerMixin):
         numbers = [get_random_phone_number() for i in range(4)]
         punctuated_numbers = [format_phone_number(number)
                               for number in numbers]
-        file_content = b"""%s\r\n%s\n \n%s\r%s""" % (
+        file_content = ("""%s\r\n%s\n \n%s\r%s""" % (
             punctuated_numbers[0],
             punctuated_numbers[1],
             punctuated_numbers[2],
             punctuated_numbers[3],
-        )
+        )).encode()
         blackwhitelist_file = ContentFile(file_content, name='bw.txt')
         data = {'import_file': blackwhitelist_file}
         rsp = self.client.post(self.url, data=data)
@@ -68,7 +70,7 @@ class ImportBlackWhitelistViewMixin(StaffUserMixin, ResponseCheckerMixin):
         "Importing a number that is already in list shouldn't cause an error"
         number = get_random_phone_number()
         self.factory(phone_number=number)
-        file_content = b"%s" % number
+        file_content = number.encode()
         blackwhitelist_file = ContentFile(file_content, name='bw.txt')
         data = {'import_file': blackwhitelist_file}
         rsp = self.client.post(self.url, data=data)
@@ -78,12 +80,25 @@ class ImportBlackWhitelistViewMixin(StaffUserMixin, ResponseCheckerMixin):
         self.assertEqual(len(bwlist), 1)
         self.assertIn(number, bwlist)
 
+    def test_import_number_cant_start_with_2180(self):
+        "Ensures that the number doesn't start with 2180"
+        number = '218091234123'
+        file_content = number.encode()
+        blackwhitelist_file = ContentFile(file_content, name='bw.txt')
+        data = {'import_file': blackwhitelist_file}
+        rsp = self.client.post(self.url, data=data, follow=True)
+        self.assertEqual(200, rsp.status_code)
+        bwlist = self.model.objects.values_list('phone_number', flat=True)
+        self.assertEqual(len(bwlist), 0)
+        self.assertContains(rsp, 'Numbers on these lines not imported because '
+                            'they are not valid phone numbers: 1.')
+
 
 class TestImportBlacklistView(ImportBlackWhitelistViewMixin, LibyaTest):
     """Exercise uploading a list of blacklisted numbers"""
     def setUp(self):
         self.model = Blacklist
-        self.permissions = ('add_blacklist',)
+        self.permissions = ('add_blacklist', 'browse_blacklist')
         self.url = reverse('blacklisted-numbers-upload')
         self.factory = BlacklistFactory
 
@@ -93,7 +108,7 @@ class TestImportBlacklistView(ImportBlackWhitelistViewMixin, LibyaTest):
 class TestImportWhitelistView(ImportBlackWhitelistViewMixin, LibyaTest):
     """Exercise uploading a list of whitelisted numbers"""
     def setUp(self):
-        self.permissions = ('add_whitelist',)
+        self.permissions = ('add_whitelist', 'browse_whitelist')
         self.model = Whitelist
         self.url = reverse('whitelisted-numbers-upload')
         self.factory = WhitelistFactory
@@ -114,16 +129,23 @@ class BlackWhitelistEditFormMixin(StaffUserMixin, ResponseCheckerMixin):
     def test_cleans_phone_number(self):
         number = get_random_phone_number()
         punctuated_number = format_phone_number(number)
-        f = self.form(data={'phone_number': punctuated_number})
-        self.assertTrue(f.is_valid(), f.errors)
-        self.assertEqual(f.cleaned_data['phone_number'], number)
+        form = self.form(data={'phone_number': punctuated_number})
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.cleaned_data['phone_number'], number)
 
     def test_add_dupe_shows_form_error(self):
         number = get_random_phone_number()
         self.factory(phone_number=number)
-        f = self.form(data={'phone_number': number})
-        self.assertFalse(f.is_valid())
-        self.assertIn('Duplicate value for phone number', f.errors.values()[0])
+        form = self.form(data={'phone_number': number})
+        self.assertFalse(form.is_valid())
+        self.assertIn('Duplicate value for phone number', list(form.errors.values())[0])
+
+    def test_phone_number_cant_start_with_2180(self):
+        "Ensures the local prefix '0' isn't accidentally included in the phone number"
+        number = '218091234124'
+        form = self.form(data={'phone_number': number})
+        self.assertFalse(form.is_valid())
+        self.assertIn('Please enter a valid phone number', list(form.errors.values())[0][0])
 
 
 class TestBlacklistChangeForm(BlackWhitelistEditFormMixin, TestCase):
@@ -150,7 +172,7 @@ class BlacklistDownload(StaffUserMixin, ResponseCheckerMixin, TestCase):
         bl = BlacklistFactory()
         rsp = self.client.get(reverse('blacklisted-numbers-download'))
         self.assertOK(rsp)
-        self.assertIn(bl.phone_number, rsp.content)
+        self.assertIn(bl.phone_number, rsp.content.decode())
 
 
 class WhitelistDownload(StaffUserMixin, ResponseCheckerMixin, TestCase):
@@ -161,7 +183,7 @@ class WhitelistDownload(StaffUserMixin, ResponseCheckerMixin, TestCase):
         wl = WhitelistFactory()
         rsp = self.client.get(reverse('whitelisted-numbers-download'))
         self.assertOK(rsp)
-        self.assertIn(wl.phone_number, rsp.content)
+        self.assertIn(wl.phone_number, rsp.content.decode())
 
 
 class DeleteBlacklist(StaffUserMixin, ResponseCheckerMixin, TestCase):
@@ -176,7 +198,7 @@ class DeleteBlacklist(StaffUserMixin, ResponseCheckerMixin, TestCase):
     def test_get_deleted_page(self):
         rsp = self.client.get(self.url)
         self.assertOK(rsp)
-        self.assertIn('Are you sure you want to delete all 3', rsp.content)
+        self.assertIn('Are you sure you want to delete all 3', rsp.content.decode())
 
     def test_post_deleted_page(self):
         rsp = self.client.post(self.url, data={'ok': True})
@@ -196,7 +218,7 @@ class DeleteWhitelist(StaffUserMixin, ResponseCheckerMixin, TestCase):
     def test_get_deleted_page(self):
         rsp = self.client.get(self.url)
         self.assertOK(rsp)
-        self.assertIn('Are you sure you want to delete all 3', rsp.content)
+        self.assertIn('Are you sure you want to delete all 3', rsp.content.decode())
 
     def test_post_deleted_page(self):
         rsp = self.client.post(self.url, data={'ok': True})
@@ -216,7 +238,7 @@ class DeleteStaffPhone(StaffUserMixin, ResponseCheckerMixin, TestCase):
     def test_get_deleted_page(self):
         rsp = self.client.get(self.url)
         self.assertOK(rsp)
-        self.assertIn('Are you sure you want to delete all 3', rsp.content)
+        self.assertIn('Are you sure you want to delete all 3', rsp.content.decode())
 
     def test_post_deleted_page(self):
         rsp = self.client.post(self.url, data={'ok': True})
@@ -286,6 +308,20 @@ class TestDeleteAllCopyCenters(StaffUserMixin, ResponseCheckerMixin, TestCase):
         self.assertEqual(centers[0].id, original.id)
 
 
+class TestRegistrationRead(StaffUserMixin, ResponseCheckerMixin, TestCase):
+    """Test the read-registration view"""
+    permissions = ['read_registration']
+    model = Registration
+
+    def test_no_server_error_if_citizen_is_missing(self):
+        """A missing citizen can cause a DoesNotExist error. Be sure to catch it."""
+        # create registration with a missing citizen
+        registration = RegistrationFactory(citizen__missing=now())
+        url = reverse('read_registration', kwargs={'pk': registration.pk})
+        response = self.client.get(url)
+        self.assertContains(response, registration.registration_center.center_id)
+
+
 class TestRegistrationCenterDeleteLogic(StaffUserMixin, ResponseCheckerMixin, TestCase):
     """Ensure that centers with copies can't be deleted"""
     permissions = ['delete_registrationcenter', 'read_registrationcenter',
@@ -308,8 +344,10 @@ class TestRegistrationCenterDeleteLogic(StaffUserMixin, ResponseCheckerMixin, Te
                 response = self.client.get(url)
 
                 delete_url = reverse('delete_registrationcenter', kwargs={'pk': center.id})
-
-                self.assertEqual(delete_url in response.content, should_offer_delete)
+                if should_offer_delete:
+                    self.assertContains(response, delete_url)
+                else:
+                    self.assertNotContains(response, delete_url)
 
     def test_delete_view_available_appropriately(self):
         """Ensure the Delete view can be accessed when appropriate"""
@@ -356,13 +394,13 @@ class CenterDownload(CenterFileTestMixin, StaffUserMixin, TestCase):
         # download the CSV file
         rsp = self.client.get(self.download_csv_url)
         self.assertEqual(200, rsp.status_code)
-        reader = UnicodeReader(StringIO(rsp.content))
-        for i, field in enumerate(reader.next()):
+        reader = csv.reader(StringIO(rsp.content.decode()))
+        for i, field in enumerate(next(reader)):
             # check the header row
             self.assertEqual(field, CSV_FIELDS[i])
         for row in reader:
             # check each row against the DB values
-            self.assertNotIn('None', unicode(row))
+            self.assertNotIn('None', str(row))
             center_id = row[0]
             center = RegistrationCenter.objects.get(center_id=center_id)
             for i, field in enumerate(CSV_FIELDS):
@@ -370,7 +408,77 @@ class CenterDownload(CenterFileTestMixin, StaffUserMixin, TestCase):
                 if field == 'center_type':
                     db_field_as_str = center.get_center_type_display()
                 else:
-                    db_field_as_str = unicode(getattr(center, field))
+                    db_field_as_str = str(getattr(center, field))
                 if db_field_as_str == 'None':
                     db_field_as_str = ''
                 self.assertEqual(row[i], db_field_as_str)
+
+
+class RegistrationSearchTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.staff_user = UserFactory()
+        cls.staff_user.is_staff = True
+        cls.staff_user.save()
+        # give this user permission to browse
+        ct = ContentType.objects.get_for_model(Registration)
+        perm_codename = 'browse_registration'
+        perm = Permission.objects.get(content_type=ct, codename=perm_codename)
+        cls.staff_user.user_permissions.add(perm)
+        # create 2 registrations, one that we expect to find and one that we expect not to find
+        cls.nid_we_should_find = 200000000001
+        cls.phone_we_should_find = '218900000002'
+        cls.nid_we_should_not_find = 200000000003
+        cls.phone_we_should_not_find = '218000000004'
+        cls.nonexistent_nid = 200000000005
+        cls.nonexistent_phone = '218900000006'
+        cls.present_reg = RegistrationFactory(
+            archive_time=None,
+            citizen__national_id=cls.nid_we_should_find,
+            sms__from_number=cls.phone_we_should_find)
+        cls.absent_reg = RegistrationFactory(
+            archive_time=None,
+            citizen__national_id=cls.nid_we_should_not_find,
+            sms__from_number=cls.phone_we_should_not_find)
+
+    def setUp(self):
+        assert self.client.login(username=self.staff_user.username, password=DEFAULT_USER_PASSWORD)
+        self.browse_url = reverse('browse_registrations')
+
+    def test_search_finds_national_id(self):
+        rsp = self.client.get(self.browse_url, data={'q': self.nid_we_should_find})
+        self.assertIn(self.present_reg, rsp.context['object_list'])
+        self.assertNotIn(self.absent_reg, rsp.context['object_list'])
+
+    def test_search_finds_phone_number(self):
+        rsp = self.client.get(self.browse_url, data={'q': self.phone_we_should_find})
+        self.assertIn(self.present_reg, rsp.context['object_list'])
+        self.assertNotIn(self.absent_reg, rsp.context['object_list'])
+
+    def test_search_strips_whitespace_national_id(self):
+        rsp = self.client.get(self.browse_url, data={'q': ' %s ' % self.nid_we_should_find})
+        self.assertIn(self.present_reg, rsp.context['object_list'])
+        self.assertNotIn(self.absent_reg, rsp.context['object_list'])
+
+    def test_search_strips_whitespace_phone_number(self):
+        rsp = self.client.get(self.browse_url, data={'q': ' %s ' % self.phone_we_should_find})
+        self.assertIn(self.present_reg, rsp.context['object_list'])
+        self.assertNotIn(self.absent_reg, rsp.context['object_list'])
+
+    def test_empty_search_result(self):
+        rsp = self.client.get(self.browse_url, data={'q': self.nonexistent_nid})
+        self.assertEqual(list(rsp.context['object_list']), [])
+
+        rsp = self.client.get(self.browse_url, data={'q': self.nonexistent_phone})
+        self.assertEqual(list(rsp.context['object_list']), [])
+
+    def test_not_a_valid_nid_or_phone(self):
+        rsp = self.client.get(self.browse_url, data={'q': '1234'})
+        self.assertEqual(list(rsp.context['object_list']), [])
+
+    def test_search_for_nondigit(self):
+        search_term = self.present_reg.citizen.first_name
+        rsp = self.client.get(self.browse_url, data={'q': search_term})
+        self.assertIn(self.present_reg, rsp.context['object_list'])
+        self.assertNotIn(self.absent_reg, rsp.context['object_list'])

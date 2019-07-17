@@ -30,6 +30,7 @@ import datetime
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.autosectionlabel',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -45,10 +46,10 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Libyan Elections'
+project = 'Libyan Elections'
 year = datetime.date.today().year
 # The Sphinx template inserts "© Copyright " in front of this:
-copyright = u'%d, The Libyan Elections Technical Team' % year
+copyright = '%d, The Libyan Elections Technical Team' % year
 
 
 # The version info for the project you're documenting, acts as replacement for
@@ -201,8 +202,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'LibyanElections.tex', u'Libyan Elections Documentation',
-   u'The Libyan Elections Technical Team', 'manual'),
+  ('index', 'LibyanElections.tex', 'Libyan Elections Documentation',
+   'The Libyan Elections Technical Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -231,8 +232,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'libyanelections', u'Libyan Elections Documentation',
-     [u'The Libyan Elections Technical Team'], 1)
+    ('index', 'libyanelections', 'Libyan Elections Documentation',
+     ['The Libyan Elections Technical Team'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -245,8 +246,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'LibyanElections', u'Libyan Elections Documentation',
-   u'The Libyan Elections Technical Team', 'LibyanElections', 'One line description of project.',
+  ('index', 'LibyanElections', 'Libyan Elections Documentation',
+   'The Libyan Elections Technical Team', 'LibyanElections', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -266,10 +267,10 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'Libyan Elections'
-epub_author = u'The Libyan Elections Technical Team'
-epub_publisher = u'The Libyan Elections Technical Team'
-epub_copyright = u'%d, The Libyan Elections Technical Team' % year
+epub_title = 'Libyan Elections'
+epub_author = 'The Libyan Elections Technical Team'
+epub_publisher = 'The Libyan Elections Technical Team'
+epub_copyright = '%d, The Libyan Elections Technical Team' % year
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'Libyan Elections'

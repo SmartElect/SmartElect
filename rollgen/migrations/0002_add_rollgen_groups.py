@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-from django.db import migrations
+from django.db import models, migrations
 
 def add_rollgen_groups(apps, schema_editor):
     Group = apps.get_model('auth', 'Group')

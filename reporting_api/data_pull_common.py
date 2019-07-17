@@ -23,7 +23,9 @@ def _get_registration_centers(must_allow_registrations=True):
     # not be a copy center; when "center" is a copy center, "original" refers to the
     # center which it is a copy of.  (original.center_id will be null if center is not
     # a copy center.)
+
     inserted_clause = ' center.reg_open = true AND ' if must_allow_registrations else ''
+
     sql = """SELECT
                  center.center_id, center.center_type, center.office_id,
                  center.subconstituency_id, original.center_id as original_center_id

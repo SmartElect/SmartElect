@@ -1,5 +1,5 @@
 # CRU for text messages (no D)
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView
 
 from libya_elections.utils import LoginPermissionRequiredMixin

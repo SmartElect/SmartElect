@@ -1,11 +1,12 @@
 # CRUD for Help Desk Staff
+from functools import reduce
 import operator
 
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, FormView
 
 from help_desk.forms import NewUserForm, UpdateUserForm
@@ -14,12 +15,10 @@ from help_desk.views.views import GetURLMixin, PassUserToFormMixin
 from libya_elections.libya_bread import PaginatorMixin
 from libya_elections.utils import LoginPermissionRequiredMixin, \
     LoginMultiplePermissionsRequiredMixin
-
-
-# Permissions dictionary for staff management views
 from staff.views import StaffViewMixin
 
 
+# Permissions dictionary for staff management views
 staff_management_permissions = {
     # Need at least one of these permissions
     'any': [
@@ -133,4 +132,4 @@ class StaffSearchView(PaginatorMixin,
                 queryset = queryset.filter(search)
             else:
                 queryset = queryset.none()
-        return queryset
+        return queryset.order_by('username')

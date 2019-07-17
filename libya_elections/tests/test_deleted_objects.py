@@ -1,5 +1,5 @@
+from django.apps import apps
 from django.contrib import admin
-from django.db.models import get_models
 from django.test import TestCase
 from django.utils import timezone
 
@@ -18,7 +18,6 @@ from ..admin_models import LibyaAdminModel
 THIRD_PARTY_MODULES = [
     'captcha',
     'django',
-    'djcelery',
     'rapidsms',
     'registration',
     'civil_registry',  # sort of... it's a mirror of an external data source
@@ -29,7 +28,7 @@ THIRD_PARTY_MODULES = [
 class BaseModelTest(TestCase):
     """Ensure that all of our models inherit from our custom base model"""
     def test_all_our_apps_should_use_base_model(self):
-        for model in get_models():
+        for model in apps.get_models():
             # skip third party modules
             if model.__module__.split('.')[0] in THIRD_PARTY_MODULES:
                 continue
@@ -103,7 +102,7 @@ class LibyaAdminModelTest(TestCase):
 
     def test_all_our_models_use_our_admin(self):
         admin.autodiscover()
-        for model, modeladmin in admin.site._registry.iteritems():
+        for model, modeladmin in admin.site._registry.items():
             # skip third party modules
             if model.__module__.split('.')[0] in THIRD_PARTY_MODULES:
                 continue

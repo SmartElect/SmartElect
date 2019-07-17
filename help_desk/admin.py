@@ -35,5 +35,6 @@ class FieldStaffAdmin(LibyaAdminModel):
     list_filter = ['suspended']
     search_fields = ['name', 'staff_id', 'phone_number']
 
+
 admin_site.register(Case, CaseAdmin)
 admin_site.register(FieldStaff, FieldStaffAdmin)

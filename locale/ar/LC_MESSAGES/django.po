@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# afituri <ahmed.elfituri@gmail.com>, 2014
+# abdulathim aqeel <ageel.abdoo@gmail.com>, 2016,2018
 # afituri <ahmed.elfituri@gmail.com>, 2014
 # lindaalbermani <albermani.linda@gmail.com>, 2014
 # Dan Poirier <dpoirier@caktusgroup.com>, 2013
 # Elliott Wilkes <elliott.wilkes@gmail.com>, 2014-2015
 # Fadia <floona2020@gmail.com>, 2014
-# Fadia <floona2020@gmail.com>, 2014
+# Faisal Rahil <faisallrahil@gmail.com>, 2019
 # IndustryArabic <elliott@forsa.io>, 2015
 # James Price <jhunterprice@gmail.com>, 2013-2014
 # lindaalbermani <albermani.linda@gmail.com>, 2014
@@ -19,102 +19,80 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libya-elections\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-11 16:38+0200\n"
-"PO-Revision-Date: 2015-08-19 20:50+0000\n"
-"Last-Translator: IndustryArabic <elliott@forsa.io>\n"
-"Language-Team: Arabic (http://www.transifex.com/hnec/libya-elections/language/ar/)\n"
+"POT-Creation-Date: 2019-05-03 16:33+0200\n"
+"PO-Revision-Date: 2019-01-13 10:09+0000\n"
+"Last-Translator: Faisal Rahil <faisallrahil@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/hnec/libya-elections/"
+"language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: audit/admin.py:11 bulk_sms/views.py:126 bulk_sms/views.py:158
-#: bulk_sms/views.py:174 changesets/views_changeset.py:41
-#: rollgen/templates/rollgen/overview.html:34
 msgid "Status"
 msgstr "الحالة"
 
-#: audit/admin.py:17 help_desk/models.py:247
 msgid "Resolved"
 msgstr "حُلت "
 
-#: audit/admin.py:18
 msgid "Not resolved"
 msgstr "لم تحل"
 
-#: audit/models.py:20 vr_dashboard/templates/vr_dashboard/sms.html:19
 msgid "Incoming"
 msgstr "الواردة"
 
-#: audit/models.py:21
 msgid "Outgoing"
 msgstr "الصادرة"
 
-#: audit/models.py:23 register/models.py:579
 msgid "uuid"
 msgstr "المعرف الفريد العمومي "
 
-#: audit/models.py:24
 msgid "logged date"
 msgstr "تاريخ الدخول "
 
-#: audit/models.py:25 register/models.py:569
 msgid "direction"
 msgstr "الاتجاه "
 
-#: audit/models.py:26
 msgid "to address"
 msgstr "إلى العنوان "
 
-#: audit/models.py:27
 msgid "from address"
 msgstr "من العنوان "
 
-#: audit/models.py:28
 msgid "content"
 msgstr "المحتوى "
 
-#: audit/models.py:29 register/models.py:580
 msgid "is audited"
 msgstr "تم التدقيق به "
 
-#: audit/models.py:30
 msgid "raw text"
 msgstr "نص خام "
 
-#: audit/models.py:45 audit/models.py:92
 msgid "vumi log"
 msgstr "فومي لوج"
 
-#: audit/models.py:46
 msgid "vumi logs"
 msgstr "فومي لوج"
 
-#: audit/models.py:49 register/models.py:589
 #, python-brace-format
 msgid "From {from_addr} to {to_addr}: {content}"
 msgstr "من  {from_addr} إلى {to_addr}: {content} "
 
-#: audit/models.py:90 bulk_sms/models.py:159 register/models.py:416
-#: register/models.py:596
 msgid "sms"
 msgstr "رسالة نصية قصيرة "
 
-#: audit/models.py:95 audit/models.py:161
 msgid "sms trail"
 msgstr "تعقب الرسائل النصية القصيرة"
 
-#: audit/models.py:96
 msgid "sms trails"
 msgstr "تعقبات الرسائل النصية القصيرة"
 
-#: audit/models.py:99
 #, python-brace-format
 msgid "Trail linking SMS ({sms}) with VumiLog ({vumi})"
 msgstr "رابط يصل الرسالة ({sms}) بـ \"فومي لوج\" ({vumi})"
 
-#: audit/models.py:130
 #, python-brace-format
 msgid ""
 "Audit complete. Message is in the <a href=\"{sms_url}\">registration</a> and "
@@ -123,7 +101,6 @@ msgstr ""
 "اكتمل التدقيق. الرسالة في نظم <a href=\"{sms_url}\">التسجيل</a> و<a href="
 "\"{vumi_url}\">المداخل</a>."
 
-#: audit/models.py:136
 #, python-brace-format
 msgid ""
 "The <a href=\"{url}\">message</a> to {number} with text \"{text}\" was sent "
@@ -133,7 +110,6 @@ msgstr ""
 " <a href=\"{url}\">الرسالة</a> إلى {number} التي تحتوي على النص \"{text}\" "
 "أرسلت من قبل نظام التسجيل في {datetime} لكنّ نظام المداخل لم يتلقها."
 
-#: audit/models.py:145
 #, python-brace-format
 msgid ""
 "The <a href=\"{url}\">message</a> from {number} with text \"{text}\" was "
@@ -143,61 +119,47 @@ msgstr ""
 "<a href=\"{url}\">الرسالة</a>من {number} التي تحتوي على النص \"{text}\" تم "
 "تلقيها من نظام المداخل في {datetime} ولكن، لم يتم تلقيها من نظام التسجيل. "
 
-#: audit/models.py:162
 msgid "comments"
 msgstr "التعليقات"
 
-#: audit/models.py:163
 msgid "resolved"
 msgstr "محلول"
 
-#: audit/models.py:167
 msgid "Browse discrepancies"
 msgstr "البحث عن التباينات"
 
-#: audit/models.py:168
 msgid "Read discrepancy"
 msgstr "قراءة التباين"
 
-#: audit/models.py:170
 msgid "sms discrepancy"
 msgstr "إرسال التباين في رسالة نصية قصيرة"
 
-#: audit/models.py:171
 msgid "sms discrepancies"
 msgstr "إرسال التباينات في رسالة نصية قصيرة"
 
-#: audit/models.py:176
 #, python-brace-format
 msgid "A discrepancy has been found for an incoming message at {datetime}."
 msgstr "تم العثور على تباين في رسالة واردة في {datetime}. "
 
-#: audit/models.py:179
 #, python-brace-format
 msgid "A discrepancy has been found for an outgoing message at {datetime}."
 msgstr "تم العثور على تباين في رسالة صادرة في {datetime}. "
 
-#: audit/templates/audit/discrepancy_browse.html:5
 msgid "Change email alert subscriptions"
 msgstr "تغيير الاشتراك في الرسائل الإلكترونية التنبيهية"
 
-#: audit/views.py:22 audit/views.py:76
 msgid "Direction"
 msgstr "الاتجاه"
 
-#: audit/views.py:23 changesets/views_changes.py:20 httptester/forms.py:9
 msgid "From"
 msgstr "من"
 
-#: audit/views.py:24 changesets/views_changes.py:21
 msgid "To"
 msgstr "الى"
 
-#: audit/views.py:32
 msgid "source number, destination number, or message"
 msgstr "رقم المصدر، رقم الهدف، أو الرسالة"
 
-#: audit/views.py:44
 #, python-format
 msgid "%(count)d message was audited."
 msgid_plural "%(count)d messages were audited."
@@ -208,7 +170,6 @@ msgstr[3] "رسائل %(count)d تم تدقيق"
 msgstr[4] "رسائل %(count)d تم تدقيق"
 msgstr[5] "رسائل %(count)d  تم تدقيق"
 
-#: audit/views.py:53
 #, python-format
 msgid "There was %(count)d discrepancy found."
 msgid_plural "There were %(count)d discrepancies found."
@@ -219,149 +180,107 @@ msgstr[3] " تباينات %(count)d  تم العثور على"
 msgstr[4] "تباينات %(count)d  تم العثور على"
 msgstr[5] "تباينات %(count)d  تم العثور على"
 
-#: audit/views.py:77
 msgid "Message in registration system"
 msgstr "رسالة في نظام التسجيل"
 
-#: audit/views.py:78
 msgid "Message to/from the mobile network operator"
 msgstr "رسالة إلى/ من مشغل شبكة الهاتف المحمول"
 
-#: bulk_sms/forms.py:12
 msgid ""
 "The uploaded file had invalid characters. Please be sure that it is saved as "
 "UTF-8."
 msgstr "الملف المنزل يضم حروفاً غير صحيحة. الرجاء التأكد من تخزينه بصيغة UTF-8"
 
-#: bulk_sms/forms.py:28
 msgid "Name for this bulk SMS broadcast."
 msgstr "تسمية عملية إرسال هذه الرسائل النصية الجماعية"
 
-#: bulk_sms/forms.py:30
 msgid "Describe this bulk SMS broadcast"
 msgstr "وصف هذه الرسائل النصية القصيرة الجماعية"
 
-#: bulk_sms/forms.py:83
 msgid "This field is required."
 msgstr "هذا الحقل مطلوب"
 
-#: bulk_sms/models.py:40
 msgid "Uploading"
 msgstr "تنزيل"
 
-#: bulk_sms/models.py:41 bulk_sms/tests/test_broadcast.py:190
 msgid "Pending Approval"
 msgstr "الموافقات المعلقة"
 
-#: bulk_sms/models.py:42
 msgid "Approved"
 msgstr "تمت الموافقة"
 
-#: bulk_sms/models.py:43
 msgid "Rejected"
 msgstr "مرفوض"
 
-#: bulk_sms/models.py:44
 msgid "Completed"
 msgstr "تم"
 
-#: bulk_sms/models.py:45
 msgid "Processing"
 msgstr "استكمال الإجراء"
 
-#: bulk_sms/models.py:66 bulk_sms/models.py:158 bulk_sms/models.py:201
 msgid "batch"
 msgstr "حزمة"
 
-#: bulk_sms/models.py:67
 msgid "batches"
 msgstr "حزم"
 
-#: bulk_sms/models.py:152 help_desk/models.py:168 polling_reports/models.py:18
-#: polling_reports/models.py:52 polling_reports/models.py:70
-#: polling_reports/models.py:91 register/models.py:640 register/models.py:659
 msgid "phone number"
 msgstr "رقم الهاتف"
 
-#: bulk_sms/models.py:153
 msgid "from shortcode"
 msgstr "من الرمز القصير"
 
-#: bulk_sms/models.py:156
 msgid "What shortcode should this appear to be from?"
 msgstr "من أي رمز قصير يجب أن يبدو هذا وارداً؟"
 
-#: bulk_sms/models.py:157 bulk_sms/models.py:206 changesets/models.py:154
-#: register/models.py:572
 msgid "message"
 msgstr "الرسالة"
 
-#: bulk_sms/models.py:164
 msgid "bulk message"
 msgstr "رسالة جماعية"
 
-#: bulk_sms/models.py:165
 msgid "bulk messages"
 msgstr "مجموع الرسائل"
 
-#: bulk_sms/models.py:172
 msgid "Invalid shortcode: Valid values are: {}"
 msgstr "رمز قصير غير صالح: القيم الصالحة هي: {}"
 
-#: bulk_sms/models.py:183
 msgid "Custom"
 msgstr "الضبط"
 
-#: bulk_sms/models.py:188 libya_site/templates/libya_site/base.html:29
-#: staff/views.py:89
 msgid "Staff"
 msgstr "الموظفون"
 
-#: bulk_sms/models.py:189
 msgid "Registrants in a single center"
 msgstr "المسجلون في المركز الواحد"
 
-#: bulk_sms/models.py:190
 msgid "Registrants in the entire voter register"
 msgstr "المسجلون في سجل الناخبين ككل"
 
-#: bulk_sms/models.py:197 changesets/models.py:193
 msgid "created by"
 msgstr "تم الإنشاء من قبل"
 
-#: bulk_sms/models.py:200
 msgid "reviewed by"
 msgstr "تمت المراجعة من"
 
-#: bulk_sms/models.py:202
 msgid "audience"
 msgstr "الجمهور"
 
-#: bulk_sms/models.py:205 polling_reports/models.py:22
-#: polling_reports/models.py:56 polling_reports/models.py:73
-#: polling_reports/models.py:94 polling_reports/models.py:117
-#: register/models.py:334 register/models.py:415 rollgen/models.py:157
 msgid "registration center"
 msgstr "مركز التسجيل"
 
-#: bulk_sms/models.py:273
 msgid "Registrants in Center"
 msgstr "المسجلون في المركز"
 
-#: bulk_sms/models.py:307
 msgid "broadcast"
 msgstr "البث"
 
-#: bulk_sms/models.py:308
 msgid "broadcasts"
 msgstr "البث"
 
-#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:4
-#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:8
 msgid "Upload SMSes for Broadcast"
 msgstr "تحميل الرسائل النصية القصيرة لنشرها"
 
-#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:23
 msgid ""
 "<p> Please upload your CSV with 12-digit phone number(s) in the first column "
 "and the message text in the second column. </p> <ul> <li>Do not include '+' "
@@ -374,86 +293,42 @@ msgstr ""
 "+ أو 0 في أول رقم الهاتف (أي 218911234567).</li><li>لا تدخل عناوين للأعمدة.</"
 "li> <li>يجب حفظ القيم المفصولة بفواصل بترميز UTF-8. </li></ul>"
 
-#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:40
-#: register/templates/register/upload_blackwhitelisted_numbers.html:34
-#: register/templates/register/upload_centers_csv.html:37
 msgid "Upload"
 msgstr "تحميل"
 
-#: bulk_sms/templates/bulk_sms/broadcast_add_via_csv.html:41
-#: changesets/templates/changesets/changeset_edit.html:41
-#: help_desk/templates/help_desk/staff/create.html:18
-#: help_desk/templates/help_desk/staff/set_password.html:15
-#: help_desk/templates/help_desk/staff/update.html:18
-#: libya_site/templates/bread/delete.html:21
-#: libya_site/templates/bread/edit.html:50
-#: libya_site/templates/bread/label_value_read.html:31
-#: register/templates/polling_reports/delete_all_staffphones.html:24
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:42
-#: register/templates/register/delete_all_copy_centers.html:39
-#: register/templates/register/upload_centers_csv.html:38
-#: rollgen/templates/rollgen/new.html:102
-#: text_messages/templates/text_messages/messagetext_form.html:42
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: bulk_sms/templates/bulk_sms/broadcast_add_via_form.html:8
 msgid "Characters used:"
 msgstr "الأحرف المستخدمة"
 
-#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:9
-#: changesets/templates/changesets/changeset_read.html:40
 msgid "Approve"
 msgstr "الموافقة"
 
-#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:12
 msgid "Reject"
 msgstr "الرفض"
 
-#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:15
-#: bulk_sms/templatetags/broadcast_admin.py:21
-#: changesets/templates/changesets/changeset_edit.html:44
-#: changesets/templates/changesets/changeset_read.html:48
-#: libya_site/templates/bread/delete.html:20
-#: libya_site/templates/bread/edit.html:48
-#: libya_site/templates/bread/label_value_read.html:28
-#: voting/templates/voting/election_label_value_read.html:16
 msgid "Delete"
 msgstr "مسح"
 
-#: bulk_sms/templates/bulk_sms/broadcast_approve_reject.html:17
-#: changesets/templates/changesets/changeset_read.html:30
-#: register/templates/register/upload_blackwhitelisted_numbers.html:42
-#: voting/templates/voting/election_label_value_read.html:14
 msgid "Back to list"
 msgstr "العودة إلى اللائحة"
 
-#: bulk_sms/templates/bulk_sms/broadcast_browse.html:6
 msgid "Send an SMS broadcast via form entry"
 msgstr "قم بنشر الرسائل النصية القصيرة عبر نموذج الإدخال"
 
-#: bulk_sms/templates/bulk_sms/broadcast_browse.html:7
 msgid "Send an SMS broadcast via CSV upload"
 msgstr "قم بنشر الرسائل النصية القصيرة عبر تحميل ملف القيم المفصولة بفواصل"
 
-#: bulk_sms/templates/bulk_sms/random_messages.html:7
-#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:13
-#: register/views.py:204 register/views.py:232
-#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:12
 msgid "Phone Number"
 msgstr "رقم الهاتف"
 
-#: bulk_sms/templates/bulk_sms/random_messages.html:8 bulk_sms/views.py:173
-#: httptester/forms.py:15
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:41
 msgid "Message"
 msgstr "الرسالة"
 
-#: bulk_sms/templatetags/broadcast_admin.py:19
 msgid "Permanently delete"
 msgstr "مسح دائم"
 
-#: bulk_sms/utils.py:22
 #, python-brace-format
 msgid ""
 "Error found in line {line_number}: The row should only have the following "
@@ -462,99 +337,76 @@ msgstr ""
 "وجود خطأ في السطر{line_number}: يجب أن يضم الصف الأعمدة التالية فقط: "
 "{columns}"
 
-#: bulk_sms/utils.py:24
 #, python-brace-format
 msgid "Unable to parse number {number} as a phone number on row {line_number}"
 msgstr ""
 "عدم التمكن من قراءة الرقم {number} على أنه رقم هاتف في السطر {line_number}"
 
-#: bulk_sms/utils.py:25
 #, python-brace-format
 msgid "Message is blank on row {line_number}"
 msgstr "الرسالة فارغة في السطر {line_number}"
 
-#: bulk_sms/views.py:42
 msgid "Only a different user may review your broadcast."
 msgstr "لا يمكن سوى لمستخدم آخر مراجعة ما نشرت"
 
-#: bulk_sms/views.py:59
 msgid "You have approved the broadcast."
 msgstr "تمت موافقتك على النشر"
 
-#: bulk_sms/views.py:64
 msgid "You have rejected the broadcast."
 msgstr "رفضت النشر"
 
-#: bulk_sms/views.py:82
 msgid "Broadcast was created and is pending approval."
 msgstr "تم إنشاء عملية النشر وهي بانتظار الموافقة"
 
-#: bulk_sms/views.py:106
 msgid "Messages are uploading in the background"
 msgstr "جاري تحميل الرسائل في الخلفية"
 
-#: bulk_sms/views.py:120
 msgid "Sent To"
 msgstr "إرسال إلى"
 
-#: bulk_sms/views.py:127 bulk_sms/views.py:175
 msgid "Remaining Time"
 msgstr "الوقت المتبقي"
 
-#: bulk_sms/views.py:128
 msgid "Total Messages"
 msgstr "مجموع الرسائل"
 
-#: bulk_sms/views.py:129
 msgid "Sent"
 msgstr "تم الإرسال"
 
-#: bulk_sms/views.py:130
 msgid "Errors"
 msgstr "أخطاء"
 
-#: bulk_sms/views.py:131
 msgid "Random Messages"
 msgstr "رسائل عشوائية"
 
-#: bulk_sms/views.py:160
 msgid "Audience"
 msgstr "الجمهور"
 
-#: bulk_sms/views.py:171 libya_elections/abstract.py:75 register/views.py:397
 msgid "creation date"
 msgstr "تاريخ الإنشاء"
 
-#: bulk_sms/views.py:172
 msgid "Send To"
 msgstr "إرسال إلى"
 
-#: bulk_sms/views.py:176
 msgid "Created By"
 msgstr "تم الإنشاء من قبل"
 
-#: bulk_sms/views.py:177
 msgid "Reviewed By"
 msgstr "تمت المراجعة من"
 
-#: changesets/forms.py:29
 msgid "Start typing registration center name to add to list"
 msgstr "ابدأ بطباعة اسم مركز التسجيل لإضافته إلى القائمة"
 
-#: changesets/forms.py:30
 msgid "Selected centers"
 msgstr "المراكز المختارة"
 
-#: changesets/forms.py:36
 msgid "Start typing registration center name to choose"
 msgstr "ابدأ بطباعة اسم مركز التسجيل للاختيار"
 
-#: changesets/forms.py:43
 msgid "Upload text file with one NID per line, and no headers or punctuation."
 msgstr ""
 "ارفع ملف النص مع رقم وطني واحد على كل سطر ومن دون عناوين أو علامات وقف."
 
-#: changesets/forms.py:48
 msgid ""
 "This changeset has one or more approvals. If you change the changeset, the "
 "approvals will be revoked and the changeset will have to be approved again. "
@@ -566,134 +418,104 @@ msgstr ""
 "إذا أردت القيام بذلك، ضع علامةً هنا. إذا كنت لا تريد القيام بذلك، إلغِ العملية "
 "أو اذهب إلى صفحة أخرى من دون تقديم تغييراتك. "
 
-#: changesets/forms.py:89 changesets/forms.py:92
 msgid "No other changeset selected"
 msgstr "لا يتم اختيار مجموعة تغييرات أخرى"
 
-#: changesets/forms.py:95
 msgid "Only successful changesets can be rolled back."
 msgstr "لا يمكن استرجاع سوى مجموعات التغيير الناجحة."
 
-#: changesets/forms.py:102
 msgid "No centers selected"
 msgstr "لم يتم اختيار أي مراكز"
 
-#: changesets/forms.py:110
 msgid "No target center selected"
 msgstr "لم يتم اختيار مركز هدف"
 
-#: changesets/forms.py:113
 msgid "Target center is one of the centers being moved from"
 msgstr "المركز الهدف هو أحد المراكز التي يتم النقل منها"
 
-#: changesets/forms.py:127
 msgid "An uploaded file is required if selection method is uploaded NIDs"
 msgstr "يجب رفع ملف إذا كانت طريقة الاختيار هي من خلال أرقام وطنية محملة"
 
-#: changesets/forms.py:132
 #, python-brace-format
 msgid "Stopping after {number} errors."
 msgstr "الإيقاف بعد {number} أخطاء."
 
-#: changesets/forms.py:139
 #, python-brace-format
 msgid "Line {number}: Wrong length"
 msgstr "السطر {number}: طول خاطئ"
 
-#: changesets/forms.py:144
 #, python-brace-format
 msgid "Line {number}: Not a valid number"
 msgstr "السطر {number}: الرقم غير صالح"
 
-#: changesets/forms.py:148
 #, python-brace-format
 msgid "Line {number}: Not a valid national ID number"
 msgstr "السطر {number}: رقم الهوية الوطنية غير صالح"
 
-#: changesets/forms.py:154
 #, python-brace-format
 msgid "Line {number}: No person registered with that NID"
 msgstr "السطر {number}: ما من شخص مسجّل تحت هذا الرقم الوطني"
 
-#: changesets/forms.py:182
 #, python-brace-format
 msgid "Approval of {user} removed due to changes"
 msgstr "تم نزع الموافقة على {user} بسبب إحداث التغييرات"
 
-#: changesets/models.py:45
 msgid "Move voters to another polling center"
 msgstr "انقل الناخبين إلى مركز اقتراع آخر"
 
-#: changesets/models.py:46
 msgid "Block voters"
 msgstr "حظر الناخبين"
 
-#: changesets/models.py:47
 msgid "Unblock voters"
 msgstr "إلغاء حظر الناخبين"
 
-#: changesets/models.py:48
 msgid "Roll back another changeset"
 msgstr "استرجع مجموعة تغييرات أخرى"
 
-#: changesets/models.py:56
 msgid "Select a list of polling centers"
 msgstr "اختر قائمة من مراكز الاقتراع"
 
-#: changesets/models.py:57
 msgid "Upload a list of national IDs"
 msgstr "ارفع قائمة بالأرقام الوطنية"
 
-#: changesets/models.py:58
 msgid "Select another changeset"
 msgstr "اختر مجموعة تغييرات أخرى"
 
-#: changesets/models.py:71
 msgid "New - not approved"
 msgstr "جديد - لا موافقة عليه"
 
-#: changesets/models.py:72
 msgid "Approved - not started"
 msgstr "موافق عليه - لم يبدأ بعد"
 
-#: changesets/models.py:74
 msgid "Started - start button has been pressed but processing has not begun"
 msgstr "تم البدء - تم الضغط على زر البدء لكنّ المعالجة لم تبدأ بعد"
 
-#: changesets/models.py:75
 msgid "Executing - being processed"
 msgstr "التنفيذ جارٍ - المعالجة جارية"
 
-#: changesets/models.py:76
 msgid "Failed - had errors, changes were not made"
 msgstr "فشلت العملية - تضمنت أخطاءً، لم تتم التغييرات"
 
-#: changesets/models.py:77
 msgid "Successful - completed without errors and not rolled back"
 msgstr "نجحت العملية - تمّت من دون أخطاء ولم يتم استرجاعها"
 
-#: changesets/models.py:79
 msgid "Partially successful - rollback was not able to rollback all changes"
 msgstr "نجحت العملية جزئياً - لم يكن بالإمكان استرجاع كل التغييرات"
 
-#: changesets/models.py:80
 msgid "Rolled back - some or all changes have been rolled back"
 msgstr "تم الاسترجاع - تم استرجاع بعض التغييرات أو كلها"
 
-#: changesets/models.py:91 civil_registry/models.py:114
-#: help_desk/models.py:159 register/models.py:241
+#, fuzzy
+#| msgid "Username"
 msgid "name"
-msgstr "الاسم"
+msgstr "اسم المستخدم"
 
-#: changesets/models.py:93 changesets/models.py:517
 msgid "change"
 msgstr "التغيير"
 
-#: changesets/models.py:96
 msgid "how to select"
 msgstr "كيفية الاختيار"
 
-#: changesets/models.py:99
 msgid ""
 "How to select affected voters. If you select another changeset, it will "
 "change the same voters who were changed in the other changeset, which might "
@@ -705,1240 +527,918 @@ msgstr ""
 "هو عينه كاستخدام القواعد عينها لاختيار الناخبين التي استخدمتها مجموعة "
 "التغييرات الأخرى."
 
-#: changesets/models.py:109
 msgid "other changeset"
 msgstr "مجموعة تغييرات أخرى"
 
-#: changesets/models.py:111
 msgid "Another changeset to select voters from or to roll back."
 msgstr "مجموعة تغييرات أخرى لاختيار الناخبين منها أو لاسترجاعها"
 
-#: changesets/models.py:123
 msgid "selected centers"
 msgstr "المراكز المختارة"
 
-#: changesets/models.py:136
 msgid "selected citizens"
 msgstr "المواطنون المختارون"
 
-#: changesets/models.py:144
 msgid "target center"
 msgstr "المركز الهدف"
 
-#: changesets/models.py:158
 msgid "Optional text message to send to affected voters after applying change"
 msgstr "رسالة نصية اختيارية يمكن إرسالها للناخبين المتأثرين بعد إحداث التغيير"
 
-#: changesets/models.py:162
 msgid "justification"
 msgstr "المبرر"
 
-#: changesets/models.py:163
 msgid ""
 "Reason for the changes. Include references to legal justification for the "
 "changes if possible."
 msgstr "سبب التغييرات. أدخِل مراجع لمبررات قانونية للتغييرات إذا أمكن."
 
-#: changesets/models.py:169
 msgid "approvers"
 msgstr "الجهات الموافقة"
 
-#: changesets/models.py:174 help_desk/models.py:193 voting/models.py:149
-#: voting/models.py:473
 msgid "start time"
 msgstr "وقت البدء"
 
-#: changesets/models.py:176
 msgid "When execution of the changeset started."
 msgstr "وقت بدء تنفيذ مجموعة التغييرات."
 
-#: changesets/models.py:178
 msgid "finish time"
 msgstr "وقت الانتهاء"
 
-#: changesets/models.py:185
 msgid "queued by"
 msgstr "تم الوضع على قائمة الانتظار من قبل"
 
-#: changesets/models.py:187
 msgid "The user who queued the changeset for execution."
 msgstr "المستخدم الذي وضع مجموعة التغييرات على قائمة الانتظار للتنفيذ."
 
-#: changesets/models.py:198
 msgid "status"
 msgstr "الحالة"
 
-#: changesets/models.py:207
 msgid "rollback changeset"
 msgstr "استرجع مجموعة تغييرات أخرى"
 
-#: changesets/models.py:208
 msgid ""
 "If this changeset has been rolled back, this is the changeset that did it."
 msgstr ""
 "إذا تم استرجاع مجموعة التغييرات هذه، هذه هي مجموعة التغييرات التي قامت بذلك."
 
-#: changesets/models.py:213
 msgid "error text"
 msgstr "نص خطأ"
 
-#: changesets/models.py:216
 msgid "If the changes failed, this will contain the error message(s)."
 msgstr "إذا فشلت التغييرات، سوف يتضمن هذا رسالة (رسائل) الأخطاء."
 
-#: changesets/models.py:220 changesets/models.py:506
 msgid "changeset"
 msgstr "مجموعة التغييرات"
 
-#: changesets/models.py:221
 msgid "changesets"
 msgstr "مجموعات التغييرات"
 
-#: changesets/models.py:228
 msgid "Approve changeset"
 msgstr "الموافقة على مجموعة التغييرات"
 
-#: changesets/models.py:229
 msgid "Start changeset"
 msgstr "البدء بمجموعة التغييرات"
 
-#: changesets/models.py:230
 msgid "Browse changesets"
 msgstr "البحث في مجموعة التغييرات"
 
-#: changesets/models.py:231
 msgid "Read changeset"
 msgstr "قراءة مجموعة التغييرات"
 
-#: changesets/models.py:503
 msgid "changed"
 msgstr "تم التغيير"
 
-#: changesets/models.py:512 civil_registry/models.py:127
-#: help_desk/forms.py:270 help_desk/models.py:213 register/models.py:51
-#: register/models.py:413 register/models.py:567
 msgid "citizen"
 msgstr "المواطن"
 
-#: changesets/models.py:524
 msgid "from center"
 msgstr "من المركز"
 
-#: changesets/models.py:532
 msgid "to center"
 msgstr "إلى المركز"
 
-#: changesets/models.py:541
 msgid "change record"
 msgstr "سجل التغيير"
 
-#: changesets/models.py:542
 msgid "change records"
 msgstr "سجلات التغيير"
 
-#: changesets/models.py:598 help_desk/models.py:30 register/admin.py:124
-#: register/views.py:705
-#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:21
-#: vr_dashboard/views/views.py:1152 vr_dashboard/views/views.py:1185
-#: vr_dashboard/views/views.py:1462
 msgid "Yes"
 msgstr "نعم"
 
-#: changesets/models.py:598 help_desk/models.py:31 register/admin.py:125
-#: register/views.py:706
-#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:23
-#: vr_dashboard/views/views.py:1152 vr_dashboard/views/views.py:1185
-#: vr_dashboard/views/views.py:1462
 msgid "No"
 msgstr "لا"
 
-#: changesets/templates/changesets/changerecord_browse.html:7
-#: changesets/templates/changesets/uploadedcitizen_browse.html:18
 msgid "Back to changeset"
 msgstr "العودة إلى مجموعة التغيير"
 
-#: changesets/templates/changesets/changerecord_browse.html:9
 msgid "Back to changesets"
 msgstr "العودة إلى مجموعات التغيير"
 
-#: changesets/templates/changesets/changerecord_list.html:3
 msgid "Changes made"
 msgstr "تم إجراء التغييرات"
 
-#: changesets/templates/changesets/changeset_edit.html:15
 msgid "Add changeset"
 msgstr "إضافة مجموعة تغيير"
 
-#: changesets/templates/changesets/changeset_edit.html:17
 msgid "Edit changeset"
 msgstr "تنقيح مجموعة التغييرات"
 
-#: changesets/templates/changesets/changeset_edit.html:39
-#: help_desk/models.py:37 help_desk/templates/help_desk/staff/create.html:17
-#: help_desk/templates/help_desk/staff/set_password.html:14
-#: help_desk/templates/help_desk/staff/update.html:17
-#: libya_elections/templates/registration/registration_form.html:40
-#: libya_site/templates/bread/edit.html:46
-#: libya_site/templates/libya_site/check_registration.html:50
-#: text_messages/templates/text_messages/messagetext_form.html:41
 msgid "Submit"
 msgstr "ارسل"
 
-#: changesets/templates/changesets/changeset_read.html:33
-#: libya_site/templates/bread/browse.html:126
-#: libya_site/templates/bread/label_value_read.html:25
-#: text_messages/templates/text_messages/messagetext_list.html:39
-#: voting/templates/voting/election_label_value_read.html:8
 msgid "Edit"
 msgstr "تنقيح"
 
-#: changesets/templates/changesets/changeset_read.html:38
 msgid "Revoke approval"
 msgstr "إلغاء الموافقة"
 
-#: changesets/templates/changesets/changeset_read.html:44
-#: rollgen/templates/rollgen/new.html:101 voting/views.py:21
 msgid "Start"
 msgstr "البدء"
 
-#: changesets/templates/changesets/uploadedcitizen_browse.html:3
 msgid "Citizens uploaded"
 msgstr "المواطنون الذي تم تحميلهم"
 
-#: changesets/templates/changesets/uploadedcitizen_browse.html:6
 #, python-format
 msgid "Browse %(names)s"
 msgstr "البحث%(names)s"
 
-#: changesets/templates/changesets/uploadedcitizen_browse.html:9
 msgid "These are the citizens affected by the changeset:"
 msgstr "هؤلاء هم المواطنون المتأثرون بمجموعة التغييرات"
 
-#: changesets/views_changes.py:16 changesets/views_uploadedcitizens.py:10
-#: civil_registry/views.py:93 help_desk/forms.py:78
-#: help_desk/templates/help_desk/screen.html:29 libya_site/forms.py:52
 msgid "National ID"
 msgstr "الرقم الوطني"
 
-#: changesets/views_changes.py:17 changesets/views_changeset.py:40
-#: changesets/views_uploadedcitizens.py:11
-#: help_desk/templates/help_desk/screen.html:20 register/views.py:504
 msgid "Name"
 msgstr "الإسم"
 
-#: changesets/views_changes.py:18
 msgid "Changed"
 msgstr "تم التغيير"
 
-#: changesets/views_changes.py:19
 msgid "Change"
 msgstr "التغيير"
 
-#: changesets/views_changeset.py:39
 msgid "Created"
 msgstr "تم الإنشاء"
 
-#: changesets/views_changeset.py:42
 msgid "Approvals"
 msgstr "الموافقات"
 
-#: changesets/views_changeset.py:46
 msgid "name, message, or justification"
 msgstr "الاسم، الرسالة، أو التبرير"
 
-#: changesets/views_changeset.py:138
 msgid "Number of uploaded voters"
 msgstr "عدد الناخبين الذين تم تحميلهم"
 
-#: changesets/views_changeset.py:140
 msgid "Number of affected voters"
 msgstr "عدد الناخبين المتأثرين"
 
-#: changesets/views_changeset.py:148
 msgid "Number of approvals"
 msgstr "عدد الموافقات"
 
-#: changesets/views_changeset.py:203
 msgid "Changeset can no longer be edited"
 msgstr "لم يعد بالإمكان تنقيح مجموعة التغييرات"
 
-#: changesets/views_changeset.py:241
 msgid "This changeset may no longer be deleted."
 msgstr "لم يعد بالإمكان حذف مجموعة التغييرات"
 
-#: changesets/views_changeset.py:295
 msgid "You cannot do that after the changeset has been started."
 msgstr "لا يمكنك القيام بذلك بعد أن يتم البدء بمجموعة التغييرات."
 
-#: changesets/views_changeset.py:299
 msgid "You have already approved this changeset."
 msgstr "لقد سبق أن وافقت على مجموعة التغييرات هذه."
 
-#: changesets/views_changeset.py:302
 msgid "You have approved this changeset."
 msgstr "لقد وافقت على مجموعة التغييرات هذه."
 
-#: changesets/views_changeset.py:304
 msgid "You are not authorized to approve this changeset."
 msgstr "لست مخوّلاً للموافقة على مجموعة التغييرات هذه."
 
-#: changesets/views_changeset.py:309
 msgid "You have revoked your approval."
 msgstr "لقد ألغيت موافقتك."
 
-#: changesets/views_changeset.py:311
 msgid "You did not approve this changeset."
 msgstr "لم توافق على مجموعة التغييرات هذه."
 
-#: changesets/views_changeset.py:317
 msgid "Changesets can only be started when they are in the approved status."
 msgstr "لا يمكن البدء بمجموعات التغيير إلاّ إذا كانت قد تمت الموافقة عليها."
 
-#: changesets/views_changeset.py:327
 msgid "You are not authorized to start this changeset."
 msgstr "لست مخولاً للبدء بمجموعة التغييرات هذه. "
 
-#: civil_registry/models.py:57
 msgid "civil registry id"
 msgstr "رقم السجل المدني"
 
-#: civil_registry/models.py:58 register/models.py:50
 msgid "Uniquely identifies a person, even across changes of national ID"
 msgstr "يعرّف الأشخاص بشكل فريد، حتى عند إحداث تغيير في الرقم الوطني"
 
-#: civil_registry/models.py:62
 msgid "national id"
 msgstr "الرقم الوطني"
 
-#: civil_registry/models.py:63
 msgid "The citizen's 12-digit national ID number"
 msgstr "الرقم الوطني للمواطن المؤلف من 12 خانةً"
 
-#: civil_registry/models.py:72
 msgid "family book record number"
 msgstr "رقـــــــــم القيـــــــد"
 
-#: civil_registry/models.py:73
-#: help_desk/templates/help_desk/screens/10_check_frn.html:5
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:24
-#: libya_site/forms.py:55
 msgid "Family Book Record Number"
 msgstr "رقـــــــــم القيـــــــد"
 
-#: civil_registry/models.py:75
 msgid "first name"
 msgstr "الاسم"
 
-#: civil_registry/models.py:77
 msgid "father name"
 msgstr "اسم الأب"
 
-#: civil_registry/models.py:79
 msgid "grandfather name"
 msgstr "اسم الجد"
 
-#: civil_registry/models.py:81
 msgid "family name"
 msgstr "الشهرة"
 
-#: civil_registry/models.py:83
 msgid "mother name"
 msgstr "اسم الأم"
 
-#: civil_registry/models.py:85
 msgid "birth date"
 msgstr "سنه الميلاد"
 
-#: civil_registry/models.py:87 rollgen/models.py:159
 msgid "gender"
 msgstr "الجنس"
 
-#: civil_registry/models.py:89
 msgid "address"
 msgstr "العنوان"
 
-#: civil_registry/models.py:93
 msgid "office id"
 msgstr "رقم المكتب"
 
-#: civil_registry/models.py:94
 msgid "branch id"
 msgstr "رقم الفرع"
 
-#: civil_registry/models.py:95
 msgid "state"
 msgstr "الحالة"
 
-#: civil_registry/models.py:98
 msgid "missing"
 msgstr "ناقص"
 
-#: civil_registry/models.py:101
 msgid "If set, this citizen was not in the last data dump."
 msgstr "في حال تم التحديد،  هذا المواطن لم يكن  في التفريغ الأخير للبيانات."
 
-#: civil_registry/models.py:128
 msgid "citizens"
 msgstr "المواطنون"
 
-#: civil_registry/views.py:94
-#: vr_dashboard/templates/vr_dashboard/base.html:140
 msgid "Gender"
 msgstr "الجنس"
 
-#: civil_registry/views.py:95 staff/views.py:87
 msgid "First name"
 msgstr "الاسم"
 
-#: civil_registry/views.py:96
 msgid "Father's name"
 msgstr "اسم الأب"
 
-#: civil_registry/views.py:97
 msgid "Grandfather's name"
 msgstr "اسم الجد"
 
-#: civil_registry/views.py:98
 msgid "Family name"
 msgstr "الشهرة"
 
-#: civil_registry/views.py:99
 msgid "Mother's name"
 msgstr "اسم الأم"
 
-#: civil_registry/views.py:100
 msgid "Birth date"
 msgstr "تاريخ الميلاد"
 
-#: civil_registry/views.py:104
 msgid ""
 "National ID, FBR number, First name, Father's name, Mother's name, "
 "Grandfather's name, or Family name"
-msgstr "الرقم الوطني، الرقم الضريبي، الاسم، اسم الأب، اسم الأم، اسم الجد أو الشهرة "
+msgstr ""
+"الرقم الوطني، الرقم الضريبي، الاسم، اسم الأب، اسم الأم، اسم الجد أو الشهرة "
 
-#: civil_registry/views.py:123
-#: help_desk/templates/help_desk/includes/case_details.html:74
 msgid "Blocked"
 msgstr "محظور"
 
-#: help_desk/forms.py:30
 msgid "Days of the week"
 msgstr "أيام الأسبوع"
 
-#: help_desk/forms.py:31
 msgid "Hours of the day"
 msgstr "ساعات اليوم"
 
-#: help_desk/forms.py:32
 msgid "Day"
 msgstr "يوم"
 
-#: help_desk/forms.py:33
 msgid "Week"
 msgstr "أسبوع"
 
-#: help_desk/forms.py:34
 msgid "Month"
 msgstr "شهر"
 
-#: help_desk/forms.py:35
 msgid "Year"
 msgstr "سنة"
 
-#: help_desk/forms.py:36 help_desk/templates/help_desk/reports/cases.html:16
 msgid "Operator"
 msgstr "عامل الهاتف"
 
-#: help_desk/forms.py:37
-#: help_desk/templates/help_desk/includes/case_details.html:40
-#: help_desk/templates/help_desk/reports/cases.html:17
 msgid "Field staff"
 msgstr "موظف ميدانى"
 
-#: help_desk/forms.py:46
 msgid "Staff ID number"
 msgstr "رقم الموظف"
 
-#: help_desk/forms.py:55
 msgid "Invalid staff ID format"
 msgstr "الرقم الوظيفي غير صالح"
 
-#: help_desk/forms.py:63
 msgid "No active field staff with that ID"
 msgstr "هذا الرقم الوظيفى غير مُفعل "
 
-#: help_desk/forms.py:94
+msgid "Staff ID does not match caller phone number"
+msgstr "الرقم الوظيفي لا يطابق رقم الهاتف"
+
 msgid "That is not a valid National ID number."
 msgstr "الرقم الوطنى غير صالح "
 
-#: help_desk/forms.py:236
+msgid "End date"
+msgstr "تاريخ الانتهاء"
+
+msgid "End date cannot be in the past"
+msgstr "تاريخ الانتهاء، لا يمكن أن يكون في الماضي"
+
 msgid "A comment is required"
 msgstr "مطلوب التعليق "
 
-#: help_desk/forms.py:260 help_desk/forms.py:268
 msgid "any"
 msgstr "أي واحد"
 
-#: help_desk/forms.py:261
 msgid "in progress"
 msgstr "جاري"
 
-#: help_desk/forms.py:262
 msgid "review required"
 msgstr "يتطلب مراجعة"
 
-#: help_desk/forms.py:263
 msgid "action required"
 msgstr "يتطلب اتخاذ تدبير"
 
-#: help_desk/forms.py:264
 msgid "complete"
 msgstr "تم"
 
-#: help_desk/forms.py:269
 msgid "staff"
 msgstr "الموظفون"
 
-#: help_desk/forms.py:273
 msgid "From date"
 msgstr "من تاريخ"
 
-#: help_desk/forms.py:274
 msgid "To date"
 msgstr "إلى تاريخ"
 
-#: help_desk/forms.py:275
 msgid "Call status"
 msgstr "وضع المكالمة"
 
-#: help_desk/forms.py:277
 msgid "Call made by"
 msgstr "أجريت المكالمة من قبل"
 
-#: help_desk/forms.py:285
 msgid "The ending date must exceed the beginning date."
 msgstr "تاريخ الانتهاء يجب أن يلي تاريخ البدء"
 
-#: help_desk/forms.py:295
 msgid "Data to show"
 msgstr "البيانات للإظهار"
 
-#: help_desk/forms.py:297
 msgid "Number of calls"
 msgstr "عدد المكالمات"
 
-#: help_desk/forms.py:298
 msgid "Average length of calls in seconds"
 msgstr "متوسط المدة التي تستغرقها المكالمات بالثواني"
 
-#: help_desk/forms.py:305
 msgid "Call outcomes"
 msgstr "نتائج المكالمات"
 
-#: help_desk/models.py:28
 msgid "Previous screen"
 msgstr "الصفحة السابقة"
 
-#: help_desk/models.py:29 help_desk/templates/help_desk/screen.html:9
 msgid "Start from Beginning"
 msgstr "البدء من البداية"
 
-#: help_desk/models.py:32
 msgid "No, Caller is a Citizen"
 msgstr "كلا، المتصل هو مواطن"
 
-#: help_desk/models.py:33
 msgid "Name and ID match"
 msgstr "الاسم والرقم يتطابقان"
 
-#: help_desk/models.py:34
 msgid "Name and ID do not match"
 msgstr "الاسم والرقم لا يتطابقان"
 
-#: help_desk/models.py:35
 msgid "Continue"
 msgstr "الاستمرار"
 
-#: help_desk/models.py:36 help_desk/screens.py:505
-#: help_desk/templates/help_desk/screen.html:57
 msgid "Caller hung up"
 msgstr "أقفل المُتصل الخط "
 
-#: help_desk/models.py:38
 msgid "Unable to Provide"
 msgstr "غير قادر على التوفير"
 
-#: help_desk/models.py:39
 msgid "Done"
 msgstr "تم"
 
-#: help_desk/models.py:132
 msgid "Person has complained about the service."
 msgstr "المواطن لديه شكوى من الخدمات المقدمة"
 
-#: help_desk/models.py:133
 msgid "Accidentally unlocked."
 msgstr "تم إلغاء القفل غن طريق الخطأ "
 
-#: help_desk/models.py:134
 msgid "Person on the end of the phone changes their mind about unlocking."
 msgstr "في نهاية المكالمة غير المتصل رآيه بخصوص إلغاء القفل"
 
-#: help_desk/models.py:135
 msgid "Phone call was harassing. "
 msgstr "المكالمة الهاتفية غير جدية "
 
-#: help_desk/models.py:136
 msgid "Other reason, see comments."
 msgstr "أسباب آخرى، أنظر الملاحظات "
 
-#: help_desk/models.py:150
 msgid "Mark as seen."
 msgstr "تم وضع علامة تمت المشاهدة "
 
-#: help_desk/models.py:151
 msgid "Re-lock."
 msgstr "إعادة القفل"
 
-#: help_desk/models.py:152
 msgid "Ignore."
 msgstr "تجاهل "
 
-#: help_desk/models.py:161
 msgid "staff id"
 msgstr "رقم الموظف"
 
-#: help_desk/models.py:169
 msgid "suspended"
 msgstr "معلق"
 
-#: help_desk/models.py:173
 msgid "field staff member"
 msgstr "موظف ميدانى"
 
-#: help_desk/models.py:174
 msgid "field staff members"
 msgstr "الموظفيين الميدانيين"
 
-#: help_desk/models.py:176
 msgid "Can browse field staff"
 msgstr "يمكن البحث في موظفي الميدان"
 
-#: help_desk/models.py:177
 msgid "Can read field staff"
 msgstr "يمكن الإطلاع على موظفي الميدان"
 
-#: help_desk/models.py:178
 msgid "Can suspend field staff"
 msgstr "يمكن تعليق موظفي الميدان"
 
-#: help_desk/models.py:194 voting/models.py:156 voting/models.py:474
 msgid "end time"
 msgstr "وقت الإنتهاء"
 
-#: help_desk/models.py:196
 msgid "current screen"
 msgstr "الشاشة الحالية"
 
-#: help_desk/models.py:203
 msgid "operator"
 msgstr "عامل الهاتف"
 
-#: help_desk/models.py:207
 msgid "field staff"
 msgstr "موظف ميدانى"
 
-#: help_desk/models.py:228
 msgid "changes increased"
 msgstr "زيادة التغييرات"
 
-#: help_desk/models.py:232
 msgid "Registration of citizen at time of call"
 msgstr "تسجيل المواطن في نفس وقت المكالمة"
 
-#: help_desk/models.py:233 register/models.py:451
 msgid "registration"
 msgstr "التسجيل"
 
-#: help_desk/models.py:244
 msgid "Not marked for review"
 msgstr "لم يتم وضع علامة للمراجعة"
 
-#: help_desk/models.py:245
 msgid "Marked for review"
 msgstr "تم وضع علامة للمراجعة"
 
-#: help_desk/models.py:246
 msgid "Recommendation made"
 msgstr "التوصيات المقدمة "
 
-#: help_desk/models.py:250
 msgid "review classification"
 msgstr "مراجعة التصنيف"
 
-#: help_desk/models.py:255 help_desk/models.py:533
 msgid "reason marked"
 msgstr "تم تحديد السبب"
 
-#: help_desk/models.py:260 help_desk/models.py:537
 msgid "recommended action"
 msgstr "الإجراء الموصى به"
 
-#: help_desk/models.py:279
 msgid "Hung up"
 msgstr "إغلاق الخط"
 
-#: help_desk/models.py:280
 msgid "Invalid staff ID"
 msgstr "بطاقة الموظف غير صالحة"
 
-#: help_desk/models.py:281
 msgid "Wrong staff name"
 msgstr "اسم الموظف خطأ"
 
-#: help_desk/models.py:282
 msgid "Wrong staff phone"
 msgstr "رقم هاتف الموظف خطأ"
 
-#: help_desk/models.py:283
 msgid "Invalid NID"
 msgstr "الرقم الوطني غير صالح"
 
-#: help_desk/models.py:284
 msgid "Invalid name or birth year"
 msgstr "الاسم غير صحيح أو سنة الولادة غير صحيحة"
 
-#: help_desk/models.py:285
 msgid "Invalid FRN and mother's name"
 msgstr "قيد كتيب العائلة غير صحيح واسم الأم غير صحيح"
 
-#: help_desk/models.py:286
 msgid "Not registered"
 msgstr "غير مسجل"
 
-#: help_desk/models.py:287
 msgid "No help needed"
 msgstr "لا حاجة للمساعدة"
 
-#: help_desk/models.py:288
 msgid "No change"
 msgstr "لا يوجد تغيير"
 
-#: help_desk/models.py:289
 msgid "Increased changes"
 msgstr "تغييرات إضافية"
 
-#: help_desk/models.py:290
 msgid "Unlocked"
 msgstr "مفتوح"
 
-#: help_desk/models.py:291
 msgid "Relocked"
 msgstr "إعادة الإغلاق"
 
-#: help_desk/models.py:294
+msgid "Abandoned"
+msgstr "متروكة"
+
 msgid "call outcome"
 msgstr "نتيجة الاتصال"
 
-#: help_desk/models.py:300 help_desk/models.py:525
 msgid "case"
 msgstr "الحالة"
 
-#: help_desk/models.py:301
 msgid "cases"
 msgstr "الحالات"
 
-#: help_desk/models.py:322
 #, python-format
 msgid "Call started %(start_time)s. Operator %(operator)s. "
 msgstr "بدء المكالمة %(start_time)s. عامل الهاتف %(operator)s."
 
-#: help_desk/models.py:326
 #, python-format
 msgid "Citizen is %s. "
 msgstr "المواطن هو %s"
 
-#: help_desk/models.py:328
 #, python-format
 msgid "Call ended %s. "
 msgstr "تم إنهاء المكالمة %s."
 
-#: help_desk/models.py:414
 msgid "Complete"
 msgstr "تم"
 
-#: help_desk/models.py:416 help_desk/views/report_views.py:271
 msgid "In progress"
 msgstr "جاري"
 
-#: help_desk/models.py:489
 msgid "screen record"
 msgstr "سجل الشاشة"
 
-#: help_desk/models.py:490
 msgid "screen records"
 msgstr "سجلات الشاشة"
 
-#: help_desk/models.py:518
-#: help_desk/templates/help_desk/includes/case_details.html:130
 msgid "Comment"
 msgstr "تعليق "
 
-#: help_desk/models.py:519
 msgid "Mark case for review"
 msgstr "ضع علامة لمراجعة الحالة"
 
-#: help_desk/models.py:520
 msgid "Recommend action on case"
 msgstr "التوصية باتخاذ إجراء بخصوص الحالة"
 
-#: help_desk/models.py:521
 msgid "Cancel open re-registration period"
 msgstr "إلغاء فترة فتح إعادة التسجيل"
 
-#: help_desk/models.py:522
 msgid "Mark case as resolved"
 msgstr "ضع علامة تم حل الحالة"
 
-#: help_desk/models.py:527
 msgid "kind of update"
 msgstr "نوع من التحديث"
 
-#: help_desk/models.py:529 subscriptions/models.py:13
 msgid "user"
 msgstr "مستخدم"
 
-#: help_desk/models.py:531
 msgid "timestamp"
 msgstr "الطابع الزمني"
 
-#: help_desk/models.py:540
 msgid "comment"
 msgstr "تعليق "
 
-#: help_desk/models.py:544
 msgid "update"
 msgstr "التحديث"
 
-#: help_desk/models.py:545
 msgid "updates"
 msgstr "التحديثات"
 
-#: help_desk/screens.py:129 help_desk/screens.py:216
+msgid "end date"
+msgstr "تاريخ الانتهاء"
+
+msgid "active range"
+msgstr "نطاق نشط"
+
+msgid "active ranges"
+msgstr "نطاقات نشطة"
+
 msgid "Redirecting to current screen for this case."
 msgstr "إعادة التوجيه إلى الصفحة الحالية لهذه الحالة"
 
-#: help_desk/screens.py:188
 msgid ""
 "The voter had no more changes allowed from that number. The allowed changes "
 "have been increased."
 msgstr "الناخب قد إستنفد كل فرص التغيير من رقم هاتفه. تم زيادة عدد المحاولات"
 
-#: help_desk/screens.py:288
 msgid "The call has ended."
 msgstr "تم إنهاء المكالمة."
 
-#: help_desk/screens.py:297
-#: libya_elections/templates/registration/login.html:4
-#: libya_elections/templates/registration/login.html:5
+msgid "Ask caller phone"
+msgstr "إسأل المتصل"
+
 msgid "Welcome"
 msgstr "مرحباً"
 
-#: help_desk/screens.py:310
 msgid "Ask Staff ID"
 msgstr "اسأل عن رقم الموظف"
 
-#: help_desk/screens.py:325
 msgid "Verify Staff Name"
 msgstr "تحقق من اسم الموظف"
 
-#: help_desk/screens.py:339
-msgid "Verify Staff Phone"
-msgstr "تحقق من رقم هاتف الموظف"
-
-#: help_desk/screens.py:353
 msgid "Get National ID"
 msgstr "أحصل على الرقم الوطنى"
 
-#: help_desk/screens.py:382
 msgid "Verify Name and Birth Year"
 msgstr "تحقق من الأسم وسنة الميلاد"
 
-#: help_desk/screens.py:397
 msgid "Citizen is not registered"
 msgstr "المواطن غير مُسجل"
 
-#: help_desk/screens.py:408
 msgid "Citizen is registered"
 msgstr "المواطن مُسجل"
 
-#: help_desk/screens.py:422
 msgid "Ask if can change from same phone"
 msgstr "إسأل اذا يمكن التغيير من نفس رقم الهاتف"
 
-#: help_desk/screens.py:436
 msgid "Verify Family Book Record Number or Mother's Name"
 msgstr "التحقق من رقم القيد أو إسم الأم"
 
-#: help_desk/screens.py:458
 msgid "How To Change Registration"
 msgstr "كيف يمكن تغيير التسجيل"
 
-#: help_desk/screens.py:475
 msgid "Period to Change Registration from another phone has started"
 msgstr "المدة المحددة لتغيير للتسجيل من رقم هاتف أخر تبدء الأن"
 
-#: help_desk/screens.py:489
 #, python-brace-format
 msgid ""
 "The phone number {phone_number} cannot be used for any more registrations."
 msgstr "لا يمكن استخدام رقم الهاتف {phone_number} لمزيد من التسجيلات."
 
-#: help_desk/screens.py:493
 #, python-brace-format
 msgid ""
 "The phone number {phone_number} can be used for {number} more registration."
 msgid_plural ""
 "The phone number {phone_number} can be used for {number} more registrations."
-msgstr[0] "يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
-msgstr[1] "يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
-msgstr[2] "يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
-msgstr[3] "يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
-msgstr[4] "يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
-msgstr[5] "يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
+msgstr[0] ""
+"يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
+msgstr[1] ""
+"يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
+msgstr[2] ""
+"يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
+msgstr[3] ""
+"يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
+msgstr[4] ""
+"يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
+msgstr[5] ""
+"يمكن استخدام رقم الهاتف {phone_number} للقيام بـ{number} تسجيلات إضافية."
 
-#: help_desk/screens.py:516
 msgid "Citizen is blocked from voting"
 msgstr "تم حظر هذا المواطن من الانتخاب"
 
-#: help_desk/screens.py:527
 msgid "Good Bye"
 msgstr "مع السلامة"
 
-#: help_desk/templates/help_desk/base.html:4
-#: help_desk/templates/help_desk/base.html:10
-#: libya_site/templates/libya_site/staff.html:13
 msgid "Caller Assistance"
 msgstr "مساعدة المتصل"
 
-#: help_desk/templates/help_desk/cases/case_detail.html:4
-#: help_desk/templates/help_desk/cases/case_detail.html:7
 msgid "Call Report"
 msgstr "تقرير الاتصال"
 
-#: help_desk/templates/help_desk/cases/case_detail.html:19
 msgid "Re-lock"
 msgstr "إعادة قفل"
 
-#: help_desk/templates/help_desk/cases/case_detail.html:24
 msgid "Mark or comment"
 msgstr "ضع علامة أو تعليق"
 
-#: help_desk/templates/help_desk/cases/case_detail.html:26
 msgid "Return to cases"
 msgstr "العودة إلى الحالات"
 
-#: help_desk/templates/help_desk/cases/update_form.html:4
 msgid "LibyaVotes Help Desk - Update Case"
 msgstr "مكتب الاتصالات لليبيا تصوّت - تحديث الملف"
 
-#: help_desk/templates/help_desk/cases/update_form.html:7
 msgid "Help Desk Field Case"
 msgstr "ملف ميداني في مركز الاتصالات للدعم"
 
-#: help_desk/templates/help_desk/cases/update_form.html:16
 msgid "Update Form"
 msgstr "نموذج التحديث"
 
-#: help_desk/templates/help_desk/cases/update_form.html:23
 msgid "Return to case"
 msgstr "العودة إلى الحالة"
 
-#: help_desk/templates/help_desk/includes/case_details.html:3
 msgid "Case"
 msgstr "الحالة"
 
-#: help_desk/templates/help_desk/includes/case_details.html:5
 msgid "Operator:"
 msgstr "عامل الهاتف"
 
-#: help_desk/templates/help_desk/includes/case_details.html:8
 msgid "Case number:"
 msgstr "رقم الحالة:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:11
 msgid "Start time:"
 msgstr "وقت البدء:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:15
 msgid "End time:"
 msgstr "وقت الإنتهاء:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:20
 msgid "Outcome:"
 msgstr "النتيجة:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:25
 msgid "Review status:"
 msgstr "مراجعة الحالة:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:29
 msgid "Reason for review:"
 msgstr "سبب المراجعة:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:34
 msgid "Recommended action:"
 msgstr "الإجراء الموصى به:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:42
-#: help_desk/templates/help_desk/includes/case_details.html:55
 msgid "Name:"
 msgstr "إسم:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:45
 msgid "Staff ID:"
 msgstr "رقم الموظف:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:48
-#: help_desk/templates/help_desk/includes/case_details.html:88
 msgid "Phone number:"
 msgstr "رقم الهاتف:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:53
 msgid "Citizen"
 msgstr "مواطن"
 
-#: help_desk/templates/help_desk/includes/case_details.html:58
 msgid "National ID:"
 msgstr "الرقم الوطني:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:61
 msgid "Birth date:"
 msgstr "سنه الميلاد:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:64
 msgid "Gender:"
 msgstr ":الجنس"
 
-#: help_desk/templates/help_desk/includes/case_details.html:67
 msgid "Family Book Record Number:"
 msgstr "رقـــــــــم القيـــــــد:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:70
 msgid "Mother:"
 msgstr "إسم الأم:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:76
 msgid "Blocked:"
 msgstr "محظور:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:77
-#: help_desk/templates/help_desk/screens/12_blocked.html:3
 msgid "The citizen is blocked from registering or voting."
 msgstr "هذا المواطن محظور من التسجّل أو الانتخاب."
 
-#: help_desk/templates/help_desk/includes/case_details.html:80
-#: register/models.py:543 vr_dashboard/templates/vr_dashboard/base.html:36
 msgid "Registration"
 msgstr "التسجيل"
 
-#: help_desk/templates/help_desk/includes/case_details.html:82
 msgid "Center:"
 msgstr "المركز:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:85
 msgid "Office area:"
 msgstr "موقع المركز:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:92
 msgid "Unlocked until:"
 msgstr "غير مقفل حتى:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:95
 msgid "Changes remaining:"
 msgstr "التغييرات المتاحة:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:99
 msgid "Changes have been increased"
 msgstr "التغييرات التي تم زيارتها:"
 
-#: help_desk/templates/help_desk/includes/case_details.html:108
 msgid "Updates"
 msgstr "التحديث"
 
-#: help_desk/templates/help_desk/includes/case_details.html:112
 msgid "Timestamp"
 msgstr "الطابع الزمني"
 
-#: help_desk/templates/help_desk/includes/case_details.html:115
-#: help_desk/templates/help_desk/staff/search.html:48
-#: subscriptions/views.py:16 subscriptions/views.py:35
 msgid "User"
 msgstr "مستخدم"
 
-#: help_desk/templates/help_desk/includes/case_details.html:118
 msgid "Type of Update"
 msgstr "نوع التحديث"
 
-#: help_desk/templates/help_desk/includes/pagination.html:6
-#: httptester/templates/httptester/table.html:20
-msgid "Previous"
-msgstr "السابق"
-
-#: help_desk/templates/help_desk/includes/pagination.html:10
-#, python-format
-msgid "Page %(number)s of %(pages)s."
-msgstr "صفحة %(number)s من %(pages)s"
-
-#: help_desk/templates/help_desk/includes/pagination.html:16
-#: httptester/templates/httptester/table.html:24
-msgid "Next"
-msgstr "اللاحق"
-
-#: help_desk/templates/help_desk/main.html:8
 msgid "Calls in progress"
 msgstr "المكالمات تحت الإجراء"
 
-#: help_desk/templates/help_desk/main.html:16
 msgid "Press the start new call button to begin caller assistance."
 msgstr "اضغط على زر البدء باتصال جديد للبدء بمساعدة المتصل"
 
-#: help_desk/templates/help_desk/main.html:21
 msgid "New call received"
 msgstr "المكالمات المستلمة"
 
-#: help_desk/templates/help_desk/reports/base.html:11
-#: help_desk/templates/help_desk/reports/cases.html:4
-#: libya_site/templates/libya_site/staff.html:14
 msgid "Call Reports"
 msgstr "تقارير الاتصال"
 
-#: help_desk/templates/help_desk/reports/base.html:55
 msgid "There are no cases which match your query."
 msgstr "لا توجد ملفات مطابقة لموضوع الاستفسار"
 
-#: help_desk/templates/help_desk/reports/cases.html:13
 msgid "Case #"
 msgstr "رقم الحالة"
 
-#: help_desk/templates/help_desk/reports/cases.html:14 voting/forms.py:38
 msgid "Start time"
 msgstr "وقت البدء"
 
-#: help_desk/templates/help_desk/reports/cases.html:15
 msgid "State"
 msgstr "الحالة"
 
-#: help_desk/templates/help_desk/reports/cases.html:18
 msgid "Outcome"
 msgstr "النتيجة"
 
-#: help_desk/templates/help_desk/reports/cases.html:19 voting/forms.py:44
 msgid "End time"
 msgstr "وقت الإنتهاء"
 
-#: help_desk/templates/help_desk/reports/dashboard.html:6
 msgid "Search records"
 msgstr "سجلات البحث"
 
-#: help_desk/templates/help_desk/reports/dashboard.html:10
-#: help_desk/templates/help_desk/staff/search.html:17
-#: libya_site/templates/bread/browse.html:44
 msgid "Search in:"
 msgstr "البحث في:"
 
-#: help_desk/templates/help_desk/reports/dashboard.html:11
 msgid ""
 "operator name, username, or email, field staff name, phone number, or staff "
 "ID, citizen name, national ID, or registry number, or registration center "
 "name or number."
-msgstr "اسم عامل الهاتف، اسم المستخدم، أو البريد الإلكتروني، اسم الموظف الميداني، رقم الهاتف، أو رقم الموظف، الرقم الوطني، أو رقم التسجيل، أو اسم مركز التسجيل أو رقمه"
+msgstr ""
+"اسم عامل الهاتف، اسم المستخدم، أو البريد الإلكتروني، اسم الموظف الميداني، "
+"رقم الهاتف، أو رقم الموظف، الرقم الوطني، أو رقم التسجيل، أو اسم مركز التسجيل "
+"أو رقمه"
 
-#: help_desk/templates/help_desk/reports/dashboard.html:32
 msgid "Apply Filters"
 msgstr "تطبيق التصفية"
 
-#: help_desk/templates/help_desk/reports/tab.html:5
 msgid "Individual cases"
 msgstr "حالات فردية"
 
-#: help_desk/templates/help_desk/reports/tab.html:6
 msgid "Statistics"
 msgstr "إحصائيات"
 
-#: help_desk/templates/help_desk/screen.html:12
 msgid "Previous Screen"
 msgstr "الصفحة السابقة"
 
-#: help_desk/templates/help_desk/screen.html:17
-#: help_desk/templates/help_desk/screens/3_check_staff_name.html:12
-#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:9
 msgid "Staff Name"
 msgstr "اسم الموظف"
 
-#: help_desk/templates/help_desk/screen.html:18
-#: help_desk/templates/help_desk/screen.html:21
-#: help_desk/templates/help_desk/screen.html:27
-#: help_desk/templates/help_desk/screen.html:30
 msgid "(not validated)"
 msgstr "(غير مصادق عليه)"
 
-#: help_desk/templates/help_desk/screen.html:26
-#: help_desk/templates/help_desk/screens/3_check_staff_name.html:8
-#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:5
 msgid "Staff ID"
 msgstr "رقم الموظف"
 
-#: help_desk/templates/help_desk/screens/10_check_frn.html:9
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:28
+msgid "Enter the phone number the call is coming from"
+msgstr "ادخل رفم الهاتف للمتصل"
+
 msgid "Mother's Name"
 msgstr "اسم الأم"
 
-#: help_desk/templates/help_desk/screens/10_check_frn.html:18
 msgid "Ask the citizen"
 msgstr "إسأل المواطن"
 
-#: help_desk/templates/help_desk/screens/10_check_frn.html:22
 msgid ""
 "Provide either the citizen's Family Book Record Number or the citizen's "
 "Mother's Name."
 msgstr "قم بتقديم  رقم السجل العائلي للمواطن أو إسم أمه"
 
-#: help_desk/templates/help_desk/screens/10_check_frn.html:24
 msgid "Provide either your Family Book Record Number or your Mother's Name."
 msgstr "الرجاء تقديم رقم سجل عائلتك أو إسم أمك"
 
-#: help_desk/templates/help_desk/screens/10_check_frn.html:28
 msgid "Did they provide either correctly?"
 msgstr "هل قدم أحدهما صحيحاً؟"
 
-#: help_desk/templates/help_desk/screens/11_change_started.html:3
 msgid "Tell the caller"
 msgstr "أخبر المتصل"
 
-#: help_desk/templates/help_desk/screens/11_change_started.html:6
 msgid ""
 "The citizen has twelve hours, starting now, to change their registration "
 "using any phone."
-msgstr " لدى المواطن 12 ساعة تبدء الآن، ليقوم بتغيير تسجيله مستخدماً أي رقم هاتف."
+msgstr ""
+" لدى المواطن 12 ساعة تبدء الآن، ليقوم بتغيير تسجيله مستخدماً أي رقم هاتف."
 
-#: help_desk/templates/help_desk/screens/11_change_started.html:8
 msgid ""
 "You have twelve hours, starting now, to change your registration using any "
 "phone."
 msgstr "لديك 12 ساعة تبدء الآن، لتقوم بتغيير تسجيلك مستخدماً أي رقم هاتف"
 
-#: help_desk/templates/help_desk/screens/11_change_started.html:12
-msgid "The procedure: SMS 'NID#PC' to 10010"
-msgstr "العملية: رسالة نصية قصيرة تحتوي على NID#PC إلى 10010"
+msgid "The procedure: SMS 'NID#PC' to 15015"
+msgstr "للتسجيل : رسالة نصية قصيرة 'الرقم الوطني#رقم المركز' الى 15015"
 
-#: help_desk/templates/help_desk/screens/11_change_started.html:15
 msgid ""
 "Please advise the citizen to use their own phone (not a staff or relative’s "
 "phone)."
 msgstr "الرجاء إرشاد المواطن إلى استخدام هاتفه الخاص (وليس هاتف موظف أو قريب)"
 
-#: help_desk/templates/help_desk/screens/11_change_started.html:23
 msgid ""
 "If the citizen wants to check whether another phone number can still be used "
 "for registrations, enter it here"
@@ -1947,154 +1447,112 @@ msgstr ""
 "الرقم هنا"
 
 #. Translators: The button with this label checks if a phone number can be used for registrations
-#: help_desk/templates/help_desk/screens/11_change_started.html:26
 msgid "Check number"
 msgstr "تفقّد الرقم"
 
-#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:3
 msgid "Greet the caller"
 msgstr "قم بإلقاء التحية على المتصل"
 
-#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:4
 msgid ""
 "Hello, this is the HNEC Voter Registration Help Desk. I can assist you with "
 "a voter registration change."
-msgstr "السلام عليكم، هنا مركز مساعدة التسجيل الخاص بالمفوضية الوطنية العليا للانتخابات. يمكنني أن أساعدك في تغيير تسجيل الناخب."
+msgstr ""
+"السلام عليكم، هنا مركز مساعدة التسجيل الخاص بالمفوضية الوطنية العليا "
+"للانتخابات. يمكنني أن أساعدك في تغيير تسجيل الناخب."
 
-#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:6
-#: help_desk/templates/help_desk/screens/2_get_staff_id.html:3
-#: help_desk/templates/help_desk/screens/3_check_staff_name.html:3
-#: help_desk/templates/help_desk/screens/4_get_nid.html:3
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:3
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:32
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:13
-#: help_desk/templates/help_desk/screens/99_good_bye.html:3
 msgid "Say to the caller"
 msgstr "قل للمتصل"
 
-#: help_desk/templates/help_desk/screens/1_ask_if_staff.html:7
 msgid "Are you an HNEC field staff member?"
 msgstr "هل أنت موظف ميداني في المفوضية الوطنية العليا للانتخابات؟"
 
-#: help_desk/templates/help_desk/screens/2_get_staff_id.html:4
 msgid "Please provide me with your Staff ID number."
 msgstr "الرجاء إطلاعي على رقم التوظيف الخاص بك"
 
-#: help_desk/templates/help_desk/screens/3_check_staff_name.html:4
 msgid "Please provide your full name."
 msgstr "الرجاء إطلاعي على اسمك الكامل"
 
-#: help_desk/templates/help_desk/screens/3_check_staff_name.html:20
 msgid "Give the caller three attempts to provide correct name as seen above."
 msgstr "قم بإعطاء المتصل ثلاث محاولات لإعطاء الاسم الصحيح كما هو مبين أعلاه"
 
-#: help_desk/templates/help_desk/screens/3b_check_staff_phone.html:21
-msgid "Is the caller using the phone number seen above?"
-msgstr "هل المتصل يستخدم رقم الهاتف الوارد أعلاه؟"
-
-#: help_desk/templates/help_desk/screens/4_get_nid.html:5
 msgid "Please provide the citizen's National Identification Number."
 msgstr "الرجاء إطلاعي على الرقم الوطني الخاص بالمواطن"
 
-#: help_desk/templates/help_desk/screens/4_get_nid.html:7
 msgid "Please provide your National Identification Number."
 msgstr "الرجاء إطلاعي على الرقم الوطني الخاص بك"
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:5
 msgid ""
 "To help us verify identification, please provide the citizen's name and "
 "birthdate."
-msgstr "لمساعدتنا على التحقق من الهوية، الرجاء تزويدنا باسم المواطن وتاريخ ميلاده."
+msgstr ""
+"لمساعدتنا على التحقق من الهوية، الرجاء تزويدنا باسم المواطن وتاريخ ميلاده."
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:7
 msgid ""
 "To help us verify identification, please provide your name and birthdate."
 msgstr "لمساعدتنا على التحقق من الهوية، الرجاء تزويدنا باسمك وتاريخ ميلادك."
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:12
 msgid "Citizen ID"
 msgstr "رقم المواطن"
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:16
 msgid "Citizen Name"
 msgstr "اسم المواطن"
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:20
 msgid "Birthdate"
 msgstr "تاريخ الميلاد"
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:36
 msgid "Does the caller's information match the citizen's above?"
 msgstr "هل تتوافق معلومات المتصل مع المواطن المذكور أعلاه؟"
 
-#: help_desk/templates/help_desk/screens/5_check_name_and_dob.html:38
 msgid ""
 "You may also use the Mother's Name or the Family Book Record Number to "
 "verify the citizen's identification."
-msgstr "يمكنك أيضًا استخدام اسم الأم أو رقم السجل العائلي للتحقق من هوية المواطن."
+msgstr ""
+"يمكنك أيضًا استخدام اسم الأم أو رقم السجل العائلي للتحقق من هوية المواطن."
 
-#: help_desk/templates/help_desk/screens/6_not_registered.html:3
 msgid "The citizen is not registered. Tell them how to register if they want."
 msgstr "صاحب هذا الرقم الوطنى غير مُسجل. إشرح له طريقة التسجيل إذا أراد ذلك"
 
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:3
 msgid "The citizen's registration information"
 msgstr "معلومات تسجيل المواطن"
 
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:7
 msgid "Registration Center"
 msgstr "مركز التسجيل"
 
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:15
-#: register/views.py:511
-#: vr_dashboard/templates/vr_dashboard/election_day.html:51
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:16
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:8
-#: vr_dashboard/templates/vr_dashboard/election_day_preliminary.html:41
-#: vr_dashboard/templates/vr_dashboard/offices.html:17
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:18
-#: vr_dashboard/templates/vr_dashboard/weekly.html:45
-#: vr_dashboard/views/views.py:821 vr_dashboard/views/views.py:977
-#: vr_dashboard/views/views.py:1141
 msgid "Office"
 msgstr "اللجان"
 
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:22
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:5
+msgid "Registration Date"
+msgstr "تاريخ التسجيل"
+
 msgid "Phone number associated with citizen's registration"
 msgstr "رقم الهاتف المرتبط بتسجيل المواطن"
 
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:34
 msgid ""
 "Does the citizen wish to change their centre or update the phone number "
 "associated with their registration?"
-msgstr "هل يرغب المواطن في تغيير مركز الاقتراع أو تحديث رقم الهاتف المرتبط لتسجيله؟"
+msgstr ""
+"هل يرغب المواطن في تغيير مركز الاقتراع أو تحديث رقم الهاتف المرتبط لتسجيله؟"
 
-#: help_desk/templates/help_desk/screens/7_ask_to_change.html:36
 msgid ""
-"Do you wish to change your centre or update the phone number assoicated with"
-" your registration?"
+"Do you wish to change your centre or update the phone number associated with "
+"your registration?"
 msgstr "هل ترغب في تغيير مركز اقتراعك أو تحديث رقم الهاتف المرتبط بتسجيلك؟"
 
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:15
-msgid "Does the citizen want to use that same phone to make the change?"
-msgstr "هل يريد المواطن استخدام نفس رقم الهاتف لإجراء التغيير؟"
-
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:17
-msgid "Do you want to use that same phone to make the change?"
-msgstr "هل تريد استخدام نفس رقم الهاتف لإجراء التغيير؟"
-
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:21
 msgid ""
-"(also select no if they wish to update the phone number associated with "
-"their registration)"
-msgstr "(أيضا إضغط لا إذا كان يرغب في تحديث رقم الهاتف المرتبط بتسجيله.)"
+"Does the citizen want to update the phone number associated with their "
+"registration?"
+msgstr "هل يريد المواطن تحديث رقم الهاتف المرتبط بتسجيله؟"
 
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:25
+msgid ""
+"Do you want to update the phone number associated with your registration?"
+msgstr "هل تريد تغير رقم الهاتف المرتبط بتسجيلك؟"
+
+msgid "(also select no if they wish to use the same phone)"
+msgstr "(أيضا أختر \"لا\" في حالة الرغبة بالاستمرارية بنفس رقم الهاتف)"
+
 msgid "Please advise the citizen"
 msgstr "قدّم المشورة للمواطن من فضلك "
 
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:26
 #, python-format
 msgid ""
 "Phone number %(number)s has been used for the maximum number of "
@@ -2102,190 +1560,127 @@ msgid ""
 msgstr ""
 "لقد تم استخدام رقم الهاتف %(number)s للحد الأقصى من عدد التسجيلات المسموح به."
 
-#: help_desk/templates/help_desk/screens/8_ask_same_phone.html:29
 msgid ""
 "If the citizen registers from another phone, they might not be able to "
 "change their registration back to this phone."
 msgstr ""
 "إذا تسجّل المواطن من هاتف آخر، قد لا يتمكن من إعادة تسجيله إلى هذا الهاتف."
 
-#: help_desk/templates/help_desk/screens/99_good_bye.html:5
 msgid "Do you have any other questions that I can answer?"
 msgstr "هل لديك أي أسئلة أخرى يمكنني الإجابة عليها؟"
 
-#: help_desk/templates/help_desk/screens/9_how_to_change.html:5
 msgid "Changes Remaining"
 msgstr "التغييرات المتاحة"
 
-#: help_desk/templates/help_desk/screens/9_how_to_change.html:12
 msgid "Tell the caller how to change their registration."
 msgstr "قُل للمتصل كيف يقوم بعملية التسجيل  "
 
-#: help_desk/templates/help_desk/screens/hung_up.html:3
 msgid "This call case was closed. Press done to return to the start."
 msgstr "تم إغلاق هذه الحالة. اضغط على \"تم\" للعودة إلى البداية"
 
-#: help_desk/templates/help_desk/staff/create.html:4
-#: help_desk/templates/help_desk/staff/search.html:4
 msgid "Manage Help Desk Staff"
 msgstr "إدارة موظفى مركز المساعدة "
 
-#: help_desk/templates/help_desk/staff/create.html:7
 msgid "Create Help Desk Staff User"
 msgstr "إنشاء مستخدم لمكتب المساعدة"
 
-#: help_desk/templates/help_desk/staff/list.html:4
-#: help_desk/templates/help_desk/staff/list.html:8
-#: libya_site/templates/libya_site/staff.html:15
 msgid "Help Desk Staff"
 msgstr "موظف مركز المساعدة"
 
-#: help_desk/templates/help_desk/staff/list.html:11
 msgid "Create new account"
 msgstr "إنشاء حساب جديد"
 
-#: help_desk/templates/help_desk/staff/list.html:12
 msgid "Make an existing account a help desk account"
 msgstr "إجعل حساب قائم حالياً حساب مركز المساعدة"
 
-#: help_desk/templates/help_desk/staff/list.html:27 staff/views.py:85
 msgid "Username"
 msgstr "اسم المستخدم"
 
-#: help_desk/templates/help_desk/staff/list.html:28
 msgid "Full Name"
 msgstr "الاسم الكامل"
 
-#: help_desk/templates/help_desk/staff/list.html:29
-#: help_desk/templates/help_desk/staff/search.html:49
 msgid "Groups"
 msgstr "مجموعة"
 
-#: help_desk/templates/help_desk/staff/list.html:30
 msgid "Date Joined"
 msgstr "تاريخ الانضمام"
 
-#: help_desk/templates/help_desk/staff/list.html:61
+msgid "Account Expires"
+msgstr "تنتهي صلاحية الحساب"
+
+msgid "No expiration"
+msgstr "الصلاحية لا تنتهي"
+
 msgid "Return to help desk"
 msgstr "العودة إلى مركز المساعدة"
 
-#: help_desk/templates/help_desk/staff/search.html:7
 msgid "Search for users"
 msgstr "البحث عن مستخدمين"
 
-#: help_desk/templates/help_desk/staff/search.html:13
 msgid "Search users"
 msgstr "البحث بين المستخدمين"
 
-#: help_desk/templates/help_desk/staff/search.html:18
 msgid "Name, Email, or Username"
 msgstr "الاسم، البريد الالكتروني، اسم المستخدم"
 
-#: help_desk/templates/help_desk/staff/search.html:24
-#: libya_site/templates/bread/browse.html:74
 msgid "Search"
 msgstr "بحث"
 
-#: help_desk/templates/help_desk/staff/search.html:35
 msgid "Click on any user in the results to grant them Help Desk permissions."
 msgstr "اضغط على أي مستخدم في النتائج لإعطائه إذن مكتب المساعدة"
 
-#: help_desk/templates/help_desk/staff/search.html:43
 msgid "Search results"
 msgstr "البحث فى النتائج"
 
-#: help_desk/templates/help_desk/staff/search.html:76
 msgid "Return to staff list"
 msgstr "العودة إلى قائمة الموظفين"
 
-#: help_desk/templates/help_desk/staff/set_password.html:4
 msgid "Set Help Desk Staff Password"
 msgstr "إعادة تعيين كلمة المرور لمستخدمين مركز المساعدة"
 
-#: help_desk/templates/help_desk/staff/set_password.html:7
 #, python-format
 msgid "Setting password for user %(user)s."
 msgstr "إعداد كلمة المرور للمستخدم %(user)s."
 
-#: help_desk/templates/help_desk/staff/update.html:4
-#: help_desk/templates/help_desk/staff/update.html:7
 msgid "Update Help Desk Staff"
 msgstr "تحديث موظفى مركز المساعدة"
 
-#: help_desk/templates/help_desk/staff/update.html:20
 msgid "Set password"
 msgstr "تعيين كلمة المرور"
 
-#: help_desk/templatetags/help_desk_tags.py:59
-#: help_desk/templatetags/help_desk_tags.py:65
-#: help_desk/templatetags/help_desk_tags.py:71
 msgid "Past 12 Months"
 msgstr "في الأشهر الـ12 الماضية"
 
-#: help_desk/templatetags/help_desk_tags.py:74
-#: help_desk/templatetags/help_desk_tags.py:79
 msgid "Years"
 msgstr "سنوات"
 
-#: help_desk/templatetags/help_desk_tags.py:87
-#: help_desk/templatetags/help_desk_tags.py:92
 msgid "Quarters (Calendar Year)"
 msgstr "أرباع (السنة الميلادية)"
 
-#: help_desk/views/fieldstaff_views.py:27
 msgid "Staff Id, Name, or Phone Number"
 msgstr "رقم الموظف، اسمه، أو رقم الهاتف"
 
-#: help_desk/views/report_views.py:66 libya_elections/libya_bread.py:101
 msgid "None"
 msgstr "لا يوجد"
 
-#: help_desk/views/report_views.py:243
-#: vr_dashboard/templates/vr_dashboard/national.html:12
-#: vr_dashboard/templates/vr_dashboard/national.html:19
-#: vr_dashboard/templates/vr_dashboard/national.html:22
-#: vr_dashboard/templates/vr_dashboard/offices.html:14
-#: vr_dashboard/templates/vr_dashboard/offices.html:20
-#: vr_dashboard/templates/vr_dashboard/offices.html:24
-#: vr_dashboard/templates/vr_dashboard/offices.html:48
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:21
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:24
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:55
-#: vr_dashboard/templates/vr_dashboard/regions.html:13
-#: vr_dashboard/templates/vr_dashboard/regions.html:20
-#: vr_dashboard/templates/vr_dashboard/regions.html:23
-#: vr_dashboard/templates/vr_dashboard/regions.html:56
-#: vr_dashboard/templates/vr_dashboard/sms.html:14
-#: vr_dashboard/templates/vr_dashboard/sms.html:55
-#: vr_dashboard/templates/vr_dashboard/weekly.html:12
-#: vr_dashboard/templates/vr_dashboard/weekly.html:54
-#: vr_dashboard/templates/vr_dashboard/weekly.html:77
-#: vr_dashboard/views/views.py:760
 msgid "Total"
 msgstr "المجموع الكلي"
 
-#: help_desk/views/report_views.py:247
-#: vr_dashboard/templates/vr_dashboard/election_day_preliminary.html:17
 msgid "Overall"
 msgstr "الإجمالي"
 
-#: help_desk/views/report_views.py:273
 msgid "Number of calls by outcome"
 msgstr "عدد المكالمات حسب النتائج"
 
-#: help_desk/views/report_views.py:275
 msgid "Average length of calls in seconds by outcome"
 msgstr "معدل مدة المكالمات بالثواني حسب النتيجة"
 
-#: httptester/forms.py:12
 msgid "Shortcode"
 msgstr "رمز قصير"
 
-#: httptester/forms.py:18
 msgid "Multiple Messages"
 msgstr "عدة رسائل"
 
-#: httptester/forms.py:20
 msgid ""
 "Alternatively, upload a <em>plain text file</em> containing a single message "
 "per line."
@@ -2293,142 +1688,98 @@ msgstr ""
 "يمكنك بدلاً من ذلك تحميل <em>ملف نص عادي</em> يحتوي على رسالة واحدة على كل "
 "سطر."
 
-#: httptester/forms.py:27
 msgid "Phone number must be all numeric."
 msgstr "يجب أن يكون رقم الهاتف مؤلفاً من أرقام فحسب."
 
-#: httptester/templates/httptester/index.html:4
-#: httptester/templates/httptester/index.html:10
-#: libya_site/templates/libya_site/staff.html:51
 msgid "Message Tester"
 msgstr "رسائل تجريبية"
 
-#: httptester/templates/httptester/index.html:59
 msgid "Clear messages from this phone"
 msgstr "حذف الرسائل من هذا الهاتف"
 
-#: httptester/templates/httptester/index.html:60
 msgid "Clear all messages"
 msgstr "حذف كل الرسائل"
 
-#: httptester/templates/httptester/index.html:62
 msgid "You haven't sent or received any test messages yet."
 msgstr "لم ترسل أو تتلقَ أي رسائل اختبار بعد."
 
-#: httptester/templates/httptester/index.html:67
 msgid "Bulk Upload"
 msgstr "مجموع الرفع"
 
-#: httptester/templates/httptester/index.html:79
 msgid "Upload and Send"
 msgstr " ارفع وارسل"
 
-#: httptester/templates/httptester/table.html:10
 #, python-format
 msgid "%(count)s of %(total)s"
 msgstr "%(count)s من %(total)s"
 
-#: httptester/templates/httptester/table.html:16
 #, python-format
 msgid "Page %(current)s of %(total)s"
 msgstr "صفحة %(current)s من %(total)s"
 
-#: httptester/views.py:64
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Next"
+msgstr "اللاحق"
+
 msgid "Cleared all messages"
 msgstr "تم حذف كل الرسائل"
 
-#: httptester/views.py:67
 #, python-brace-format
 msgid "Cleared messages from {identity}"
 msgstr "تم حذف الرسائل من {identity}"
 
-#: httptester/views.py:74
 msgid "Sent bulk messages"
 msgstr "إرسال مجموع الرسائل"
 
-#: httptester/views.py:80
 msgid "Sent message"
 msgstr "الرسالة المرسلة"
 
-#: libya_elections/abstract.py:49
 msgid "deleted"
 msgstr "تم المسح"
 
-#: libya_elections/abstract.py:76
 msgid "modification date"
 msgstr "تاريخ التعديل"
 
-#: libya_elections/abstract.py:126
 msgid "archive time"
 msgstr "وقت الأرشيف"
 
-#: libya_elections/abstract.py:130
 msgid "If non-NULL, from this time on, this record is no longer in effect."
 msgstr "إذا لم يكن خالياً، من الآن فصاعداً لن يعود هذا السجل ساري المفعول."
 
-#: libya_elections/admin_models.py:17 register/admin.py:77
 #, python-format
 msgid "Permanently delete selected %(verbose_name_plural)s."
 msgstr "مسح %(verbose_name_plural)s المختارة بشكل دائم."
 
-#: libya_elections/admin_site.py:41
 msgid "Permission Denied."
 msgstr "الإذن مرفوض"
 
-#: libya_elections/constants.py:21
-#: vr_dashboard/templates/vr_dashboard/national.html:18
-#: vr_dashboard/templates/vr_dashboard/national.html:21
-#: vr_dashboard/templates/vr_dashboard/offices.html:19
-#: vr_dashboard/templates/vr_dashboard/offices.html:21
-#: vr_dashboard/templates/vr_dashboard/offices.html:23
-#: vr_dashboard/templates/vr_dashboard/offices.html:25
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:20
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:23
-#: vr_dashboard/templates/vr_dashboard/regions.html:19
-#: vr_dashboard/templates/vr_dashboard/regions.html:22
-#: vr_dashboard/templates/vr_dashboard/weekly.html:53
-#: vr_dashboard/templates/vr_dashboard/weekly.html:109
 msgid "Female"
 msgstr "أنثى"
 
-#: libya_elections/constants.py:22
-#: vr_dashboard/templates/vr_dashboard/national.html:17
-#: vr_dashboard/templates/vr_dashboard/national.html:20
-#: vr_dashboard/templates/vr_dashboard/offices.html:18
-#: vr_dashboard/templates/vr_dashboard/offices.html:22
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:19
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:22
-#: vr_dashboard/templates/vr_dashboard/regions.html:18
-#: vr_dashboard/templates/vr_dashboard/regions.html:21
-#: vr_dashboard/templates/vr_dashboard/weekly.html:105
 msgid "Male"
 msgstr "ذكر"
 
-#: libya_elections/constants.py:23
 msgid "Unisex"
 msgstr "الجنسين"
 
-#: libya_elections/constants.py:57
 msgid ""
-"Please enter a valid phone number (218xxxxxxxxx or 88216xxxxxxxx) without "
+"Please enter a valid phone number (2189xxxxxxxx or 88216xxxxxxxx) without "
 "punctuation or spaces."
 msgstr ""
-"أدخِل من فضلك رقم هاتف صالحاً (218xxxxxxxxx أو 88216xxxxxxxx) من دون علامات "
-"وقف أو فراغات."
+"الرجاء إدخال رقم هاتف صالح (2189xxxxxxxx أو 88216xxxxxxxx) بدون علامات أو "
+"مسافات."
 
-#: libya_elections/settings/base.py:47
-#: text_messages/templates/text_messages/messagetext_list.html:29
-#: text_messages/templates/text_messages/messagetext_list.html:33
+msgid "This account no longer has staff access."
+msgstr "لم يعد هذا الحساب لديه حق الوصول كموظف."
+
 msgid "Arabic"
 msgstr "العربية"
 
-#: libya_elections/settings/base.py:48 libya_elections/tests/test_utils.py:137
-#: text_messages/templates/text_messages/messagetext_list.html:30
-#: text_messages/templates/text_messages/messagetext_list.html:32
 msgid "English"
 msgstr "الإنجليزية"
 
-#: libya_elections/templates/404.html:23
 msgid ""
 "<h1>Not found <span>:(</span></h1> <p>Sorry, but the page you were trying to "
 "view does not exist.</p> <p>It looks like this was the result of either:</p> "
@@ -2437,7 +1788,6 @@ msgstr ""
 "نأسف، الصفحة التي تبحث عنها لم يتم العثورعلىها. من الممكن أن تكون أخطأت في "
 "كتابة الرابط، أو الصفحة التي طلبتها لم تعد مفعلة. "
 
-#: libya_elections/templates/500.html:23
 msgid ""
 "<h1>Server Error <span>:(</span></h1> <p>Something has gone horribly wrong.</"
 "p> <p>We've notified our admins and they won't rest until it is fixed.</p>"
@@ -2446,16 +1796,12 @@ msgstr ""
 "نأسف، يوجد خلل في المنظومة. إدارة المنظومة إكتشفت الخلل، وتعمل على إصلاحه فى "
 "أقرب وقت ممكن. نشكر لك حسن تعاونك."
 
-#: libya_elections/templates/registration/activate.html:4
-#: libya_elections/templates/registration/activate.html:5
 msgid "Activation Error"
 msgstr "خطأ في التفعيل"
 
-#: libya_elections/templates/registration/activate.html:8
 msgid "Account activation failed."
 msgstr "فشل تفعيل الحساب"
 
-#: libya_elections/templates/registration/activation_email.txt:1
 #, python-format
 msgid ""
 "\n"
@@ -2478,11 +1824,9 @@ msgstr ""
 "مع تحيات المفوضية الوطنية العليا للانتخابات\n"
 "\n"
 
-#: libya_elections/templates/registration/activation_email_subject.txt:1
 msgid "Activate your LibyaVotes account"
 msgstr "تحديث حسابك في  LibyaVotes "
 
-#: libya_elections/templates/registration/login.html:12
 msgid ""
 "To check your voter registration information, you need an account. If you "
 "have an account, please log in below. To create a new account, click the "
@@ -2492,57 +1836,39 @@ msgstr ""
 "كان لديك حساب، الرجاء تسجيل دخولك أدناه. لإنشاء حساب جديد، انقر فوق الزر "
 "أدناه"
 
-#: libya_elections/templates/registration/login.html:32
 msgid "Your username and password didn't match. Please try again."
 msgstr "إسم المستخذم وكلمة المرور غير متطابقان، يرجي إعادة المحاولة."
 
-#: libya_elections/templates/registration/login.html:38
-#: libya_elections/templates/registration/password_reset_complete.html:12
-#: libya_site/templates/libya_site/base.html:41
 msgid "Log in"
 msgstr "الدخول"
 
-#: libya_elections/templates/registration/login.html:41
 msgid "Forgotten your username or password?"
 msgstr "نسيت كلمة المرور أو اسم المستخدم؟"
 
-#: libya_elections/templates/registration/login.html:46
 msgid "Need to create an account?"
 msgstr "تحتاج إلى إنشاء حساب؟"
 
-#: libya_elections/templates/registration/password_change_done.html:4
-#: libya_elections/templates/registration/password_change_done.html:5
 msgid "Password change successful"
 msgstr "تغيير كلمة المرور بنجاح"
 
-#: libya_elections/templates/registration/password_change_done.html:8
 msgid "Your password was changed."
 msgstr "تم تغيير كلمة المرور الخاصة بك"
 
-#: libya_elections/templates/registration/password_reset_complete.html:4
-#: libya_elections/templates/registration/password_reset_complete.html:5
 msgid "Password reset complete"
 msgstr "إعادة تعيين كلمة المرور إنتهت"
 
-#: libya_elections/templates/registration/password_reset_complete.html:8
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr "تم تعيين كلمة المرور الخاصة بك. تستطيع الإستمرار وتسجيل دخولك الآن."
 
-#: libya_elections/templates/registration/password_reset_confirm.html:4
-#: libya_elections/templates/registration/password_reset_form.html:4
-#: libya_elections/templates/registration/password_reset_form.html:5
 msgid "Password reset"
 msgstr "إعادة تعيين كلمة المرور"
 
-#: libya_elections/templates/registration/password_reset_confirm.html:5
 msgid "Enter new password"
 msgstr "أدخل كلمة مرور جديدة"
 
-#: libya_elections/templates/registration/password_reset_confirm.html:5
 msgid "Password reset unsuccessful"
 msgstr "إعادة تعيين كلمة المرور بنجاح."
 
-#: libya_elections/templates/registration/password_reset_confirm.html:9
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
@@ -2550,15 +1876,12 @@ msgstr ""
 "الرجاء إدخال كلمة المرور الجديدة مرتين، حتى نتمكن من التحقق من أنك كتبتها "
 "بشكل صحيح"
 
-#: libya_elections/templates/registration/password_reset_confirm.html:21
 msgid "Confirm password:"
 msgstr "تأكيد كلمة المرور"
 
-#: libya_elections/templates/registration/password_reset_confirm.html:29
 msgid "Change my password"
 msgstr "تغيير كلمة المرور"
 
-#: libya_elections/templates/registration/password_reset_confirm.html:32
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
@@ -2566,12 +1889,9 @@ msgstr ""
 "رابط إعادة تعيين كلمة المرور غبر صالح، فقد تم إستخدامه سابقاً. الرجاء طلب "
 "إعادة تعيين كلمة المرور."
 
-#: libya_elections/templates/registration/password_reset_done.html:4
-#: libya_elections/templates/registration/password_reset_done.html:5
 msgid "Password reset successful"
 msgstr "إعادة تعيين كلمة المرور بنجاح."
 
-#: libya_elections/templates/registration/password_reset_done.html:8
 msgid ""
 "We've emailed you instructions for setting your password to the email "
 "address you submitted. You should be receiving it shortly."
@@ -2579,7 +1899,6 @@ msgstr ""
 "لقد تم إرسال بريد الالكتروني بكافة التعليمات لتحديد كلمة المرورالخاصة بك على "
 "عنوان البريد الإلكتروني الذي أرسلته. يجب أن يصلك بريدنا الالكتروني قريبا."
 
-#: libya_elections/templates/registration/password_reset_email.html:2
 #, python-format
 msgid ""
 "You're receiving this email because you requested a password reset for your "
@@ -2588,598 +1907,447 @@ msgstr ""
 "إستلمت هذا البريد الإلكتروني لأنك طلبت إعادة تعيين كلمة المرور الخاصة بك عند "
 "%(site_name)s."
 
-#: libya_elections/templates/registration/password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
 msgstr "الرجاء الذهاب إلى الصفحة التالية وإختيار كلمة مرور جديدة"
 
-#: libya_elections/templates/registration/password_reset_email.html:8
 msgid "Your username, in case you've forgotten:"
 msgstr "اسم المستخدم الخاص بك، في حال كنت قد نسيتها:"
 
-#: libya_elections/templates/registration/password_reset_form.html:8
 msgid ""
 "Forgotten your username or password? Enter your email address below, and "
 "we'll email instructions for setting a new password. Your username will be "
 "included in that email."
-msgstr "هل نسيت اسم المستخدم أو كلمة المرور؟ أدخل عنوان بريدك الإلكتروني أدناه، وسنقوم بإرسال رسالة إلكترونية بكافة التعليمات لتحديد كلمة مرور جديدة. ستشمل الرسالة اسم المستخدم."
+msgstr ""
+"هل نسيت اسم المستخدم أو كلمة المرور؟ أدخل عنوان بريدك الإلكتروني أدناه، "
+"وسنقوم بإرسال رسالة إلكترونية بكافة التعليمات لتحديد كلمة مرور جديدة. ستشمل "
+"الرسالة اسم المستخدم."
 
-#: libya_elections/templates/registration/password_reset_form.html:21
 msgid "Reset my password"
 msgstr "إعادة تعيين كلمة المرور الخاصة بي"
 
-#: libya_elections/templates/registration/registration_complete.html:4
-#: libya_elections/templates/registration/registration_complete.html:5
 msgid "Check your email account"
 msgstr "تفقد بريدك الإلكتروني"
 
-#: libya_elections/templates/registration/registration_complete.html:8
 msgid ""
 "You will receive an email and will have to click a link in that email to "
 "complete your registration."
-msgstr "لقد تم إرسال رسالة إلكترونية على عنوان البريد الإلكتروني الخاص بك. الرجاء الضغط على الرابط إدناه واتباع التعليمات لإكمال تسجيلك."
+msgstr ""
+"لقد تم إرسال رسالة إلكترونية على عنوان البريد الإلكتروني الخاص بك. الرجاء "
+"الضغط على الرابط إدناه واتباع التعليمات لإكمال تسجيلك."
 
-#: libya_elections/templates/registration/registration_form.html:4
 msgid "LibyaVotes: Register an account"
 msgstr "LibyaVotes: تسجيل حساب"
 
-#: libya_elections/templates/registration/registration_form.html:5
 msgid "Fill in this form to create an account"
 msgstr "قُم بتعبئة هذا النموذج لانشاء حساب "
 
-#: libya_elections/utils.py:56
 #, python-brace-format
 msgid "Duplicate value for {fieldname}"
 msgstr "تكرير القيمة لـ {fieldname}"
 
-#: libya_site/forms.py:37
 msgid "A National ID is a 12-digit number."
 msgstr "للرقم الوطنى 12 خانة."
 
-#: libya_site/forms.py:38
 msgid "A valid National ID is at most 12 digits long."
 msgstr "آى رقم وطنى صالح يتكون من 12 خانة فقط"
 
-#: libya_site/forms.py:39
 msgid "A valid National ID starts with 1 or 2."
 msgstr "الرقم الوطنى للذكر يبدء بي 1, والانثي يبدء بي 2"
 
-#: libya_site/forms.py:58
 msgid "Please type these numbers"
 msgstr "الرجاء طباعة الارقام أ"
 
-#: libya_site/templates/admin/base_site.html:15
-#: libya_site/templates/admin/base_site.html:18
 msgid "Libya Votes Administration"
 msgstr "إدارة موقع ليبيا تصوّت"
 
-#: libya_site/templates/admin/base_site.html:23
-#: libya_site/templates/libya_site/staff.html:63
 msgid "Staff Home"
 msgstr "الصفحة الرئيسية للعاملين"
 
-#: libya_site/templates/admin/base_site.html:27
 msgid "Documentation"
 msgstr "توثيق"
 
-#: libya_site/templates/admin/base_site.html:30
 msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
-#: libya_site/templates/admin/base_site.html:32
-#: libya_site/templates/libya_site/base.html:39
 msgid "Log out"
 msgstr "الخروج"
 
-#: libya_site/templates/bread/browse.html:19
-#: register/templates/register/blacklist_browse.html:11
-#: register/templates/register/whitelist_browse.html:11
 msgid "Add"
 msgstr "إضافة"
 
-#: libya_site/templates/bread/browse.html:40
 #, python-format
 msgid "Search %(names)s"
 msgstr "البحث %(names)s"
 
-#: libya_site/templates/bread/browse.html:45
 #, python-format
 msgid "%(search_terms)s"
 msgstr "%(search_terms)s"
 
-#: libya_site/templates/bread/delete.html:4
-#: libya_site/templates/bread/delete.html:8
 #, python-format
 msgid "Delete %(name)s"
 msgstr "مسح %(name)s"
 
-#: libya_site/templates/bread/delete.html:16
 #, python-format
 msgid "Really delete %(name)s?"
 msgstr "هل تريد حقاً مسح %(name)s؟"
 
-#: libya_site/templates/bread/edit.html:4
-#: libya_site/templates/bread/edit.html:19
 #, python-format
 msgid "Edit %(name)s"
 msgstr "تنقيح %(name)s"
 
-#: libya_site/templates/bread/edit.html:11
 msgid "Please correct the errors in the form below."
 msgstr "الرجاء تصحيح الخطأ في النموذج الوارد أدناه"
 
-#: libya_site/templates/bread/label_value_read.html:4
-#: libya_site/templates/bread/label_value_read.html:8
 #, python-format
 msgid "Read %(name)s"
 msgstr "قراءة %(name)s"
 
-#: libya_site/templates/bread/label_value_read.html:34
-#: libya_site/templates/libya_site/check_registration_results.html:26
 msgid "Back"
 msgstr "عودة"
 
-#: libya_site/templates/libya_site/base.html:5
 msgid "LibyaVotes Home"
 msgstr "الصفحة الرئيسية لليبيا تصوّت"
 
-#: libya_site/templates/libya_site/base.html:31
-#: vr_dashboard/templates/vr_dashboard/base.html:8
 msgid "Registration Statistics"
 msgstr "إحصائيات التسجيل"
 
-#: libya_site/templates/libya_site/base.html:32
 msgid "Check Registration"
 msgstr "تفقد التسجيل"
 
-#: libya_site/templates/libya_site/check_registration.html:9
-#: libya_site/templates/libya_site/check_registration_results.html:7
 msgid "Look up registration information"
 msgstr "بحث عن بيانات التسجيل الخاص بك فى سجل الناخبين."
 
-#: libya_site/templates/libya_site/check_registration_results.html:18
 #, python-format
-msgid ""
-"%(citizen)s is registered at voting center %(name)s with code %(code)s."
+msgid "%(citizen)s is registered at voting center %(name)s with code %(code)s."
 msgstr "%(citizen)s  مسجل في مركز الاقتراع %(name)s برمز %(code)s. "
 
-#: libya_site/templates/libya_site/check_registration_results.html:22
 #, python-format
 msgid "%(citizen)s is not registered."
 msgstr "غير مسجل %(citizen)s"
 
-#: libya_site/templates/libya_site/staff.html:12
 msgid "Help Desk"
 msgstr "مركز المساعدة"
 
-#: libya_site/templates/libya_site/staff.html:16
 msgid "Field Staff Members"
 msgstr "الموظفيين الميدانيين"
 
-#: libya_site/templates/libya_site/staff.html:21
 msgid "Election Management"
 msgstr "إدارة الانتخابات"
 
-#: libya_site/templates/libya_site/staff.html:22
 msgid "Elections, Ballots, &amp; Candidates"
 msgstr "الانتخابات، الاقتراع، &amp، المرشحون"
 
-#: libya_site/templates/libya_site/staff.html:23
 msgid "Registration Periods"
 msgstr "فترات التسجيل"
 
-#: libya_site/templates/libya_site/staff.html:24
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:4
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:9
 msgid "Polling Center Monitoring"
 msgstr "مراقبة المراكز الانتخابية"
 
-#: libya_site/templates/libya_site/staff.html:25
-#: rollgen/templates/rollgen/overview.html:5
-#: rollgen/templates/rollgen/overview.html:10
 msgid "Voter Rolls"
 msgstr "لوائح الناخبين"
 
-#: libya_site/templates/libya_site/staff.html:30
 msgid "Registration Management"
 msgstr "إدارة التسجيل"
 
-#: libya_site/templates/libya_site/staff.html:31
 msgid "Registrations"
 msgstr "التسجيلات"
 
-#: libya_site/templates/libya_site/staff.html:32
-#: register/templates/register/tab.html:7
 msgid "Registration Centers"
 msgstr "مراكز التسجيل"
 
-#: libya_site/templates/libya_site/staff.html:33
 msgid "Citizens"
 msgstr "المواطنين"
 
-#: libya_site/templates/libya_site/staff.html:38
+msgid "Changesets"
+msgstr "مجموعات التغييرات"
+
 msgid "SMS Messaging"
 msgstr "إرسال الرسائل عبر الرسائل النصية القصيرة"
 
-#: libya_site/templates/libya_site/staff.html:39
 msgid "Broadcasts"
 msgstr "النشر"
 
-#: libya_site/templates/libya_site/staff.html:40
-#: register/templates/polling_reports/tab.html:6
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:94
 msgid "Staff Phones"
 msgstr "أرقام هواتف الموظفين"
 
-#: libya_site/templates/libya_site/staff.html:41
-#: register/templates/register/sms_browse.html:4
-#: register/templates/register/sms_browse.html:7
 msgid "Messages"
 msgstr "الرسائل"
 
-#: libya_site/templates/libya_site/staff.html:42 subscriptions/models.py:11
 msgid "SMS Discrepancies"
 msgstr "تباينات الرسائل النصية القصيرة"
 
-#: libya_site/templates/libya_site/staff.html:47
 msgid "Admin"
 msgstr "مشرف"
 
-#: libya_site/templates/libya_site/staff.html:48
 msgid "Users &amp; Permissions"
 msgstr "المستخدمون، &amp، الأذونات"
 
-#: libya_site/templates/libya_site/staff.html:49
-#: text_messages/templates/text_messages/messagetext_list.html:4
-#: text_messages/templates/text_messages/messagetext_list.html:8
 msgid "Translations"
 msgstr "الترجمات"
 
-#: libya_site/templates/libya_site/staff.html:67
 msgid "Welcome staff member!"
 msgstr "أهلًا بأعضاء فريق العمل!"
 
-#: libya_site/templates/libya_site/staff.html:70
 msgid "Click a link above to administer the LibyaVotes staff site."
 msgstr "اضغط على الرابط الوارد أعلاه للدخول إلى موقع موظفي LibyaVotes."
 
-#: libya_site/views.py:36
 msgid "Your account has been activated.  You can login now."
 msgstr "تم تفعيل حسابك. يمكنك الذخول الأن."
 
-#: polling_reports/models.py:17 polling_reports/models.py:51
-#: polling_reports/models.py:90 polling_reports/models.py:115
-#: reporting_api/models.py:8 rollgen/models.py:156 voting/models.py:130
-#: voting/models.py:187 voting/models.py:367
 msgid "election"
 msgstr "الانتخابات"
 
-#: polling_reports/models.py:20 polling_reports/models.py:54
-#: polling_reports/models.py:92
 msgid "Received from this phone"
 msgstr "تمّ التلقي من هذا الهاتف"
 
-#: polling_reports/models.py:24
 msgid "period number"
 msgstr "رقم الفترة"
 
-#: polling_reports/models.py:31
 msgid "number of voters"
 msgstr "عدد الناخبين"
 
-#: polling_reports/models.py:38
 msgid "polling report"
 msgstr "تقرير الاقتراع"
 
-#: polling_reports/models.py:39
 msgid "polling reports"
 msgstr "تقارير الاقتراع"
 
-#: polling_reports/models.py:41
 msgid "Can read polling report"
 msgstr "يمكن الاطلاع على تقرير الاقتراع"
 
-#: polling_reports/models.py:42
 msgid "Can browse polling reports"
 msgstr "يمكن البحث في تقارير الاقتراع"
 
-#: polling_reports/models.py:59
 msgid "center open record"
 msgstr "السجل المفتوح للمركز"
 
-#: polling_reports/models.py:60
 msgid "center open records"
 msgstr "السجلات المفتوحة للمركز"
 
-#: polling_reports/models.py:62
 msgid "Can read center open record"
 msgstr "يمكن قراءة السجل المفتوح للمركز"
 
-#: polling_reports/models.py:63
 msgid "Can browse center open record"
 msgstr "يمكن البحث في السجل المفتوح للمركز"
 
-#: polling_reports/models.py:79
+#, python-brace-format
+msgid "this staff phone {phone} from {center}"
+msgstr " هذا هاتف الموظف {phone} من المركز {center}"
+
 msgid "staff phone"
 msgstr "أرقام هواتف الموظفين"
 
-#: polling_reports/models.py:80
 msgid "staff phones"
 msgstr "هواتف الموظفين"
 
-#: polling_reports/models.py:82
 msgid "Can read staff phone"
 msgstr "يمكن الاطلاع على أرقام هواتف الموظفين"
 
-#: polling_reports/models.py:83
 msgid "Can browse staff phones"
 msgstr "يمكن البحث في هواتف الموظفين"
 
-#: polling_reports/models.py:97
 msgid "option"
 msgstr "خيار"
 
-#: polling_reports/models.py:99
 msgid "number of votes"
 msgstr "عدد الأصوات"
 
-#: polling_reports/models.py:102
 msgid "preliminary vote count"
 msgstr "فرز الأصوات الأولي"
 
-#: polling_reports/models.py:103
 msgid "preliminary vote counts"
 msgstr "فرز الأصوات الأولي"
 
-#: polling_reports/models.py:106
 msgid "Can read preliminary vote count"
 msgstr "يمكن قراءة فرز الأصوات الأولي"
 
-#: polling_reports/models.py:107
 msgid "Can browse preliminary vote counts"
 msgstr "يمكن البحث في فرز الأصوات الأولي"
 
-#: polling_reports/models.py:120
 #, python-brace-format
 msgid "{center} closed for {election}"
 msgstr "{center} مقفل من أجل  {election}"
 
-#: polling_reports/models.py:125
 msgid "center closed for election"
 msgstr "المركز مقفل من أجل الانتخابات"
 
-#: polling_reports/models.py:126
 msgid "centers closed for election"
 msgstr "المراكز مقفلة من أجل الانتخابات"
 
-#: polling_reports/models.py:128
 msgid "Can read center closed for an election"
 msgstr "يمكن الاطلاع على المركز المقفل من أجل الانتخابات"
 
-#: polling_reports/models.py:129
 msgid "Can browse centers closed for an election"
 msgstr "يمكن البحث في المراكز المقفلة من أجل الانتخابات"
 
-#: register/admin.py:49
 msgid ""
-"The following centers are copied by other centers and cannot be deleted: {}."
-" No centers were deleted."
-msgstr "تم نسخ المراكز التالية من قبل مراكز أخرى ولا يمكن مسحها {}. لم يتم مسح أي مركز. "
+"The following centers are copied by other centers and cannot be deleted: {}. "
+"No centers were deleted."
+msgstr ""
+"تم نسخ المراكز التالية من قبل مراكز أخرى ولا يمكن مسحها {}. لم يتم مسح أي "
+"مركز. "
 
-#: register/admin.py:68 register/views.py:536
 msgid "No copies"
 msgstr "ما من نُسَخ"
 
-#: register/admin.py:119
 msgid "archived"
 msgstr "محفوظ في الأرشيف"
 
-#: register/forms.py:20
 msgid "CSV File"
 msgstr "ملف قيم مفصولة بفواصل"
 
-#: register/forms.py:81 register/models.py:297
 msgid "Copy centres are read-only."
 msgstr "إنّ مراكز النسخ صالحة للقراءة فقط."
 
-#: register/forms.py:89
 msgid "Newlines are not allowed."
 msgstr "لا يُسمح بأسطر جديدة."
 
-#: register/forms.py:110
 #, python-brace-format
 msgid "That is not a valid center_type. Valid choices are {choice_names}."
 msgstr "هذا ليس نوع مركز صالحاً. الخيارات الصالحة هي {choice_names}."
 
-#: register/forms.py:126
 msgid "Copy centre does not exist."
 msgstr "مركز النسخ غير موجود."
 
-#: register/forms.py:144
 msgid "Office does not exist."
 msgstr "المكتب غير موجود."
 
-#: register/forms.py:158
 msgid "Constituency does not exist."
 msgstr "الدائرة الانتخابية غير موجودة."
 
-#: register/forms.py:172
 msgid "Subconstituency does not exist."
 msgstr "الدائرة الانتخابية الفرعية غير موجودة."
 
-#: register/forms.py:203
 msgid "Upload a text file, one phone number per line."
 msgstr "ارفع ملف نصي فيه رقم هاتف واحد على كل سطر."
 
-#: register/models.py:44
 msgid "blocked"
 msgstr "محظور"
 
-#: register/models.py:82
 msgid "person"
 msgstr "شخص"
 
-#: register/models.py:83
 msgid "people"
 msgstr "أشخاص"
 
-#: register/models.py:91
 msgid "id"
 msgstr "الرقم"
 
-#: register/models.py:92 voting/models.py:145 voting/models.py:432
 msgid "name (English)"
 msgstr "الاسم (بالإنكليزية)"
 
-#: register/models.py:93 voting/models.py:146 voting/models.py:433
 msgid "name (Arabic)"
 msgstr "الاسم (بالعربية)"
 
-#: register/models.py:129
 msgid "No Region"
 msgstr "ما من منطقة"
 
-#: register/models.py:130
 msgid "West"
 msgstr "غرب"
 
-#: register/models.py:131
 msgid "South"
 msgstr "جنوب"
 
-#: register/models.py:132
 msgid "East"
 msgstr "شرق"
 
-#: register/models.py:142
 msgid "region"
 msgstr "منطقة"
 
-#: register/models.py:145 register/models.py:242
 msgid "office"
 msgstr "اللجان"
 
-#: register/models.py:146
 msgid "offices"
 msgstr "المكاتب"
 
-#: register/models.py:166 register/models.py:244
 msgid "constituency"
 msgstr "دائرة انتخابية"
 
-#: register/models.py:167
 msgid "constituencies"
 msgstr "دوائر انتخابية"
 
-#: register/models.py:180 register/models.py:247
 msgid "subconstituency"
 msgstr "دائرة إنتخابية"
 
-#: register/models.py:181 voting/models.py:369
 msgid "subconstituencies"
 msgstr "دوائر إنتخابية"
 
-#: register/models.py:206
 msgid "General"
 msgstr "عام"
 
-#: register/models.py:207
 msgid "Displaced"
 msgstr "نازحين"
 
-#: register/models.py:208
 msgid "Oil"
 msgstr "حقل نفط"
 
-#: register/models.py:209
 msgid "Disability"
 msgstr "مركز تأهيل وايواء"
 
-#: register/models.py:210
 msgid "Revolution"
 msgstr "ثوار"
 
-#: register/models.py:211
 msgid "Copy"
 msgstr "نسخة"
 
-#: register/models.py:212
 msgid "Split"
 msgstr "تقسيم"
 
-#: register/models.py:238
 msgid "center id"
 msgstr "رقم المركز"
 
-#: register/models.py:248
 msgid "mahalla name"
 msgstr "اسم المحلة"
 
-#: register/models.py:249
 msgid "village name"
 msgstr "اسم القرية"
 
-#: register/models.py:250
 msgid "type"
 msgstr "النوع"
 
-#: register/models.py:252
 msgid "latitude"
 msgstr "خط العرض"
 
-#: register/models.py:257
 msgid "longitude"
 msgstr "خط الطول"
 
-#: register/models.py:266
 msgid "copy of"
 msgstr "نسخة عن"
 
-#: register/models.py:273
 msgid "support for registrations"
 msgstr "دعم التسجيلات"
 
-#: register/models.py:287
 msgid "Copy centre type must be \"copy\"."
 msgstr "يجب على نوع مركز النسخ أن يكون \"نسخ\"."
 
-#: register/models.py:302
 msgid "A centre may not be changed to a copy centre."
 msgstr "لا يمكن تغيير أي مركز إلى مركز نسخ."
 
-#: register/models.py:307
 msgid "A copy centre cannot copy another copy centre."
 msgstr "لا يمكن لمركز نسخ أن ينسخ مركز نسخ آخر."
 
-#: register/models.py:311
 #, python-brace-format
 msgid "Copy centre already has the maximum number of copies ({n_max})."
 msgstr "سبق أن أصبح لدى مركز النسخ الحد الأقصى من عدد النسخ ({n_max})."
 
-#: register/models.py:315
 msgid "Centre type \"copy\" requires copy centre information."
 msgstr "إنّ نوع المركز \"مركز نسخ\" يتطلب إدخال معلومات مركز النسخ."
 
-#: register/models.py:320
 msgid "Either set both latitude and longitude or neither."
 msgstr "إمّا أدخِل كلا خطي العرض والطول أو لا تدخل أيّاً منهما."
 
-#: register/models.py:324
 msgid "Split centers must be associated with subconstituency {}."
 msgstr "يجب ربط المراكز المنقسمة بالدائرة الانتخابية الفرعية {}"
 
-#: register/models.py:329
 msgid "Only split centers may be associated with subconstituency {}."
 msgstr "لا يجوز ربط سوى المراكز المنقسمة بالدائرة الانتخابية الفرعية {}."
 
-#: register/models.py:335
 msgid "registration centers"
 msgstr "مراكز التسجيل"
 
-#: register/models.py:418
 msgid "change count"
 msgstr "عدد مرات التغيير"
 
-#: register/models.py:420
 msgid ""
 "The number of times this registration has been changed after it was "
 "initially made (original registration not counted). "
@@ -3187,11 +2355,9 @@ msgstr ""
 "عدد المرات التي تم فيها تغيير هذا التسجيل بعد القيام به (لا يُحتسب التسجيل "
 "الأصلي)."
 
-#: register/models.py:424
 msgid "max changes"
 msgstr "العدد الأقصى لمرات التغيير"
 
-#: register/models.py:426
 msgid ""
 "The number of times this registration is allowed to be changed after it was "
 "initially made. Defaults to 3, but can be increased."
@@ -3199,11 +2365,9 @@ msgstr ""
 "عدد المرات التي يسمح بها بتغيير هذا التسجيل بعد القيام به. العدد المُفترض هو "
 "3 ولكن، يمكن زيادته."
 
-#: register/models.py:430
 msgid "repeat count"
 msgstr "عدد مرات الإعادة"
 
-#: register/models.py:432
 msgid ""
 "The number of times messages have been received for this exact registration. "
 "The first message is counted, so the 2nd time we see the same registration, "
@@ -3214,11 +2378,9 @@ msgstr ""
 "الرسالة الأولى، لذا، في المرة التالية التي نرى فيها التسجّل نفسه، يصبح عدد "
 "الأصوات 2، وهلمّ جرى. تتم إعادة تعيين ذلك في كل مرة يتم فيها تغيير التسجيل."
 
-#: register/models.py:439
 msgid "unlocked until"
 msgstr "غير مقفل حتى"
 
-#: register/models.py:441
 msgid ""
 "If this is set and the current datetime is earlier than this value, allow "
 "changing this registration from any phone, even if it's not the phone "
@@ -3227,228 +2389,165 @@ msgstr ""
 "إذا تم ضبط هذه القيمة والتاريخ/الوقت الحالي هو سابق لهذه القيمة، يجب السماح "
 "بتغيير هذا التسجيل من أي هاتف، حتى إن لم يكن الهاتف الذي تم استخدامه سابقاً."
 
-#: register/models.py:452
 msgid "registrations"
 msgstr "التسجيلات"
 
-#: register/models.py:483
 msgid "This registration is unlocked until {}."
 msgstr "التسجيل غير مقفل حتى  {}."
 
-#: register/models.py:485
 msgid "This registration is locked."
 msgstr "التسجيل مقفل."
 
-#: register/models.py:544
 msgid "Invalid format"
 msgstr "الرقم الوظيفي غير صالح"
 
-#: register/models.py:545
 msgid "Multiple problems"
 msgstr "عدة مشكلات"
 
-#: register/models.py:546
 msgid "Invalid registration centre code length"
 msgstr "عدد خانات رقم مركز الاقتراع غير صحيحة"
 
-#: register/models.py:547
 msgid "No such registration centre found"
 msgstr "بحث عن بيانات التسجيل الخاص بك فى سجل الناخبين."
 
-#: register/models.py:548
 msgid "Not enough enough National ID digits"
 msgstr "عدد خانات الرقم الوطنى غير صحيحة"
 
-#: register/models.py:549
 msgid "Invalid valid National ID"
 msgstr "بطاقة الموظف غير صالحة"
 
-#: register/models.py:550
 msgid "Unknown"
 msgstr "محتوى غير معروف"
 
-#: register/models.py:551
 msgid "Registration update"
 msgstr "التسجيل"
 
-#: register/models.py:552
 msgid "Registration Center query"
 msgstr "مراكز التسجيل"
 
-#: register/models.py:553
 msgid "Invalid Form ID"
 msgstr "الرقم الوطني غير صالح"
 
-#: register/models.py:554
 msgid "Phone activation"
 msgstr "تفعيل رقم الهاتف"
 
-#: register/models.py:555 vr_dashboard/views/views.py:1332
 msgid "Daily Report"
 msgstr "التقارير"
 
-#: register/models.py:556
 msgid "Daily Report invalid"
 msgstr "التقرير اليومي غير صالح"
 
-#: register/models.py:557
 msgid "Bulk Outgoing Message"
 msgstr "مجموع الرسائل:"
 
-#: register/models.py:558
 msgid "Polling Report"
 msgstr "تقرير الاقتراع"
 
-#: register/models.py:559
 msgid "Polling Report invalid"
 msgstr "تقرير الاقتراع غير صالح"
 
-#: register/models.py:560
 msgid "Phone number not activated"
 msgstr "لم يتم تفعيل رقم الهاتف"
 
-#: register/models.py:564
 msgid "from number"
 msgstr "من الرقم"
 
-#: register/models.py:565
 msgid "to number"
 msgstr "إلى الرقم"
 
-#: register/models.py:568
 msgid "carrier"
 msgstr "الناقل"
 
-#: register/models.py:570
 msgid "message type"
 msgstr "نوع الرسالة"
 
-#: register/models.py:571
 msgid "order"
 msgstr "الترتيب"
 
-#: register/models.py:574
 msgid "message code"
 msgstr "رمز الرسالة"
 
-#: register/models.py:582
 msgid "in response to"
 msgstr "ردًا على"
 
-#: register/models.py:583
 msgid "need to anonymize"
 msgstr "حاجة إلى إخفاء الهوية"
 
 #. Translators: "smses" is plural for "SMS" (a Short Message Service text message)
-#: register/models.py:598
 msgid "smses"
 msgstr "رسائل نصية قصيرة"
 
-#: register/models.py:632
 msgid "Obsolete message code: {}"
 msgstr "رمز رسالة باطلة: {}"
 
-#: register/models.py:649
 msgid "blacklisted number"
 msgstr "رقم على اللائحة السوداء"
 
-#: register/models.py:650
 msgid "blacklisted numbers"
 msgstr "أرقام على اللائحة السوداء"
 
-#: register/models.py:668
 msgid "whitelisted number"
 msgstr "رقم على اللائحة البيضاء"
 
-#: register/models.py:669
 msgid "whitelisted numbers"
 msgstr "أرقام على اللائحة البيضاء"
 
-#: register/templates/polling_reports/delete_all_staffphones.html:4
-#: register/templates/polling_reports/delete_all_staffphones.html:7
 msgid "Delete All Staff Phones"
 msgstr "مسح جميع هواتف الموظفين"
 
-#: register/templates/polling_reports/delete_all_staffphones.html:13
 #, python-format
 msgid "Are you sure you want to delete all %(object_count)s Staff Phones?"
 msgstr "هل أنت متأكد من حذف كافة %(object_count)s هواتف الموظفين؟"
 
-#: register/templates/polling_reports/delete_all_staffphones.html:23
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:41
 msgid "Delete All"
 msgstr "مسحها كلها "
 
-#: register/templates/polling_reports/delete_all_staffphones.html:29
 msgid "There are currently no Staff Phones."
 msgstr "ما من هواتف موظفين حاليًا"
 
-#: register/templates/polling_reports/staffphone_browse.html:10
 msgid "Delete all Staff Phones"
 msgstr "حذف جميع هواتف الموظفين"
 
-#: register/templates/polling_reports/tab.html:7
 msgid "Whitelisted Numbers"
 msgstr "أرقام على اللائحة البيضاء"
 
-#: register/templates/polling_reports/tab.html:8
 msgid "Blacklisted Numbers"
 msgstr "أرقام على اللائحة السوداء"
 
-#: register/templates/register/blacklist_browse.html:7
-#: register/templates/register/registrationcenter_browse.html:13
-#: register/templates/register/whitelist_browse.html:7
 msgid "Upload CSV"
 msgstr "تحميل ملفات القيم المفصولة بفواصل"
 
-#: register/templates/register/blacklist_browse.html:9
-#: register/templates/register/registrationcenter_browse.html:15
-#: register/templates/register/whitelist_browse.html:9
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:62
 msgid "Download CSV"
 msgstr "تحميل"
 
-#: register/templates/register/blacklist_browse.html:22
 msgid "Delete all Blacklisted Numbers"
 msgstr "حذف كافة الأرقام على اللائحة السوداء"
 
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:6
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:15
 msgid "Delete All Blacklisted Numbers"
 msgstr "حذف جميع الأرقام على اللائحة السوداء"
 
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:8
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:17
 msgid "Delete All Whitelisted Numbers"
 msgstr "حذف جميع الأرقام على اللائحة البيضاء"
 
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:26
 #, python-format
 msgid ""
 "Are you sure you want to delete all %(object_count)s Blacklisted numbers?"
 msgstr "هل أنت متأكد من حذف كافة %(object_count)s الأرقام على اللائحة السوداء؟"
 
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:30
 #, python-format
 msgid ""
 "Are you sure you want to delete all %(object_count)s Whitelisted numbers?"
 msgstr "هل أنت متأكد من حذف كافة %(object_count)s الأرقام على اللائحة البيضاء؟"
 
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:48
 msgid "There are currently no Blacklisted numbers."
 msgstr "ما من أرقام على اللائحة السوداء حاليًا."
 
-#: register/templates/register/delete_all_blackwhitelisted_numbers.html:50
 msgid "There are currently no Whitelisted numbers."
 msgstr "ما من أرقام على الائحة البيضاء حاليًا."
 
-#: register/templates/register/delete_all_copy_centers.html:4
-#: register/templates/register/delete_all_copy_centers.html:7
-#: register/templates/register/delete_all_copy_centers.html:38
 msgid "Delete All Copy Centres"
 msgstr "حذف كل مراكز النسخ"
 
-#: register/templates/register/delete_all_copy_centers.html:15
 #, python-format
 msgid ""
 "All %(n_copy_centers)s copy centres in the database are shown below. Are you "
@@ -3457,52 +2556,36 @@ msgstr ""
 "كل مراكز النسخ %(n_copy_centers)s في قاعدة البيانات مبينة أدناه. هل أنت "
 "متأكد من أنّك تريد مسحها؟"
 
-#: register/templates/register/delete_all_copy_centers.html:23
 msgid "Copy Centres That Will Be Deleted"
 msgstr "مراكز النسخ التي سيتم مسحها"
 
-#: register/templates/register/delete_all_copy_centers.html:44
 msgid "There are currently no copy centres defined."
 msgstr "ما من مراكز نسخ محددة حالياً."
 
-#: register/templates/register/registration_browse.html:6
 msgid "Change registrations"
 msgstr "تغيير التسجيلات"
 
-#: register/templates/register/registrationcenter_browse.html:10
 msgid "Delete all Copy Centres"
 msgstr "مسح كل مراكز النسخ"
 
-#: register/templates/register/tab.html:8
-#: vr_dashboard/templates/vr_dashboard/base.html:59
-#: vr_dashboard/templates/vr_dashboard/regions.html:17
 msgid "Subconstituencies"
 msgstr "دوائر إنتخابية"
 
-#: register/templates/register/tab.html:9
 msgid "Constituencies"
 msgstr "الدوائر الانتخابية"
 
-#: register/templates/register/tab.html:10
-#: rollgen/templates/rollgen/tab.html:4
-#: vr_dashboard/templates/vr_dashboard/base.html:53
-#: vr_dashboard/templates/vr_dashboard/election_day_preliminary.html:36
 msgid "Offices"
 msgstr "اللجان"
 
-#: register/templates/register/upload_blackwhitelisted_numbers.html:8
 msgid "Upload blacklisted numbers"
 msgstr "تحميل أرقام اللائحة السوداء"
 
-#: register/templates/register/upload_blackwhitelisted_numbers.html:10
 msgid "Upload whitelisted numbers"
 msgstr "تحميل أرقام اللائحة البيضاء"
 
-#: register/templates/register/upload_centers_csv.html:6
 msgid "Upload new registration centers"
 msgstr "ارفع مراكز تسجيل جديدة"
 
-#: register/templates/register/upload_centers_csv.html:21
 #, python-format
 msgid ""
 "<p>CSV File Requirements</p> <ul> <li>Please ensure the file is saved in "
@@ -3519,11 +2602,9 @@ msgstr ""
 "الرفع. </li><li>نزّل <a href=\"%(download_csv_url)s\">الملف الحالي لمراكز "
 "التسجيل</a>.</li></ul>"
 
-#: register/templates/register/whitelist_browse.html:22
 msgid "Delete all Whitelisted Numbers"
 msgstr "حذف كافة الأرقام على اللائحة البيضاء"
 
-#: register/utils.py:31
 #, python-brace-format
 msgid ""
 "Imported {created} new centers. Updated {updated} centers. There were "
@@ -3532,7 +2613,6 @@ msgstr ""
 "تم استيراد {created} مراكز جديدة. تم تحديث {updated} مراكز. تم تخطي {dupes} "
 "تكرارات. الصفوف الفارغة {blank}"
 
-#: register/utils.py:34
 msgid ""
 "Errors occurred while parsing the uploaded file. No centers were imported or "
 "updated."
@@ -3540,7 +2620,6 @@ msgstr ""
 "وقعت أخطاء أثناء تحليل تركيب الملف الذي تم رفعه. لم يتم استيراد أو تحديث أي "
 "مراكز."
 
-#: register/utils.py:37
 #, python-brace-format
 msgid ""
 "Error found in line {line_number}: row does not contain the exact number of "
@@ -3551,7 +2630,9 @@ msgstr ""
 "المحدد اللازم أو يحتوي على أسطر فارغة. لا يجب أن يحتوي الصف سوى على الأعمدة "
 "التالية: {columns}"
 
-#: register/utils.py:41
+msgid "Could not parse as a CSV file."
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "Error in row {line_number}. Field: {field_name}. Value: {value}. Error: "
@@ -3560,16 +2641,13 @@ msgstr ""
 "خطأ في الصف {line_number}. الحقل: {field_name}. القيمة: {value}. الخطأ: "
 "{error}"
 
-#: register/utils.py:43
 #, python-brace-format
 msgid "Error in row {line_number}. Error: {error}"
 msgstr "خطأ في الصف {line_number}. الخطأ: {error}"
 
-#: register/views.py:89
 msgid "All copy centres have been deleted."
 msgstr "تم حذف كافة مراكز النسخ"
 
-#: register/views.py:314
 #, python-format
 msgid ""
 "Numbers on these lines not imported because they are not valid phone "
@@ -3578,230 +2656,175 @@ msgstr ""
 "لم يتم استيراد الأرقام التي على الأسطر التالية لأنها ليست أرقام هاتف صالحة: "
 "%s."
 
-#: register/views.py:368
 msgid "All Staff Phones have been deleted."
 msgstr "تم حذف كافة هواتف الموظفين"
 
-#: register/views.py:398
 msgid "Phone number"
 msgstr "رقم الهاتف"
 
-#: register/views.py:399
 msgid "Registration center"
 msgstr "مركز التسجيل"
 
-#: register/views.py:403
 msgid "Center Id, Center name, or Phone number"
 msgstr "رقم المركز، اسم المركز، رقم الهاتف"
 
-#: register/views.py:442
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:116
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:40
 msgid "Message Type"
 msgstr "نوع الرسالة"
 
-#: register/views.py:444
 msgid "Message Code"
 msgstr "رمز الرسالة"
 
-#: register/views.py:503
 msgid "Center Id"
 msgstr "رقم المركز"
 
-#: register/views.py:508
 msgid "Type"
 msgstr "النوع"
 
-#: register/views.py:512
 msgid "Constituency"
 msgstr "الدائرة الانتخابية"
 
-#: register/views.py:514
 msgid "Subconstituency"
 msgstr "دائرة إنتخابية"
 
-#: register/views.py:516
 msgid "Supports Registrations"
 msgstr "دعم التسجيلات"
 
-#: register/views.py:520
 msgid "Center Id, Center name"
 msgstr "رقم المركز، اسم المركز"
 
-#: register/views.py:562
 msgid "Copied by"
 msgstr "قام بعملية النسخ"
 
-#: register/views.py:602 register/views.py:634 register/views.py:663
 msgid "Id"
 msgstr "الرقم"
 
-#: register/views.py:603 register/views.py:635 register/views.py:664
 msgid "Name (English)"
 msgstr "الاسم (بالإنجليزية)"
 
-#: register/views.py:604 register/views.py:636 register/views.py:665
 msgid "Name (Arabic)"
 msgstr "الاسم (بالعربية)"
 
-#: register/views.py:608 vr_dashboard/templates/vr_dashboard/regions.html:17
 msgid "Region"
 msgstr "منطقة"
 
-#: register/views.py:611 register/views.py:639 register/views.py:668
 msgid "Id or Name (in English or Arabic)"
 msgstr "الهوية أو الاسم (بالإنجليزية أو بالعربية)"
 
-#: register/views.py:704
 msgid "Any"
 msgstr "أي واحد"
 
-#: register/views.py:731
-msgid "national ID, first name, father name, grandfather name, family name "
-msgstr "الرقم الوطني، الاسم، اسم الأب، اسم الجد، العائلة"
+msgid ""
+"ENTIRE national ID or phone number WITHOUT any spaces or punctuation, first "
+"name, father name, grandfather name"
+msgstr ""
+"يالرقم الوطني أو رقم الهاتف بدون أي مسافات أو علامات ترقيم ، الاسم الأول ، "
+"اسم الأب ، اسم الجد"
 
-#: register/views.py:756
 msgid "Lock Status"
 msgstr "حالة الإقفال"
 
-#: reporting_api/models.py:9
 msgid "report"
 msgstr "تقرير"
 
-#: reporting_api/models.py:10
 msgid "headquarters reports"
 msgstr "تقارير المقر الرئيسي"
 
-#: reporting_api/models.py:11
 msgid "message log"
 msgstr "رسالة الذخول"
 
-#: reporting_api/models.py:14
 msgid "election report"
 msgstr "تقرير الانتخابات"
 
-#: reporting_api/models.py:15
 msgid "election reports"
 msgstr "تقارير الانتخابات"
 
-#: rollgen/forms.py:31
 msgid "Please enter a comma-delimited list of center ids."
 msgstr "يرجى إدخال قائمة بفواصل تضم أرقام المركز "
 
-#: rollgen/forms.py:52
 #, python-format
 msgid "\"%(name)s\" is not a valid job name."
 msgstr "\"%(name)s\" ليس اسمًا صالحًا لمهمة"
 
-#: rollgen/forms.py:54
 #, python-format
 msgid "There is already a job named \"%(name)s\"."
 msgstr "تتوفر بالفعل مهمة باسم \"%(name)s\"."
 
-#: rollgen/forms.py:60
 msgid ""
-"There are no restrictions on job names except that they may not begin with a"
-" period and may not contain back nor forward slashes."
-msgstr "ما من قيود على أسماء المهام سوى شرط ألا تبدأ بعلامة النقطة وألا تحتوي على خط مائل إلى الأمام أو إلى الخلف."
+"There are no restrictions on job names except that they may not begin with a "
+"period and may not contain back nor forward slashes."
+msgstr ""
+"ما من قيود على أسماء المهام سوى شرط ألا تبدأ بعلامة النقطة وألا تحتوي على خط "
+"مائل إلى الأمام أو إلى الخلف."
 
-#: rollgen/forms.py:66
 msgid "Accept centres with no office"
 msgstr "قبول المراكز من دون مكتب"
 
-#: rollgen/forms.py:68
 msgid "Accept centres with no voters"
 msgstr "قبول المراكز من دون ناخبين"
 
-#: rollgen/forms.py:70
 msgid "All centres"
 msgstr "كل المراكز"
 
-#: rollgen/forms.py:71
 msgid "The centres in the constituencies selected below "
 msgstr "المراكز في الدوائر الانتخابية المختارة أدناه"
 
-#: rollgen/forms.py:72
 msgid "The centres in the offices selected below "
 msgstr "المراكز في المكاتب المختارة أدناه"
 
-#: rollgen/forms.py:73
 msgid "The centres selected below "
 msgstr "المراكز المختارة أدناه"
 
-#: rollgen/forms.py:74
 msgid "The centres in this comma-delimited list "
 msgstr "المراكز في هذه القائمة بفواصل"
 
-#: rollgen/forms.py:96
 msgid "You must select at least one constituency."
 msgstr "عليك أن تختار دائرة انتخابية واحدة على الأقل"
 
-#: rollgen/forms.py:101
 msgid "You must select at least one office."
 msgstr "عليك أن تختار مكتبًا واحدًا على الأقل"
 
-#: rollgen/forms.py:106
 msgid "You must select at least one centre."
 msgstr "عليك أن تختار مركزًا واحدًا على الأقل"
 
-#: rollgen/forms.py:114
 msgid "These centre ids are invalid: {}"
 msgstr "أرقام هذه المراكز غير صالحة:  {}"
 
-#: rollgen/forms.py:120
 msgid "You must enter at least one centre."
 msgstr "عليك إدخال مركزًا واحدًا على الأقل."
 
-#: rollgen/models.py:158 text_messages/models.py:22
 msgid "number"
 msgstr "العدد"
 
-#: rollgen/models.py:160
 msgid "number of registrants"
 msgstr "عدد المسجلين"
 
-#: rollgen/models.py:161
 msgid "first voter name"
 msgstr "اسم أول ناخب"
 
-#: rollgen/models.py:162
 msgid "first voter number"
 msgstr "رقم أول ناخب"
 
-#: rollgen/models.py:163
 msgid "last voter name"
 msgstr "اسم آخر ناخب"
 
-#: rollgen/models.py:164
 msgid "last voter number"
 msgstr "رقم آخر ناخب"
 
-#: rollgen/models.py:192
 msgid "station"
 msgstr "المحطة"
 
-#: rollgen/models.py:193
 msgid "stations"
 msgstr "المحطات"
 
-#: rollgen/templates/rollgen/browse_job_centers.html:10
-#: rollgen/templates/rollgen/browse_job_offices.html:11
-#: rollgen/templates/rollgen/job_failed_view.html:11
-#: rollgen/templates/rollgen/job_in_progress_view.html:11
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:12
 msgid "Return to Overview"
 msgstr "العودة إلى النظرة العامة"
 
-#: rollgen/templates/rollgen/browse_job_centers.html:12
-#: rollgen/templates/rollgen/browse_job_offices.html:13
 msgid "Voter Rolls > Job"
 msgstr "لوائح الناخبين  > مهمة"
 
-#: rollgen/templates/rollgen/browse_job_centers.html:26
 msgid "Click on a center to jump to the PDFs for that center."
 msgstr "اضغط على مركز للإطلاع على ملف بي دي إف الخاص بالمركز"
 
-#: rollgen/templates/rollgen/browse_job_centers.html:30
 #, python-format
 msgid ""
 "The center with no registrants is not clickable because it has no associated "
@@ -3810,54 +2833,44 @@ msgid_plural ""
 "The %(n_empty_centers)s centers with no registrants are not clickable "
 "because they have no associated documents."
 msgstr[0] ""
-msgstr[1] "لا يمكن الضغط على المركز الـ n_empty_centers)s)% الذي لا يحتوي على أي شخص مسجَّل لأنها غير مرتبطة بمستندات خاصة بها."
+msgstr[1] ""
+"لا يمكن الضغط على المركز الـ n_empty_centers)s)% الذي لا يحتوي على أي شخص "
+"مسجَّل لأنها غير مرتبطة بمستندات خاصة بها."
 msgstr[2] ""
 msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: rollgen/templates/rollgen/browse_job_centers.html:47
 msgid "Center Group"
 msgstr "مجموعة المركز"
 
-#: rollgen/templates/rollgen/browse_job_centers.html:48
-#: rollgen/templates/rollgen/overview.html:36
 msgid "Centers"
 msgstr "المراكز"
 
-#: rollgen/templates/rollgen/browse_job_offices.html:32
 msgid "Office Number"
 msgstr "رقم المكتب"
 
-#: rollgen/templates/rollgen/browse_job_offices.html:33
 msgid "Browse Office"
 msgstr "البحث عن مكتب"
 
-#: rollgen/templates/rollgen/browse_job_offices.html:34
 msgid "Download Zip File"
 msgstr "تنزيل كملف من نوع .zip"
 
-#: rollgen/templates/rollgen/browse_job_offices.html:44
 msgid "Download"
 msgstr "تنزيل"
 
-#: rollgen/templates/rollgen/browse_office.html:11
 msgid "Return to Job"
 msgstr "العودة إلى المهمة"
 
-#: rollgen/templates/rollgen/browse_office.html:14
 msgid "Voter Rolls > Job > View Office"
 msgstr "لوائح الناخبين > مهمة>  رؤية المكتب"
 
-#: rollgen/templates/rollgen/browse_office.html:29
 msgid "File Name"
 msgstr "اسم الملف"
 
-#: rollgen/templates/rollgen/browse_office.html:30
 msgid "Size"
 msgstr "الحجم"
 
-#: rollgen/templates/rollgen/browse_office.html:47
 #, python-format
 msgid "%(n_pages)s page"
 msgid_plural "%(n_pages)s pages"
@@ -3868,53 +2881,39 @@ msgstr[3] "صفحات %(n_pages)s"
 msgstr[4] "صفحات %(n_pages)s"
 msgstr[5] " صفحات %(n_pages)s"
 
-#: rollgen/templates/rollgen/browse_office.html:59
 msgid "There are no files for this office."
 msgstr "ما من ملف لهذا المكتب"
 
-#: rollgen/templates/rollgen/job_failed_view.html:14
-#: rollgen/templates/rollgen/job_in_progress_view.html:14
 msgid "Voter Rolls > Job "
 msgstr "لوائح الناخبين > مهمة"
 
-#: rollgen/templates/rollgen/job_failed_view.html:19
 msgid "This job failed. Error information follows."
 msgstr "المهمة فشلت. معلومات عن الخطأ في ما يلي"
 
-#: rollgen/templates/rollgen/job_in_progress_view.html:19
 msgid "This job is still in progress. Please check back later."
 msgstr "العمل جاري على هذه المهمة. يُرجى إعادة التحقق لاحقًا "
 
-#: rollgen/templates/rollgen/new.html:5
 msgid "Voter Rolls - New"
 msgstr "لوائح الناخبين- جديد"
 
-#: rollgen/templates/rollgen/new.html:11
 msgid "Voter Rolls > Create New Voter Roll"
 msgstr "لوائح الناخبين  > إنشاء لائحة ناخبين جديدة"
 
-#: rollgen/templates/rollgen/new.html:38
 msgid "Options"
 msgstr "الخيارات"
 
-#: rollgen/templates/rollgen/new.html:51 rollgen/templates/rollgen/tab.html:5
 msgid "Centres"
 msgstr "المراكز"
 
-#: rollgen/templates/rollgen/overview.html:13
 msgid "New"
 msgstr "جديد"
 
-#: rollgen/templates/rollgen/overview.html:22
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:40
 msgid "Overview"
 msgstr "اللجان"
 
-#: rollgen/templates/rollgen/overview.html:33
 msgid "Job"
 msgstr "مهمة"
 
-#: rollgen/templates/rollgen/overview.html:35
 msgid "Phase"
 msgstr "مرحلة"
 
@@ -3925,89 +2924,70 @@ msgstr "مرحلة"
 #. 3 PDFs
 #. 12 pages
 #.
-#: rollgen/templates/rollgen/overview.html:44
 msgid "Number of PDFs/Pages"
 msgstr "عدد ملفات بي دي إف/ الصفحات"
 
-#: rollgen/templates/rollgen/overview.html:58
 msgid "This job is in progress."
 msgstr "جاري العمل على هذه المهمة"
 
-#: rollgen/templates/rollgen/overview.html:61
 msgid "Failed"
 msgstr "فشلت العملية"
 
-#: rollgen/templates/rollgen/overview.html:63
 #, python-format
 msgid "Completed<br/>%(end_date)s, %(end_time)s"
 msgstr "مكتمل <br/>%(end_date)s, %(end_time)s"
 
-#: rollgen/templates/rollgen/overview.html:74
 #, python-format
 msgid "(Total %(n_centers)s)"
 msgstr "(مجموع %(n_centers)s)"
 
-#: rollgen/templates/rollgen/overview.html:86
 #, python-format
 msgid "and %(n_excess_centers)s more"
 msgstr "و %(n_excess_centers)s إضافية"
 
-#: rollgen/templates/rollgen/overview.html:101
 #, python-format
 msgid "%(n_files)s PDFs <br/> %(n_pages)s pages"
 msgstr "%(n_files)s ملفات بي دي إف <br/> %(n_pages)s صفحات"
 
-#: rollgen/templates/rollgen/overview.html:114
 msgid "Download Polling CSV"
 msgstr "تنزيل ملفات القيم المفصولة"
 
-#: rollgen/utils.py:202
 msgid "These ids are invalid: {}"
 msgstr "الأرقام غير صالحة:  {}"
 
-#: rollgen/views.py:286
 msgid "You do not have permission to view roll generator output."
 msgstr "لست مخولاً للاطلاع على مخرجات مولد اللوائح"
 
-#: rollgen/views.py:301
 msgid "You do not have permission to run the roll generator."
 msgstr "ليس لديك الإذن لتشغيل مولّد اللوائح "
 
-#: rollgen/views.py:500
 msgid "The criteria you specified didn't match any active centres."
 msgstr "المعيار الذي  حددته لا يطابق أي من المراكز الفاعلة."
 
-#: staff/views.py:86
 msgid "Email"
 msgstr "عنوان البريد الإلكتروني"
 
-#: staff/views.py:88
 msgid "Last name"
 msgstr "الشهرة"
 
-#: staff/views.py:90
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:17
-#: vr_dashboard/views/views.py:1142 vr_dashboard/views/views.py:1454
 msgid "Active"
 msgstr "فعال"
 
-#: staff/views.py:94
+msgid "Date joined"
+msgstr "تاريخ الانضمام"
+
 msgid "username, email, first name, or last name"
 msgstr "اسم المستخدم، البريد الالكتروني، الاسم، أو الشهرة"
 
-#: subscriptions/models.py:14
 msgid "subscription type"
 msgstr "نوع التسجيل"
 
-#: subscriptions/models.py:25
 msgid "email alert subscription"
 msgstr "الاشتراك في الرسائل الإلكترونية التنبيهية"
 
-#: subscriptions/models.py:26
 msgid "email alert subscriptions"
 msgstr "الاشتراكات في الرسائل الإلكترونية التنبيهية"
 
-#: subscriptions/templates/subscriptions/email_body.txt:4
 msgid ""
 "\n"
 "The HNEC Voter Registration Audit System has identified the following "
@@ -4021,31 +3001,25 @@ msgstr ""
 "التي تستلزم المراجعة. في ما يلي ملخص عن تفاصيل هذه المسائل.\n"
 "انقر من فضلك عن مسألة للاطلاع عليها في نظام التدقيق.\n"
 
-#: subscriptions/templates/subscriptions/email_subject.txt:3
 msgid "[TESTING] HNEC Voter Registration Audit System"
 msgstr ""
 "[TESTING] نظام التدقيق في التسجيل الخاص بالمفوضية الوطنية العليا للانتخابات"
 
-#: subscriptions/templates/subscriptions/email_subject.txt:5
 msgid "HNEC Voter Registration Audit System"
 msgstr "نظام التدقيق في التسجيل الخاص بالمفوضية الوطنية العليا للانتخابات"
 
-#: subscriptions/templates/subscriptions/subscription_browse.html:6
 msgid "Back to SMS discrepancies"
 msgstr "العودة إلى تباينات الرسائل النصية القصيرة"
 
-#: subscriptions/views.py:17 subscriptions/views.py:36
 msgid "Type of subscription"
 msgstr "نوع التسجيل"
 
-#: text_messages/forms.py:32
 #, python-format
 msgid ""
 "Messages should use either {} placeholders or %()s placeholders but not both"
 msgstr ""
 "على الرسائل أن تستخدم إمّا العناصر النائبة {} أو %()s وعدم استخدام الاثنين معاً"
 
-#: text_messages/forms.py:39
 #, python-format
 msgid ""
 "English and Arabic messages must use the same kind of placeholders, either "
@@ -4054,183 +3028,151 @@ msgstr ""
 "على النصين العربي والإنجليزي أن يستخدما نوع العناصر النائبة عينه، أي إما {} "
 "أو %()s"
 
-#: text_messages/forms.py:76
 msgid "The Arabic text must have the same placeholders as the English text."
 msgstr "يجب أن يتحلى النص العربي بنفس عدد العناصر النائبة كالنص الإنجليزي."
 
-#: text_messages/models.py:24
 msgid "label"
 msgstr "التسمية"
 
-#: text_messages/models.py:28
 msgid "english"
 msgstr "الإنجليزية"
 
-#: text_messages/models.py:32
 msgid "arabic"
 msgstr "العربية"
 
-#: text_messages/models.py:35
 msgid "english repeat message"
 msgstr "رسالة التكرار الإنجليزية"
 
-#: text_messages/models.py:38
 msgid "arabic repeat message"
 msgstr "رسالة التكرار العربية"
 
-#: text_messages/models.py:41
 msgid "description"
 msgstr "الوصف"
 
-#: text_messages/models.py:45
 msgid "last updated by"
 msgstr "آخر تحديث من قِبَل"
 
-#: text_messages/models.py:49
 msgid "message text"
 msgstr "نص الرسالة"
 
-#: text_messages/models.py:50
 msgid "message texts"
 msgstr "نصوص الرسائل النصية القصيرة"
 
-#: text_messages/templates/text_messages/messagetext_form.html:4
 msgid "Message text"
 msgstr "نص الرسالة"
 
-#: text_messages/templates/text_messages/messagetext_form.html:8
 msgid "Editing"
 msgstr "التنقيح"
 
-#: text_messages/templates/text_messages/messagetext_form.html:23
 msgid "Last updated by:"
 msgstr "آخر تحديث من قِبَل:"
 
-#: text_messages/templates/text_messages/messagetext_form.html:27
 msgid "Last updated at:"
 msgstr "آخر تحديث في:"
 
-#: text_messages/templates/text_messages/messagetext_list.html:13
 msgid ""
-"These are only the translations for SMS messages. All other translations are"
-" available at <a href='https://transifex.com'>Transifex.com</a>"
-msgstr "هذه ترجمات الرسائل النصية القصيرة فقط. كافة الترجمات الأخرى متوفرة على <a href='https://transifex.com'>Transifex.com</a> "
+"These are only the translations for SMS messages. All other translations are "
+"available at <a href='https://transifex.com'>Transifex.com</a>"
+msgstr ""
+"هذه ترجمات الرسائل النصية القصيرة فقط. كافة الترجمات الأخرى متوفرة على <a "
+"href='https://transifex.com'>Transifex.com</a> "
 
-#: text_messages/templates/text_messages/messagetext_list.html:53
 msgid "if repeated"
 msgstr "في حال حصول تكرار"
 
-#: voting/forms.py:35
+msgid "Found {} header columns, but expected {}."
+msgstr "تم العثور على {} أعمدة في حين أنّ المتوقع هو {}."
+
+msgid "Expected header {} but found {}."
+msgstr "العنوان المتوقع كان {} لكنّ النتيجة كانت {}."
+
 msgid "Start date"
 msgstr "تاريخ البدء"
 
-#: voting/forms.py:41
-msgid "End date"
-msgstr "تاريخ الانتهاء"
-
-#: voting/models.py:131
 msgid "message number"
 msgstr "رقم الرسالة"
 
-#: voting/models.py:132
 msgid "reminder number"
 msgstr "رقم التذكير"
 
-#: voting/models.py:135
 msgid "reminder queued"
 msgstr "التذكير على قائمة الانتظار "
 
-#: voting/models.py:136
 msgid "reminders queued"
 msgstr "التذكيرات على قائمة الانتظار  "
 
-#: voting/models.py:150
 msgid ""
 "Earliest time associated with this election - set automatically from other "
 "fields"
 msgstr "أبكر وقت مرتبط بهذه الانتخابات - تم ضبطه تلقائياً من حقول أخرى"
 
-#: voting/models.py:157
 msgid ""
 "Latest time associated with this election - set automatically from other "
 "fields"
 msgstr "آخر وقت مرتبط بهذه الانتخابات - تم ضبطه تلقائياً من حقول أخرى"
 
-#: voting/models.py:163
 msgid "polling start time"
 msgstr "وقت بدء الاقتراع"
 
-#: voting/models.py:164
 msgid "polling end time"
 msgstr "وقت انتهاء الاقتراع"
 
-#: voting/models.py:167
 msgid "work start time"
 msgstr "وقت بدء العمل"
 
-#: voting/models.py:168
 msgid ""
 "Earliest time that phones can be activated, center opening reports "
 "submitted, etc. for this election. Automatically set to midnight two days "
 "before the start of polling."
 msgstr ""
 
-#: voting/models.py:176
 msgid "work end time"
 msgstr "وقت انتهاء العمل"
 
-#: voting/models.py:177
+#, fuzzy
+#| msgid ""
 msgid ""
 "Latest time that reports can be submitted for this election. Automatically "
 "set to 16 hours after the end of polling."
 msgstr ""
+"آخر وقت يمكن فيه تقديم التقارير لهذه الانتخابات. تم ضبطه تلقائياً ليكون 16 "
+"ساعةً بعد انتهاء عملية الاقتراع. إزالة هذه الميزة للانتخابات عبر الرسائل "
+"القصيرة."
 
-#: voting/models.py:188
 msgid "elections"
 msgstr "الانتخابات"
 
-#: voting/models.py:196
 #, python-brace-format
 msgid "{0.name_arabic} ({0.name_english})"
 msgstr "{0.name_arabic} ({0.name_english})"
 
-#: voting/models.py:209
 msgid "polling start time is later than end time."
 msgstr "إنّ وقت بدء الاقتراع بعد وقت الانتهاء."
 
-#: voting/models.py:362
 msgid "General ballot"
 msgstr "الاقتراع العام"
 
-#: voting/models.py:363
 msgid "Women's ballot"
 msgstr "الاقتراع النساء"
 
-#: voting/models.py:372
 msgid "internal ballot number"
 msgstr "رقم الاقتراع الداخلي"
 
-#: voting/models.py:373
 msgid "Number used internally to identify unique ballots across an election."
 msgstr "الرقم المستخدم داخلياً لتمييز الاقتراعات في خلال الانتخابات."
 
-#: voting/models.py:375
 msgid "ballot type"
 msgstr "نوع الاقتراع"
 
-#: voting/models.py:377
 msgid "number of seats"
 msgstr "عدد المقاعد"
 
-#: voting/models.py:380 voting/models.py:437
 msgid "ballot"
 msgstr "الاقتراع"
 
-#: voting/models.py:381
 msgid "ballots"
 msgstr "أوراق الاقتراع"
 
-#: voting/models.py:396
 #, python-brace-format
 msgid ""
 "Ballot #{ballot_number} {ballot_name} in subconstituencies "
@@ -4239,510 +3181,345 @@ msgstr ""
 "الاقتراع رقم {ballot_number} {ballot_name} في الدوائر الانتخابية الفرعية "
 "{subconstituencies} في انتخابات {election}"
 
-#: voting/models.py:435
 msgid "candidate number"
 msgstr "رقم المرشح"
 
-#: voting/models.py:436
 msgid "Number used in text messages when voting for this candidate"
 msgstr "الرقم المستخدم في الرسائل النصية عند التصويت لهذا المرشّح"
 
-#: voting/models.py:440
 msgid "candidate"
 msgstr "مرشّح"
 
-#: voting/models.py:441
 msgid "candidates"
 msgstr "المرشحون"
 
-#: voting/models.py:452
 #, python-brace-format
 msgid "Candidate {0.name_arabic} ({0.name_english}) on {0.ballot}"
 msgstr "المرشّح {0.name_arabic} ({0.name_english}) في {0.ballot}"
 
-#: voting/models.py:479
 msgid "registration period"
 msgstr "فترة التسجيل"
 
-#: voting/models.py:480
 msgid "registration periods"
 msgstr "فترات التسجيل"
 
-#: voting/models.py:488
+#, python-brace-format
+msgid "registration period from {start_time} to {end_time}"
+msgstr "تبدأ فترة التسجيل من {start_time} الى  {end_time}"
+
 msgid "Both start and end must be provided."
 msgstr "لا بد من توفير تاريخ البدء والانتهاء"
 
-#: voting/models.py:494
 msgid "End time must be after start time."
 msgstr "يجب أن يكون وقت الانتهاء بعد وقت البدء."
 
-#: voting/models.py:509
 msgid "Other registration periods overlap this one."
 msgstr "تتداخل فترات تسجيل أخرى مع هذه الفترة."
 
-#: voting/templates/voting/election_label_value_read.html:9
 msgid "Upload election data"
 msgstr "تحميل بيانات الانتخابات"
 
-#: voting/templates/voting/election_label_value_read.html:12
 msgid "Download election data"
 msgstr "تنزيل بيانات الانتخابات"
 
-#: voting/templates/voting/tab.html:8
 msgid "Elections"
 msgstr "الانتخابات"
 
-#: voting/templates/voting/tab.html:9
 msgid "Ballots"
 msgstr "أوراق الاقتراع"
 
-#: voting/templates/voting/tab.html:10
 msgid "Candidates"
 msgstr "المرشحون"
 
-#: voting/templates/voting/tab.html:11
 msgid "Stations"
 msgstr "المحطات"
 
-#: voting/templates/voting/tab.html:12
 msgid "Closed Centers"
 msgstr "المراكز المقفلة"
 
-#: voting/views.py:22 voting/views.py:87
 msgid "Name (en)"
 msgstr "الاسم (بالانجليزية)"
 
-#: voting/views.py:23 voting/views.py:88
 msgid "Name (ar)"
 msgstr "الاسم (بالعربية)"
 
-#: voting/views.py:26
 msgid "Election name in English or Arabic"
 msgstr "عنوان الانتخابات بالإنجليزية أو بالعربية"
 
-#: voting/views.py:85
 msgid "Ballot"
 msgstr "الإقتراع"
 
-#: voting/views.py:86
 msgid "Number"
 msgstr "الرقم"
 
-#: voting/views.py:92
 msgid "Candidate name in English or Arabic"
 msgstr "اسم المرشح بالإنجليزية أو بالعربية"
 
-#: vr_dashboard/forms.py:13
 #, python-format
 msgid "Center %s is not a valid center."
 msgstr "المركز %s غير صالح."
 
-#: vr_dashboard/forms.py:23
 msgid "Either a phone number or a center must be supplied, but not both."
 msgstr "عليك إدخال إما رقم هاتف أو مركز، وليس إدخال الاثنين معاً."
 
-#: vr_dashboard/templates/vr_dashboard/base.html:22
+msgid "From date cannot be after end date"
+msgstr "تاريخ البدأ لا يمكن أن يكون بعد تاريخ الانتهاء"
+
 msgid "Summary"
 msgstr "ملخص"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:38
 msgid "Check your registration information"
 msgstr "تحقق من معلومات تسجيلك"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:51
-#: vr_dashboard/templates/vr_dashboard/hq.html:21
-#: vr_dashboard/views/views.py:950
 msgid "Libya"
 msgstr "ليبيا"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:52
 msgid "Regions"
 msgstr "منطقة"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:56
 msgid "Offices Detail"
 msgstr "اللجان - تفاصيل"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:61
-#: vr_dashboard/templates/vr_dashboard/weekly.html:38
 msgid "Weekly"
 msgstr "أسبوعي"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:62
 msgid "SMS"
 msgstr "خدمة الرسائل القصيرة"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:72
+msgid "Reports"
+msgstr "التقارير"
+
 msgid "Period:"
 msgstr "وقت:"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:80
-#: vr_dashboard/templates/vr_dashboard/base.html:141
 msgid "New Registrations"
 msgstr "‫التسجيلات الجديدة‬"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:95
 msgid "Cumulative Registrations"
 msgstr "التسجيل التراكمي"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:118
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:59
 msgid "Last Updated: "
 msgstr "آخر تحديث: "
 
-#: vr_dashboard/templates/vr_dashboard/base.html:120
 msgid "Download Full CSV"
 msgstr "تنزيل كافة ملفات القيم المفصولة بفواصل"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:121
 msgid "Download Daily CSV"
 msgstr "تنزيل ملفات القيم المفصولة بفواصل اليومية"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:135
 msgid "January"
 msgstr "كانون الثاني/يناير"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:135
 msgid "February"
 msgstr "شباط/فبراير"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:135
 msgid "March"
 msgstr "آذار/مارس"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:136
 msgid "April"
 msgstr "نيسان/أبريل"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:136
 msgid "May"
 msgstr "أيار/مايو"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:136
 msgid "June"
 msgstr "حزيران/يونيو"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:137
 msgid "July"
 msgstr "تموز/يوليو"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:137
 msgid "August"
 msgstr "آب/أغسطس"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:137
 msgid "September"
 msgstr "أيلول/سبتمبر"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:138
 msgid "October"
 msgstr "تشرين الأول/أكتوبر"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:138
 msgid "November"
 msgstr "تشرين الثاني/نوفمبر"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:138
 msgid "December"
 msgstr "كانون الأول/ديسمبر"
 
-#: vr_dashboard/templates/vr_dashboard/base.html:142
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:15
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:84
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:87
-#: vr_dashboard/templates/vr_dashboard/weekly.html:7
-#: vr_dashboard/views/views.py:1140
 msgid "Total Registrations"
 msgstr "إجمالي التسجيل"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:10
 msgid "Polling is over"
 msgstr "انتهت عملية الاقتراع"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:12
 msgid "Polling is in progress"
 msgstr "عملية الاقتراع جارية"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:14
 msgid "Polling has not started"
 msgstr "لم تبدأ عملية الاقتراع"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:16
 msgid "Work period"
 msgstr "فترة العمل"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:19
 msgid "Polling period"
 msgstr "فترة الاقتراع"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:52
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:12
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:7
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:43
-#: vr_dashboard/views/views.py:978 vr_dashboard/views/views.py:1137
-#: vr_dashboard/views/views.py:1452
 msgid "Polling Center"
 msgstr "مركز الاقتراع"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:53
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:18
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:45
-#: vr_dashboard/views/views.py:979 vr_dashboard/views/views.py:1143
-#: vr_dashboard/views/views.py:1455
 msgid "Opened"
 msgstr "مفتوح"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:54
-#: vr_dashboard/views/views.py:980 vr_dashboard/views/views.py:1309
 msgid "Not Opened"
 msgstr "لم يُفتح"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:55
-#: vr_dashboard/templates/vr_dashboard/election_day.html:56
-#: vr_dashboard/templates/vr_dashboard/election_day.html:57
-#: vr_dashboard/templates/vr_dashboard/election_day.html:58
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:19
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:20
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:21
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:22
-#: vr_dashboard/views/views.py:983 vr_dashboard/views/views.py:984
-#: vr_dashboard/views/views.py:985 vr_dashboard/views/views.py:986
 msgid "Period"
 msgstr "وقت"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:55
-#: vr_dashboard/templates/vr_dashboard/election_day.html:56
-#: vr_dashboard/templates/vr_dashboard/election_day.html:57
-#: vr_dashboard/templates/vr_dashboard/election_day.html:58
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:79
-#: vr_dashboard/views/views.py:983 vr_dashboard/views/views.py:984
-#: vr_dashboard/views/views.py:985 vr_dashboard/views/views.py:986
-#: vr_dashboard/views/views.py:1322
 msgid "Not Reported"
 msgstr "لم يتم إرسال التقرير اليومي"
 
-#: vr_dashboard/templates/vr_dashboard/election_day.html:59
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:23
-#: vr_dashboard/views/views.py:987 vr_dashboard/views/views.py:1148
 msgid "Closed"
 msgstr "مغلق"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:7
 msgid "Loading..."
 msgstr "التحميل جارٍ..."
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:13
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:44
-#: vr_dashboard/views/views.py:1138 vr_dashboard/views/views.py:1453
 msgid "Code"
 msgstr "رقم المركز"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:14
-#: vr_dashboard/views/views.py:1139
 msgid "Copied Polling Center"
 msgstr "مركز الاقتراع المنسوخ"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:19
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:20
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:21
-#: vr_dashboard/templates/vr_dashboard/election_day_center.html:22
 msgid "Reported"
 msgstr "تم التبليغ عنه"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:11
 msgid "Return to Office"
 msgstr "العودة إلى المكتب"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:19
 msgid "Copy of center"
 msgstr "نسخة المركز"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:25
 msgid "Copies of this center:"
 msgstr "نُسَخ هذا المركز:"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:33
 msgid "The center was inactive for this election."
 msgstr "لم يكن المركز فاعلًا في هذه الانتخابات"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:37
 msgid "Reporting"
 msgstr "التقارير"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:40
 msgid "Last Opened"
 msgstr "أخر إفتتاح"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:44
 msgid "Last Reported"
 msgstr "أخر تقرير"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:51
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:118
 msgid "Reported Votes"
 msgstr "عدد الأصوت حسب التقرير "
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:56
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:62
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:68
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:74
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:117
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:46
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:47
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:48
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:49
-#: vr_dashboard/views/views.py:1144 vr_dashboard/views/views.py:1145
-#: vr_dashboard/views/views.py:1146 vr_dashboard/views/views.py:1147
-#: vr_dashboard/views/views.py:1456 vr_dashboard/views/views.py:1457
-#: vr_dashboard/views/views.py:1458 vr_dashboard/views/views.py:1459
 msgid "Reported Period"
 msgstr "وقت إرسال التقرير"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:114
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:38
 msgid "Date"
 msgstr "تاريخ"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:115
 msgid "Phone"
 msgstr "رقم الهاتف"
 
-#: vr_dashboard/templates/vr_dashboard/election_day_center_n.html:134
 msgid "No messages were received."
 msgstr "لم يتم تلقي أي رسائل."
 
-#: vr_dashboard/templates/vr_dashboard/election_day_office_n.html:61
 msgid "Inactive"
 msgstr "غير فاعل"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:7
 msgid "National"
 msgstr "وطني"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:13
-#: vr_dashboard/templates/vr_dashboard/hq.html:36
-#: vr_dashboard/templates/vr_dashboard/hq.html:64
 msgid "Location"
 msgstr "الموقع"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:15
-#: vr_dashboard/templates/vr_dashboard/hq.html:38
-#: vr_dashboard/templates/vr_dashboard/hq.html:66
-#: vr_dashboard/templates/vr_dashboard/hq.html:94
+msgid "Votes"
+msgstr "الأصوات"
+
+msgid "Registrations (Active)"
+msgstr "التسجيلات (ناشطة)"
+
 #, python-format
 msgid "Turnout %% (Active)"
 msgstr "نسبة المشاركة %% (ناشطة)"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:16
-#: vr_dashboard/templates/vr_dashboard/hq.html:39
-#: vr_dashboard/templates/vr_dashboard/hq.html:67
-#: vr_dashboard/templates/vr_dashboard/hq.html:95
 #, python-format
 msgid "Turnout %% (Open)"
 msgstr "نسبة المشاركة %% (مفتوحة)"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:30
 msgid "By Region"
 msgstr "بحسب المنطقة"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:58
 msgid "By Office"
 msgstr "بحسب المكتب"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:86
 msgid "By Center Type"
 msgstr "بحسب نوع المركز"
 
-#: vr_dashboard/templates/vr_dashboard/hq.html:91
 msgid "Center Type"
 msgstr "نوع المركز"
 
-#: vr_dashboard/templates/vr_dashboard/includes/error_core.html:7
 msgid "Error"
 msgstr "خطأ"
 
-#: vr_dashboard/templates/vr_dashboard/national.html:6
 msgid "National Stats"
 msgstr "الإحصاءات الوطنية"
 
-#: vr_dashboard/templates/vr_dashboard/national.html:11
-#: vr_dashboard/templates/vr_dashboard/offices.html:13
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:13
-#: vr_dashboard/templates/vr_dashboard/regions.html:12
-#: vr_dashboard/templates/vr_dashboard/weekly.html:40
 msgid "Cumulative Totals"
 msgstr "التراكمي حتى الآن"
 
-#: vr_dashboard/templates/vr_dashboard/national.html:13
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:15
-#: vr_dashboard/templates/vr_dashboard/regions.html:14
 msgid "Age Totals"
 msgstr "التراكمي بالأعمار"
 
-#: vr_dashboard/templates/vr_dashboard/offices.html:6
 msgid "Office Stats"
 msgstr "إحصاءات المكتب"
 
-#: vr_dashboard/templates/vr_dashboard/offices.html:7
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:7
-#: vr_dashboard/templates/vr_dashboard/regions.html:7
 msgid "Click on a row below to see it in the chart."
 msgstr "اضغط على صف من الصفوف أدناه لرؤية المخطط"
 
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:6
 msgid "Registration Stats"
 msgstr "إحصائيات التسجيل"
 
-#: vr_dashboard/templates/vr_dashboard/offices_detail.html:14
 msgctxt "yesterday_total"
 msgid "Total"
 msgstr "المجموع"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/includes/whitelist_form.html:9
 msgid "Add to Whitelist"
 msgstr "أضِف إلى القائمة المسموح لها بالدخول إلى هذه الخدمة"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:10
 msgid "Center"
 msgstr "المركز"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:12
 msgid "This phone is not linked to a center."
 msgstr "هذا الهاتف ليس موصولاً بمركز."
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:19
 msgid "This phone is whitelisted."
 msgstr "هذا الهاتف مندرج في القائمة المسموح لها بالدخول إلى هذه الخدمة."
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:21
 msgid "This phone is not whitelisted."
 msgstr "رقم الهاتف ليس مدرجاً على القائمة المسموح لها بالدخول إلى هذه الخدمة."
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:33
 msgid "Phone History"
 msgstr "تاريخ الهاتف"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:39
 msgid "To or From"
 msgstr "إلى أو من"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/message_list.html:61
 msgid "No messages have been sent to or received from this phone."
 msgstr "لم يتم إرسال أو تلقي أي رسائل من هذا الهاتف."
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:6
 msgid "Phones for center"
 msgstr "أرقام الهاتف للمركز"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:13
 msgid "Whitelist Status"
 msgstr "حالة القائمة المسموح لها بالدخول إلى هذه الخدمة"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/phone_list.html:19
 msgid "History"
 msgstr "سجل الزيارات"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool/query_form.html:7
 msgid ""
 "Please enter a center id, or a phone number (218xxxxxxxxx or 88216xxxxxxxx) "
 "without punctuation or spaces. Either a phone number or a center must be "
@@ -4752,107 +3529,99 @@ msgstr ""
 "علامات وقف أو فراغات. عليك إدخال إما رقم هاتف أو مركز، وليس إدخال الاثنين "
 "معاً."
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:4
-#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:8
 msgid "Phone and Message Tool"
 msgstr "أداة الهاتف والرسائل"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:24
 msgid "Enter Another Phone or Center ID #"
 msgstr "أدخل رقم هاتف أو رقم مركز  #"
 
-#: vr_dashboard/templates/vr_dashboard/phone_tool_base.html:28
 msgid "Return to Polling Centers Monitoring"
 msgstr "العودة إلى مراقبة مراكز الاقتراع"
 
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:12
 msgid "Phone Tool"
 msgstr "أداة الهاتف"
 
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:18
 msgid "Election Title"
 msgstr "عنوان الانتخابات"
 
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:43
 msgid "Center List"
 msgstr "المراكز"
 
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:46
 msgid "HQ"
 msgstr "المقر الرئيسي"
 
-#: vr_dashboard/templates/vr_dashboard/polling_base.html:49
 msgid "Preliminary Vote Counts"
 msgstr "فرز الأصوات الأولي"
 
-#: vr_dashboard/templates/vr_dashboard/regions.html:6
 msgid "Region Stats"
 msgstr "إحصاءات المنطقة"
 
-#: vr_dashboard/templates/vr_dashboard/sms.html:6
+msgid "Full CSV Report"
+msgstr "تقرير كامل بصيغة CSV"
+
+msgid "Daily CSV Report"
+msgstr "التقرير اليومي بصيغة CSV"
+
+msgid "Polling Center CSV Report"
+msgstr "تقرير مراكز الاقتراع بصيغة CSV"
+
+msgid "Phone CSV Report"
+msgstr "تقرير أرقام الهواتف بصيغة CSV"
+
+msgid "Date-limited Daily CSV Report"
+msgstr "التقرير اليومي مع تحديد التاريخ  بصيغة CSV"
+
+msgid "Report"
+msgstr "تقرير"
+
 msgid "SMS Stats"
 msgstr "إحصائيات الرسائل النصية"
 
-#: vr_dashboard/templates/vr_dashboard/sms.html:11
-#: vr_dashboard/templates/vr_dashboard/sms.html:52
 msgid "Stat"
 msgstr "إحصائية"
 
-#: vr_dashboard/templates/vr_dashboard/sms.html:13
-#: vr_dashboard/templates/vr_dashboard/sms.html:54
-#: vr_dashboard/templates/vr_dashboard/weekly.html:37
 msgid "Last 7 Days"
 msgstr "آخر سبع أيام"
 
-#: vr_dashboard/templates/vr_dashboard/sms.html:27
 msgid "Phones with Registrations from Multiple Family Books"
 msgstr "الهواتف التى قامت بتسجيل أكثر من كتيب عائلة"
 
-#: vr_dashboard/templates/vr_dashboard/sms.html:37
 msgid "Phones Attempting Duplicate Registrations"
 msgstr "الهواتف التى قامت بمحاولات تكرار التسجيل"
 
-#: vr_dashboard/templates/vr_dashboard/sms.html:47
 msgid "Message Stats"
 msgstr "إحصائيات المستخدمين"
 
-#: vr_dashboard/templates/vr_dashboard/weekly.html:16
-#: vr_dashboard/views/views.py:760
-msgid "Yesterday"
-msgstr "يوم أمس"
+msgid "Today"
+msgstr "اليوم"
 
-#: vr_dashboard/templates/vr_dashboard/weekly.html:32
 msgid "Weekly Stats"
 msgstr "الإحصاءات الأسبوعية"
 
-#: vr_dashboard/templates/vr_dashboard/weekly.html:39
 msgid "CDA"
 msgstr "الهيئة التأسيسية لصياغة مشروع الدستور"
 
-#: vr_dashboard/templates/vr_dashboard/weekly.html:50
 msgctxt "interval"
 msgid "to"
 msgstr "إلى"
 
-#: vr_dashboard/views/phone_tool.py:54
+msgid "Center ID"
+msgstr "رقم المركز"
+
 msgid "This request is not intended to be called directly."
 msgstr "لا يُقصد من هذا الطلب أن يتم استخدامه مباشرةً. "
 
-#: vr_dashboard/views/phone_tool.py:60
 #, python-format
 msgid "Phone number %s is not a valid staff phone."
 msgstr "رقم الهاتف %s ليس رقم هاتف موظف صالحاً."
 
-#: vr_dashboard/views/phone_tool.py:72
 msgid "No matching phones were found."
 msgstr "لم يتم إيجاد أرقام هاتف مطابقة."
 
-#: vr_dashboard/views/views.py:65
 #, python-brace-format
 msgid "Period {period} Votes Reported: {count}"
 msgstr "الفترة {period} الأصوات التي تم التبليغ عنها:  {count}"
 
-#: vr_dashboard/views/views.py:104
 #, python-brace-format
 msgid ""
 "As of {date} at {time} {total} people have registered on the High National "
@@ -4863,117 +3632,94 @@ msgstr ""
 "{date} ، قد وصل عدد الناخبين المسجلين إلى  {total} منهم {num_men}  رجال، "
 "{num_women} نساء"
 
-#: vr_dashboard/views/views.py:121
 msgid ""
 "Data for this report is currently being generated.  Please try again later."
 msgstr "يتم حالياً إعداد بيانات هذا التقرير. الرجاء إعادة المحاولة لاحقاً."
 
-#: vr_dashboard/views/views.py:760
 msgid "Group"
 msgstr "المجموعة"
 
-#: vr_dashboard/views/views.py:760
 msgid "Total M"
 msgstr "مجموع الذكور"
 
-#: vr_dashboard/views/views.py:760
 msgid "Total F"
 msgstr "مجموع الإناث"
 
-#: vr_dashboard/views/views.py:760
+msgid "Yesterday"
+msgstr "يوم أمس"
+
 msgid "Yesterday M"
 msgstr "مجموع الذكور يوم أمس"
 
-#: vr_dashboard/views/views.py:761
 msgid "Yesterday F"
 msgstr "مجموع الإناث يوم أمس"
 
-#: vr_dashboard/views/views.py:896
 msgid "Response format is not supported."
 msgstr "تنسيق الردّ ليس معتمداً."
 
-#: vr_dashboard/views/views.py:901
 #, python-format
 msgid "Last Updated: %s"
 msgstr "آخر تحديث: %s"
 
-#: vr_dashboard/views/views.py:971
 msgid "Election Day Overview"
 msgstr "لمحة عامة عن يوم الانتخابات"
 
-#: vr_dashboard/views/views.py:1021 vr_dashboard/views/views.py:1479
 #, python-brace-format
 msgid "As of {time} on {date}:"
 msgstr "يوم {date}، عند الساعة {time}:"
 
-#: vr_dashboard/views/views.py:1025 vr_dashboard/views/views.py:1482
 #, python-brace-format
 msgid "{count} centers have opened"
 msgstr "{count} تم إفتتاح المركز"
 
-#: vr_dashboard/views/views.py:1028 vr_dashboard/views/views.py:1485
 #, python-brace-format
 msgid "{count} centers have not opened"
 msgstr "{count} لم يتم إفتتاح مركز"
 
-#: vr_dashboard/views/views.py:1081
 msgid "No Data Available"
 msgstr "البيانات غير متوفرة"
 
-#: vr_dashboard/views/views.py:1082
 msgid "Preliminary vote reports have not been received for this election."
 msgstr "لم ترد تقارير أولية حول التصويت لهذه الانتخابات"
 
-#: vr_dashboard/views/views.py:1131
 msgid "Election Day Centers"
 msgstr "مراكز يوم الانتخابات"
 
-#: vr_dashboard/views/views.py:1266
 msgid "Not Whitelisted"
 msgstr "رقم الهاتف غير مدرج فى المنظومة"
 
-#: vr_dashboard/views/views.py:1291
 #, python-format
 msgid "Center id %s is not valid."
 msgstr "رقم المركز %s غير صالح."
 
-#: vr_dashboard/views/views.py:1306
 msgid "N/A"
 msgstr "غير متوفر"
 
-#: vr_dashboard/views/views.py:1326
 msgid "Votes Report"
 msgstr "تقرير الأصوات"
 
-#: vr_dashboard/views/views.py:1328
 msgid "Phone Link"
 msgstr "الهواتف المخصصة للمركز"
 
-#: vr_dashboard/views/views.py:1330
 msgid "Check in"
 msgstr "تسجيل الدخول"
 
-#: vr_dashboard/views/views.py:1389
 #, python-format
 msgid "Office id %s is not valid."
 msgstr "رقم المكتب %s ليس صالحاً."
 
-#: vr_dashboard/views/views.py:1420
 msgctxt "has_reported"
 msgid "Yes"
 msgstr "نعم"
 
-#: vr_dashboard/views/views.py:1421
 msgctxt "has_not_reported"
 msgid "No"
 msgstr "لا"
 
-#: vr_dashboard/views/views.py:1446
 #, python-format
 msgid "Election Day Office %d"
 msgstr "مكتب يوم الانتخابات %d"
 
-#: vr_dashboard/views/views.py:1489
 #, python-brace-format
 msgid "{count} are inactive"
 msgstr "{count} غير فاعلة"

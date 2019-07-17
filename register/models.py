@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from collections import OrderedDict
 from decimal import Decimal
 import logging
@@ -7,12 +5,12 @@ import logging
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.query import QuerySet
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import get_language, override, ugettext_noop, ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -25,8 +23,8 @@ from libya_elections.libya_bread import CitizenFormatterMixin, \
     RegistrationCenterFormatterMixin, SMSFormatterMixin, SubconstituencyFormatterMixin
 from libya_elections.constants import CENTER_ID_MAX_INT_VALUE, CENTER_ID_MIN_INT_VALUE, INCOMING, \
     NO_NAMEDTHING, OUTGOING, SPLIT_CENTER_SUBCONSTITUENCY_ID
-from libya_elections.phone_numbers import format_phone_number, formatted_phone_number_tag, PhoneNumberField, \
-    FormattedPhoneNumberMixin
+from libya_elections.phone_numbers import format_phone_number, formatted_phone_number_tag, \
+    PhoneNumberField, FormattedPhoneNumberMixin
 from libya_elections.utils import ensure_unique, NUM_LATLONG_DECIMAL_PLACES
 from text_messages.utils import get_message
 
@@ -55,8 +53,8 @@ class Person(AbstractTimestampTrashBinModel):
     objects = PersonManager()
 
     @sensitive_variables()
-    def __unicode__(self):
-        return unicode(self.citizen)
+    def __str__(self):
+        return str(self.citizen)
 
     def clean(self):
         ensure_unique(self._meta.model, self, 'citizen_id')
@@ -81,6 +79,15 @@ class Person(AbstractTimestampTrashBinModel):
         permissions = (("read_person", "Can read person"),)
         verbose_name = _("person")
         verbose_name_plural = _("people")
+        ordering = ['id']
+
+
+class NamedThingQuerySet(QuerySet):
+    pass
+
+
+class NamedThingManager(TrashBinManager):
+    queryset = NamedThingQuerySet
 
 
 class NamedThing(AbstractTimestampTrashBinModel):
@@ -96,7 +103,7 @@ class NamedThing(AbstractTimestampTrashBinModel):
         abstract = True
         ordering = ['id']
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s - %s' % (self._meta.verbose_name, self.id, self.name)
 
     @staticmethod
@@ -141,6 +148,8 @@ class Office(NamedThing):
 
     region = models.IntegerField(_("region"), choices=REGION_CHOICES, default=0)
 
+    objects = NamedThingManager()
+
     class Meta(NamedThing.Meta):
         verbose_name = _("office")
         verbose_name_plural = _("offices")
@@ -158,6 +167,8 @@ class Office(NamedThing):
 
 
 class Constituency(NamedThing):
+    objects = NamedThingManager()
+
     class Meta(NamedThing.Meta):
         permissions = (
             ("read_constituency", "Can read constituency"),
@@ -172,6 +183,8 @@ class Constituency(NamedThing):
 
 
 class SubConstituency(NamedThing):
+    objects = NamedThingManager()
+
     class Meta(NamedThing.Meta):
         permissions = (
             ("read_subconstituency", "Can read subconstituency"),
@@ -185,7 +198,13 @@ class SubConstituency(NamedThing):
         return 'read_subconstituency'
 
 
+class RegistrationCenterQuerySet(QuerySet):
+    pass
+
+
 class RegistrationCenterManager(TrashBinManager):
+    queryset = RegistrationCenterQuerySet
+
     def delete_all_copy_centers(self):
         return RegistrationCenter.objects.filter(copy_of__isnull=False).update(deleted=True)
 
@@ -224,8 +243,8 @@ class RegistrationCenter(ConstituencyFormatterMixin, OfficeFormatterMixin,
 
         # NAMES_REVERSED reverses NAMES. NAMES_REVERSED contains Arabic and English dicts that map
         # center type names to their corresponding constants.
-        NAMES_REVERSED = {'ar': {value: key for key, value in NAMES['ar'].iteritems()},
-                          'en': {value: key for key, value in NAMES['en'].iteritems()}}
+        NAMES_REVERSED = {'ar': {value: key for key, value in NAMES['ar'].items()},
+                          'en': {value: key for key, value in NAMES['en'].items()}}
 
         @classmethod
         def get_choices(klass, language_code):
@@ -233,18 +252,21 @@ class RegistrationCenter(ConstituencyFormatterMixin, OfficeFormatterMixin,
 
             The returned list has the same order as CHOICES.
             """
-            return [(key, value) for key, value in klass.NAMES[language_code].iteritems()]
+            return [(key, value) for key, value in klass.NAMES[language_code].items()]
 
     center_id = models.IntegerField(_('center id'), db_index=True,
                                     validators=[MinValueValidator(CENTER_ID_MIN_INT_VALUE),
                                                 MaxValueValidator(CENTER_ID_MAX_INT_VALUE)])
     name = models.CharField(_('name'), max_length=255)
-    office = models.ForeignKey(Office, default=NO_NAMEDTHING, verbose_name=_('office'))
+    office = models.ForeignKey(Office, default=NO_NAMEDTHING, verbose_name=_('office'),
+                               on_delete=models.CASCADE)
     constituency = models.ForeignKey(Constituency, default=NO_NAMEDTHING,
-                                     verbose_name=_('constituency'))
+                                     verbose_name=_('constituency'),
+                                     on_delete=models.CASCADE)
     subconstituency = models.ForeignKey(SubConstituency, default=NO_NAMEDTHING,
                                         related_name="registration_centers",
-                                        verbose_name=_('subconstituency'))
+                                        verbose_name=_('subconstituency'),
+                                        on_delete=models.CASCADE)
     mahalla_name = models.CharField(_('mahalla name'), max_length=255, blank=True)
     village_name = models.CharField(_('village name'), max_length=255, blank=True)
     center_type = models.PositiveSmallIntegerField(_('type'), choices=Types.CHOICES,
@@ -263,7 +285,8 @@ class RegistrationCenter(ConstituencyFormatterMixin, OfficeFormatterMixin,
     # copy_of is populated only for copy centers and indicates the original center of which this
     # is a copy.
     copy_of = models.ForeignKey("self", null=True, blank=True, default=None,
-                                related_name='copied_by', verbose_name=_('copy of'))
+                                related_name='copied_by', verbose_name=_('copy of'),
+                                on_delete=models.CASCADE)
 
     # reg_open represents whether or not a center can have registrations.
     # A center which has reg_open==False won't have any registrations counted in
@@ -274,7 +297,7 @@ class RegistrationCenter(ConstituencyFormatterMixin, OfficeFormatterMixin,
 
     objects = RegistrationCenterManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s" % (self.center_id, self.name)
 
     def get_absolute_url(self):
@@ -410,10 +433,13 @@ class Registration(CitizenFormatterMixin, RegistrationCenterFormatterMixin, SMSF
     # NB: We've added a partial index in Postgres to enforce unique citizens in
     # among Registrations with archive_time=None and deleted=False
     citizen = models.ForeignKey('civil_registry.Citizen', related_name="registrations",
-                                verbose_name=_('citizen'))
+                                verbose_name=_('citizen'),
+                                on_delete=models.CASCADE)
     registration_center = models.ForeignKey('RegistrationCenter',
-                                            verbose_name=_('registration center'))
-    sms = models.ForeignKey('SMS', verbose_name=_('sms'), related_name='registrations')
+                                            verbose_name=_('registration center'),
+                                            on_delete=models.CASCADE)
+    sms = models.ForeignKey('SMS', verbose_name=_('sms'), related_name='registrations', null=True,
+                            on_delete=models.CASCADE)
     change_count = models.IntegerField(
         _('change count'),
         default=0,
@@ -444,7 +470,7 @@ class Registration(CitizenFormatterMixin, RegistrationCenterFormatterMixin, SMSF
     )
 
     @sensitive_variables()
-    def __unicode__(self):
+    def __str__(self):
         return "Registration for: %s" % self.citizen
 
     class Meta:
@@ -454,6 +480,7 @@ class Registration(CitizenFormatterMixin, RegistrationCenterFormatterMixin, SMSF
             ("read_registration", "Can read registration"),
             ("browse_registration", "Can browse registration"),
         )
+        ordering = ['-creation_date']
 
     def clean(self):
         """Give nicer error than a database integrity error on an attempt to create
@@ -475,7 +502,9 @@ class Registration(CitizenFormatterMixin, RegistrationCenterFormatterMixin, SMSF
         maximum registrations per phone"""
         # For convenience from templates
         from register.utils import remaining_registrations
-        return remaining_registrations(self.sms.from_number) == 0
+        if self.sms:
+            return remaining_registrations(self.sms.from_number) == 0
+        return False
 
     @property
     def formatted_unlocked_until(self):
@@ -564,8 +593,10 @@ class SMS(CitizenFormatterMixin, InResponseToFormatterMixin, AbstractTimestampTr
     from_number = models.CharField(_('from number'), max_length=15, db_index=True)
     to_number = models.CharField(_('to number'), max_length=15, db_index=True)
     citizen = models.ForeignKey('civil_registry.Citizen', null=True, blank=True,
-                                related_name="messages", verbose_name=_('citizen'))
-    carrier = models.ForeignKey('rapidsms.Backend', verbose_name=_('carrier'))
+                                related_name="messages", verbose_name=_('citizen'),
+                                on_delete=models.CASCADE)
+    carrier = models.ForeignKey('rapidsms.Backend', verbose_name=_('carrier'),
+                                on_delete=models.CASCADE)
     direction = models.IntegerField(_('direction'), choices=DIRECTION_CHOICES, db_index=True)
     msg_type = models.IntegerField(_('message type'), choices=MESSAGE_TYPES)
     order = models.IntegerField(_('order'), null=True, blank=True)
@@ -579,13 +610,14 @@ class SMS(CitizenFormatterMixin, InResponseToFormatterMixin, AbstractTimestampTr
     uuid = models.CharField(_('uuid'), blank=True, max_length=50, db_index=True)
     is_audited = models.BooleanField(_('is audited'), default=False, db_index=True)
     in_response_to = models.ForeignKey('SMS', null=True, blank=True, related_name='responses',
-                                       verbose_name=_('in response to'))
+                                       verbose_name=_('in response to'),
+                                       on_delete=models.CASCADE)
     need_to_anonymize = models.BooleanField(_('need to anonymize'), default=False, db_index=True)
 
     objects = SMSManager()
 
     @sensitive_variables()
-    def __unicode__(self):
+    def __str__(self):
         return _("From {from_addr} to {to_addr}: {content}").format(
             from_addr=self.from_number_formatted,
             to_addr=self.to_number_formatted,
@@ -600,6 +632,7 @@ class SMS(CitizenFormatterMixin, InResponseToFormatterMixin, AbstractTimestampTr
             ("read_sms", "Can read sms"),
             ("browse_sms", "Can browse sms"),
         )
+        ordering = ['-creation_date']
 
     @property
     def from_number_formatted(self):
@@ -639,7 +672,7 @@ class SMS(CitizenFormatterMixin, InResponseToFormatterMixin, AbstractTimestampTr
 class Blacklist(FormattedPhoneNumberMixin, AbstractTimestampTrashBinModel):
     phone_number = PhoneNumberField(_('phone number'), db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.formatted_phone_number()
 
     def clean(self):
@@ -658,7 +691,7 @@ class Blacklist(FormattedPhoneNumberMixin, AbstractTimestampTrashBinModel):
 class Whitelist(FormattedPhoneNumberMixin, AbstractTimestampTrashBinModel):
     phone_number = PhoneNumberField(_('phone number'), db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.formatted_phone_number()
 
     def clean(self):

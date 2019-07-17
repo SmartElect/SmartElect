@@ -1,19 +1,19 @@
 import base64
 from copy import deepcopy
+import csv
 from datetime import datetime, timedelta
 import logging
 import re
-from StringIO import StringIO
+from io import StringIO
+from unittest.mock import patch
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.test import TestCase
-from mock import patch
+from django.urls import reverse
 from pytz import timezone
-from civil_registry.tests.factories import CitizenFactory
 
+from civil_registry.tests.factories import CitizenFactory
 from libya_elections.constants import MESSAGE_1, INCOMING
-from libya_elections.csv_utils import UnicodeReader
 from libya_elections.utils import astz
 from libya_site.tests.factories import DEFAULT_USER_PASSWORD, UserFactory
 from libya_site.utils import intcomma
@@ -146,7 +146,7 @@ class TestEndToEnd(TestCase):
         url += '?format=csv'
         rsp = self._request(url, **extra)
         content = rsp.content[2:]  # skip BOM
-        reader = UnicodeReader(StringIO(content), encoding="utf-16-le", delimiter='\t')
+        reader = csv.reader(StringIO(content.decode('utf-16-le')), delimiter='\t')
         rows = []
         for row in reader:
             rows.append(row)
@@ -157,7 +157,7 @@ class TestEndToEnd(TestCase):
         """ Get string form of the provided SMS message type.
         """
         # unicode() resolves the lazy translation object
-        return unicode([x for x in SMS.MESSAGE_TYPES if x[0] == t][0][1])
+        return str([x for x in SMS.MESSAGE_TYPES if x[0] == t][0][1])
 
     def _create_registrations(self, expected_stats):
         """ Create different numbers of registrations on each of the chosen registration dates
@@ -505,7 +505,7 @@ class TestEndToEnd(TestCase):
             if PRELIMINARY_VOTE_COUNTS in office:
                 actual_stats['by_office'][office['office_id']]['prelim'] = {
                     key: intcomma(value)
-                    for key, value in office[PRELIMINARY_VOTE_COUNTS].iteritems()
+                    for key, value in office[PRELIMINARY_VOTE_COUNTS].items()
                 }
 
         # process the sms screen
@@ -542,7 +542,7 @@ class TestEndToEnd(TestCase):
             office_id = int(row[0].split()[0])
             opened = int(row[2])
             # already grabbed from normal view, so make sure it matches
-            self.assertEquals(actual_stats['by_office'][office_id]['opened'], opened)
+            self.assertEqual(actual_stats['by_office'][office_id]['opened'], opened)
 
         csv = self._request_csv(reverse('vr_dashboard:election-day-center'))
         # center data starts in 4th row
@@ -559,8 +559,8 @@ class TestEndToEnd(TestCase):
             for period, where_in_row in (('1', 7), ('2', 8), ('3', 9), ('4', 10)):
                 period_key = 'votes_reported_' + period
                 if row[where_in_row]:
-                    self.assertEquals(actual_stats['by_center'][center_id][period_key],
-                                      int(row[where_in_row]))
+                    self.assertEqual(actual_stats['by_center'][center_id][period_key],
+                                     int(row[where_in_row]))
                 else:
                     self.assertNotIn(period_key, actual_stats['by_center'][center_id])
 
@@ -657,7 +657,7 @@ class TestEndToEnd(TestCase):
                 },
                 self.rc_5.center_id: {
                     # nothing yet
-                }
+                },
             },
             'by_office': {
                 self.rc_1.office_id: {
@@ -695,14 +695,15 @@ class TestEndToEnd(TestCase):
         with patch.object(reports, 'get_effective_reminder_time') as mock_reminder_time:
             mock_reminder_time.return_value = middle_of_election_day
             tasks.election_day()
-            mock_reminder_time.assert_called()
+            assert mock_reminder_time.called
 
         tasks.registrations()
 
         # Log the JSON reports to help with debugging
-        credentials = base64.b64encode(self.reporting_user + ':' + self.reporting_password)
+        credentials = base64.b64encode(
+            (self.reporting_user + ':' + self.reporting_password).encode())
         auth_headers = {
-            'HTTP_AUTHORIZATION': 'Basic ' + credentials
+            'HTTP_AUTHORIZATION': b'Basic ' + credentials
         }
         for report_rel_url in [test_reports.REGISTRATIONS_REL_URI,
                                test_reports.ELECTION_DAY_LOG_REL_URI,

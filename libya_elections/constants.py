@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.utils.translation import ugettext_lazy as _
 
 """
@@ -34,6 +32,13 @@ CENTER_ID_MAX_INT_VALUE = 10 ** (CENTER_ID_LENGTH) - 1
 FORM_ID_LENGTH_MIN = 6
 FORM_ID_LENGTH_MAX = 8
 
+# Range of valid national IDs
+MIN_NATIONAL_ID = 100000000000
+MAX_NATIONAL_ID = 299999999999
+
+# No center should have this number (for test purposes)
+NO_SUCH_CENTER = 99998
+
 # Subcon 998 is a special, virtual subcon associated with split centers.
 SPLIT_CENTER_SUBCONSTITUENCY_ID = 998
 # Dummy Value for centers with no (NamedThing)
@@ -46,15 +51,15 @@ LAST_PERIOD_NUMBER = 4
 PRELIMINARY_VOTE_COUNT_INDICATOR = 5
 
 # Standard Libya date format is D/M/Y. Ref: http://en.wikipedia.org/wiki/Date_format_by_country
+# Should only use for INPUT.  Use SHORT_DATE_FORMAT on output so locales can work.
 LIBYA_DATE_FORMAT = '%d/%m/%Y'
-LIBYA_DATETIME_FORMAT = LIBYA_DATE_FORMAT + ' %H:%M'
 
 # Template constants
 
 # For FK links from Bread Read views:
 ANCHOR_SNIPPET = '<a href="{}">{}</a>'
 
-PHONE_NUMBER_MSG = _("Please enter a valid phone number (218xxxxxxxxx or 88216xxxxxxxx) "
+PHONE_NUMBER_MSG = _("Please enter a valid phone number (2189xxxxxxxx or 88216xxxxxxxx) "
                      "without punctuation or spaces.")
 
 # SMS responses - do NOT change these values
@@ -112,8 +117,19 @@ POLLING_REPORT_RECEIVED_VERY_HIGH_TURNOUT = 88
 POLLING_REPORT_RECEIVED_NO_REGISTRANTS = 89
 # We don't know what to do with your message
 PUNT = 90
+CANNOT_CHANGE_BY_TEXT_MESSAGE = 93
+# Add more messages just above this comment (keeping this order
+# so it's easy to find the highest existing message number)
 
 # Arabic digits
 EASTERN_ARABIC_DIGITS = '٠١٢٣٤٥٦٧٨٩'
 # U+060C is the preferred comma for Libyan Arabic.
 ARABIC_COMMA = '\u060C'
+
+# Mixins which provide suitable HTML for foreign key fields in Bread read views
+# Some of these are already used in multiple models, others are not (yet).
+# The standard behavior is to handle the lack of a linked field by returning
+# NO_LINKED_OBJECT, although this feature is not required for all of these
+# formatters.
+
+NO_LINKED_OBJECT = _('None')

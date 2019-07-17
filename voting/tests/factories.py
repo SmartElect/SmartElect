@@ -14,7 +14,8 @@ start_dt = now()
 
 
 class ElectionFactory(DjangoModelFactory):
-    FACTORY_FOR = Election
+    class Meta:
+        model = Election
 
     name_english = Sequence(lambda n: "Election %d" % n)
     name_arabic = Sequence(lambda n: "Election %d (ar)" % n)
@@ -26,7 +27,8 @@ class ElectionFactory(DjangoModelFactory):
 
 
 class BallotFactory(DjangoModelFactory):
-    FACTORY_FOR = Ballot
+    class Meta:
+        model = Ballot
 
     ballot_type = LazyAttribute(lambda o: random.choice(Ballot.VALID_RACE_TYPES))
     election = SubFactory(ElectionFactory)
@@ -34,7 +36,8 @@ class BallotFactory(DjangoModelFactory):
 
 
 class CandidateFactory(DjangoModelFactory):
-    FACTORY_FOR = Candidate
+    class Meta:
+        model = Candidate
 
     ballot = SubFactory(BallotFactory)
     name_english = Sequence(lambda n: "Candidate %d" % n)
@@ -43,4 +46,5 @@ class CandidateFactory(DjangoModelFactory):
 
 
 class RegistrationPeriodFactory(DjangoModelFactory):
-    FACTORY_FOR = RegistrationPeriod
+    class Meta:
+        model = RegistrationPeriod

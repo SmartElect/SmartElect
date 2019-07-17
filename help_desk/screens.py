@@ -3,17 +3,17 @@ import logging
 
 from django.conf.urls import url
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseBadRequest, HttpResponseServerError, \
     HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _, ungettext
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView, RedirectView
 
-from .forms import GetStaffIDForm, GetNIDForm
+from .forms import GetStaffIDForm, GetNIDForm, GetCallerPhoneForm
 from .models import BUTTON_YES, BUTTON_NO, BUTTON_HUNG_UP, \
     BUTTON_SUBMIT, DEFAULT_BUTTON_CLASSES, Case, BUTTON_TEXT, BUTTON_GO_BACK, \
     ScreenRecord, BUTTON_DONE, BUTTON_NO_CITIZEN, BUTTON_UNABLE, BUTTON_MATCH, \
@@ -26,12 +26,12 @@ logger = logging.getLogger(__name__)
 
 
 # Screen names (used internally only, do not translate):
+ASK_CALLER_PHONE = '0_ask_caller_phone'
 ASK_IF_STAFF = '1_ask_if_staff'
 GET_STAFF_ID = '2_get_staff_id'
 CHECK_STAFF_NAME = '3_check_staff_name'
 GET_NID = '4_get_nid'
 CHECK_NAME_AND_DOB = '5_check_name_and_dob'
-CHECK_STAFF_PHONE = '3b_check_staff_phone'
 NOT_REGISTERED = '6_not_registered'
 ASK_TO_CHANGE = '7_ask_to_change'
 ASK_SAME_PHONE = '8_ask_same_phone'
@@ -43,15 +43,15 @@ GOOD_BYE = '99_good_bye'
 HUNG_UP = 'hung_up'
 LAST_SCREEN = 'last_screen'
 
-FIRST_SCREEN = ASK_IF_STAFF
+FIRST_SCREEN = ASK_CALLER_PHONE
 
 
 def two_at_a_time(args):
     iterable = iter(args)
     while True:
         try:
-            x = iterable.next()
-            y = iterable.next()
+            x = next(iterable)
+            y = next(iterable)
             yield (x, y)
         except StopIteration:
             return
@@ -74,6 +74,14 @@ class StartCallView(LoginPermissionRequiredMixin,
     permanent = False
 
     def get_redirect_url(self, **kwargs):
+        # Close any open calls for this operator before creating a new one
+        open_cases = Case.objects.filter(operator=self.request.user, end_time=None)
+        for case in open_cases:
+            case.call_outcome = Case.ABANDONED
+            case.end()
+            case.save()
+
+        # Now create a new case for this call
         case = Case.objects.create(operator=self.request.user)
         case.current_screen = ScreenRecord.objects.create(case=case, name=FIRST_SCREEN)
         case.save()
@@ -131,7 +139,7 @@ class ScreenView(LoginPermissionRequiredMixin,
         else:
             return HttpResponseServerError("Case has no current screen")
         if self.form_class and not getattr(self, 'form', None):
-            self.form = self.form_class()
+            self.form = self.form_class(case=self.case)
         return super(ScreenView, self).get(request, *args, **kwargs)
 
     def get_button_class(self, button_name):
@@ -205,7 +213,7 @@ class ScreenView(LoginPermissionRequiredMixin,
 
         If next view is None, it will end the case and redirect to help_desk home.
 
-        If the SUBMIT button was pressed, check the form. If valid, call form.update_case(case).
+        If the SUBMIT button was pressed, check the form. If valid, call form.update_case().
         If not valid, display the form and any errors that were found.
 
         Otherwise, it redirects to the next view.
@@ -218,7 +226,7 @@ class ScreenView(LoginPermissionRequiredMixin,
         else:
             return HttpResponseServerError("Case has no current screen")
         self.button_name = None
-        for name, value in request.POST.iteritems():
+        for name, value in request.POST.items():
             if name.startswith("button_"):
                 self.button_name = name[7:]
                 break
@@ -238,10 +246,10 @@ class ScreenView(LoginPermissionRequiredMixin,
             self.button = self.buttons[self.button_name]
         assert hasattr(self, 'button')
         if self.button_name == BUTTON_SUBMIT and self.form_class:
-            self.form = self.form_class(request.POST)
+            self.form = self.form_class(data=request.POST, case=self.case)
             if not self.form.is_valid():
                 return self.get(request, *args, **kwargs)
-            self.form.update_case(self.case)
+            self.form.update_case()
         if self.button_name == BUTTON_START_OVER:
             # Special case - reset everything
             self.case.reset()
@@ -266,7 +274,7 @@ class ScreenView(LoginPermissionRequiredMixin,
             # If this was a screen with a form, undo any data previously input from this form
             view = view_for_screen[screen_name]
             if view.form_class:
-                view.form_class().undo(self.case)
+                view.form_class(case=self.case).undo()
             # Clear any outcome we might have reached
             self.case.call_outcome = None
             self.case.save()
@@ -276,7 +284,7 @@ class ScreenView(LoginPermissionRequiredMixin,
         self.screen.end(case=self.case, button=self.button_name)
         next_view = self.button['next_view']
         if callable(next_view):
-            next_view = next_view(self.case)
+            next_view = next_view(self)
         outcome = self.button.get('outcome', None)
         if outcome:
             self.case.call_outcome = outcome
@@ -290,6 +298,17 @@ class ScreenView(LoginPermissionRequiredMixin,
         else:
             self.case.start_screen(next_view)
             return redirect(next_view, self.case.pk)
+
+
+class AskCallerPhoneView(ScreenView):
+    name = ASK_CALLER_PHONE
+    title = _('Ask caller phone')
+    form_class = GetCallerPhoneForm
+    buttons = make_buttons(
+        BUTTON_SUBMIT, {
+            'next_view': ASK_IF_STAFF,
+        }
+    )
 
 
 class AskIfStaffView(ScreenView):
@@ -311,7 +330,7 @@ class GetStaffIDView(ScreenView):
     form_class = GetStaffIDForm
     buttons = make_buttons(
         BUTTON_SUBMIT, {
-            'next_view': CHECK_STAFF_NAME
+            'next_view': CHECK_STAFF_NAME,
         },
         BUTTON_UNABLE, {
             'next_view': GOOD_BYE,
@@ -325,25 +344,11 @@ class CheckStaffNameView(ScreenView):
     title = _('Verify Staff Name')
     buttons = make_buttons(
         BUTTON_MATCH, {
-            'next_view': CHECK_STAFF_PHONE
+            'next_view': GET_NID,
         },
         BUTTON_NO_MATCH, {
             'next_view': GOOD_BYE,
             'outcome': Case.INVALID_STAFF_NAME,
-        }
-    )
-
-
-class CheckStaffPhoneView(ScreenView):
-    name = CHECK_STAFF_PHONE
-    title = _('Verify Staff Phone')
-    buttons = make_buttons(
-        BUTTON_YES, {
-            'next_view': GET_NID
-        },
-        BUTTON_NO, {
-            'next_view': GOOD_BYE,
-            'outcome': Case.INVALID_STAFF_PHONE,
         }
     )
 
@@ -363,12 +368,13 @@ class GetNIDView(ScreenView):
     )
 
 
-def figure_out_next_on_yes_after_check_name_and_dob(case):
+def figure_out_next_on_yes_after_check_name_and_dob(view):
     """
     Use this to figure out what the next screen should be for the given
     case after the help desk staffer has said they gave us the
     correct name and DOB to authenticated themselves.
     """
+    case = view.case
     if case.blocked:
         return BLOCKED
     elif case.registration:
@@ -422,11 +428,11 @@ class AskSamePhoneView(ScreenView):
     title = _('Ask if can change from same phone')
     buttons = make_buttons(
         BUTTON_YES, {
-            'next_view': HOW_TO_CHANGE,
-            'outcome': Case.SAME_PHONE,
+            'next_view': CHECK_FRN,
         },
         BUTTON_NO, {
-            'next_view': CHECK_FRN,
+            'next_view': HOW_TO_CHANGE,
+            'outcome': Case.SAME_PHONE,
         }
     )
 
@@ -438,11 +444,11 @@ class CheckFRNView(ScreenView):
         BUTTON_YES, {
             'next_view': CHANGE_PERIOD_STARTED,
             'outcome': Case.UNLOCKED,
-            },
+        },
         BUTTON_NO, {
             'next_view': GOOD_BYE,
             'outcome': Case.INVALID_FRN,
-            }
+        }
     )
 
     def post(self, request, *args, **kwargs):
@@ -534,10 +540,10 @@ class GoodByeView(ScreenView):
 
 
 screen_views = [
+    AskCallerPhoneView,
     AskIfStaffView,
     GetStaffIDView,
     CheckStaffNameView,
-    CheckStaffPhoneView,
     GetNIDView,
     CheckNameAndDOBView,
     NotRegisteredView,

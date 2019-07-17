@@ -1,16 +1,12 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
-import cStringIO as StringIO
+import io
 import csv
 import datetime
 import logging
 import os
+from unittest.mock import ANY
 
 # 3rd party imports
-from mock import ANY
-
-# Django imports
 from django.utils.timezone import now as django_now
 
 # Project imports
@@ -58,7 +54,7 @@ class TestPollingCSVs(TestJobBase):
         header = [['national_id', 'center_id', 'station_number']]
 
         filename = 'voters_by_national_id.csv'
-        with open(os.path.join(self.output_path, filename), 'rb') as f:
+        with open(os.path.join(self.output_path, filename), 'r') as f:
             actual_lines = [line for line in csv.reader(f)]
 
         stations = station_distributor(self.voters)
@@ -72,7 +68,7 @@ class TestPollingCSVs(TestJobBase):
 
         filename = 'voters_by_center_and_station.csv'
 
-        with open(os.path.join(self.output_path, filename), 'rb') as f:
+        with open(os.path.join(self.output_path, filename), 'r') as f:
             actual_lines = [line for line in csv.reader(f)]
 
         voter_stations = sorted(voter_stations, key=lambda voter_station: voter_station[1:])
@@ -81,8 +77,8 @@ class TestPollingCSVs(TestJobBase):
 
     def test_polling_metadata_csv(self):
         """Test that the polling-specific metadata CSV contains the correct content."""
-        faux_file = StringIO.StringIO()
-        faux_file.write(generate_polling_metadata_csv())
+        faux_file = io.StringIO()
+        faux_file.write(generate_polling_metadata_csv().decode())
         faux_file.seek(0)
         actual_lines = [line for line in csv.reader(faux_file)]
 
@@ -100,19 +96,19 @@ class TestPollingCSVs(TestJobBase):
         # First data row
         station = stations[0]
         line = [str(self.center.center_id),
-                self.center.name.encode('utf-8'),
-                RegistrationCenter.Types.NAMES['ar'][self.center.center_type].encode('utf-8'),
+                self.center.name,
+                RegistrationCenter.Types.NAMES['ar'][self.center.center_type],
                 str(self.center.office_id),
                 str(self.center.constituency_id),
-                self.center.constituency.name_arabic.encode('utf-8'),
+                self.center.constituency.name_arabic,
                 str(self.center.subconstituency.id),
-                self.center.subconstituency.name_arabic.encode('utf-8'),
+                self.center.subconstituency.name_arabic,
                 str(station.number),
                 GENDER_NAMES[station.gender],
                 str(station.n_registrants),
-                station.first_voter_name.encode('utf-8'),
+                station.first_voter_name,
                 str(station.first_voter_number),
-                station.last_voter_name.encode('utf-8'),
+                station.last_voter_name,
                 str(station.last_voter_number),
                 ANY]
         expected_lines.append(line)
@@ -120,19 +116,19 @@ class TestPollingCSVs(TestJobBase):
         # Second data row
         station = stations[1]
         line = [str(self.center.center_id),
-                self.center.name.encode('utf-8'),
-                RegistrationCenter.Types.NAMES['ar'][self.center.center_type].encode('utf-8'),
+                self.center.name,
+                RegistrationCenter.Types.NAMES['ar'][self.center.center_type],
                 str(self.center.office_id),
                 str(self.center.constituency_id),
-                self.center.constituency.name_arabic.encode('utf-8'),
+                self.center.constituency.name_arabic,
                 str(self.center.subconstituency.id),
-                self.center.subconstituency.name_arabic.encode('utf-8'),
+                self.center.subconstituency.name_arabic,
                 str(station.number),
                 GENDER_NAMES[station.gender],
                 str(station.n_registrants),
-                station.first_voter_name.encode('utf-8'),
+                station.first_voter_name,
                 str(station.first_voter_number),
-                station.last_voter_name.encode('utf-8'),
+                station.last_voter_name,
                 str(station.last_voter_number),
                 ANY]
 

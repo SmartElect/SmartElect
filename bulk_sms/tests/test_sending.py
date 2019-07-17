@@ -3,7 +3,8 @@ import os
 import signal
 import threading
 import multiprocessing
-from unittest import skipIf
+from unittest import skip
+from unittest.mock import patch
 
 from django.test import TestCase, TransactionTestCase
 from django.conf import settings
@@ -11,8 +12,6 @@ from django.core.cache import cache
 from django.core.management import call_command
 from django.db import connections as django_db_connections
 
-from django_nose.runner import _reusing_db
-from mock import patch
 from rapidsms.models import Connection
 from rapidsms.tests.harness import backend, router, TestRouter
 from rapidsms.errors import MessageSendingError
@@ -108,7 +107,7 @@ class SendingTest(LowLevelRouterMixin, TestCase):
         self.bulk_msg = BulkMessageFactory(
             batch=self.batch,
             phone_number=get_random_number_string(),
-            message=u'.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة',
+            message='.نآسف، مرحلة التسجيل عن طريق الرسائل النصية ليست متاحة',
             sms=None
         )
 
@@ -260,16 +259,17 @@ class SendingTest(LowLevelRouterMixin, TestCase):
 
 # must use TransactionTestCase because sending is done in multiple threads,
 # which all need to access the database simultaneously
-# skip when reusing DB until https://code.djangoproject.com/ticket/23727 is fixed
-@skipIf(_reusing_db(), "until https://code.djangoproject.com/ticket/23727 is fixed")
+
+# We were skipping until https://code.djangoproject.com/ticket/23727 was fixed. That is fixed now,
+# but keepdb is still broken with TransactionTestCase, so keep skipping until
+# https://code.djangoproject.com/ticket/25251 is fixed.
+@skip("until https://code.djangoproject.com/ticket/25251 is fixed")
 class ThreadedSendingTest(LowLevelRouterMixin, TransactionTestCase):
     # https://docs.djangoproject.com/en/1.7/topics/testing/tools/#transactiontestcase
     # See the first warning, also read the comment here:
     # https://github.com/django/django/blob/b626c289ccf9cc487f97d91c2a45cac096d9d0c7/django/test/testcases.py#L734
 
-    # UNCOMMENT once https://code.djangoproject.com/ticket/23727 is fixed
-    # so we can remove the @skipIf above
-    # serialized_rollback = True
+    serialized_rollback = True
 
     def setUp(self):
         # create an approved Batch
@@ -305,16 +305,14 @@ class ThreadedSendingTest(LowLevelRouterMixin, TransactionTestCase):
 
 # use TransactionTestCase plus router mixin to ensure multiprocessing-safe
 # saving of outbound messages during tests
-# skip when reusing DB until https://code.djangoproject.com/ticket/23727 is fixed
-@skipIf(_reusing_db(), "until https://code.djangoproject.com/ticket/23727 is fixed")
+
+@skip("until https://code.djangoproject.com/ticket/25251 is fixed")
 class MultiprocSendingTest(MultiprocessingLowLevelRouterMixin, TransactionTestCase):
     # https://docs.djangoproject.com/en/1.7/topics/testing/tools/#transactiontestcase
     # See the first warning, also read the comment here:
     # https://github.com/django/django/blob/b626c289ccf9cc487f97d91c2a45cac096d9d0c7/django/test/testcases.py#L734
 
-    # UNCOMMENT once https://code.djangoproject.com/ticket/23727 is fixed
-    # so we can remove the @skipIf above
-    # serialized_rollback = True
+    serialized_rollback = True
 
     def setUp(self):
         # create an approved Batch

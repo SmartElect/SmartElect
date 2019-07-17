@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import division
-from __future__ import unicode_literals
 import logging
 
 # 3rd party imports
@@ -14,7 +12,7 @@ from django.conf import settings
 # Project imports
 from .arabic_reshaper import reshape
 from .pdf_canvas import NumberedCanvas, getArabicStyle, getHeaderStyle, getTableStyleThreeCol
-from .pdf_canvas import cda_logo, hnec_logo, drawHnecLogo
+from .pdf_canvas import get_cda_logo_fname, get_hnec_logo_fname, drawHnecLogo
 from .strings import STRINGS
 from .utils import chunker, format_name, CountingDocTemplate, build_copy_info, \
     truncate_center_name, out_of_disk_space_handler_context, GENDER_NAMES
@@ -54,8 +52,8 @@ def station_name_range(station):
                  STRINGS['last']]
                 ]
     elif station.gender == UNISEX:
-        roll_women = filter(lambda voter: voter.gender == FEMALE, station.roll)
-        roll_men = filter(lambda voter: voter.gender == MALE, station.roll)
+        roll_women = [voter for voter in station.roll if voter.gender == FEMALE]
+        roll_men = [voter for voter in station.roll if voter.gender == MALE]
 
         # get first and last by gender
         first_voter_m = roll_men[0]
@@ -89,7 +87,7 @@ def draw_header(elements, header_string, center_info, styles, station, type):
     # is RTL. See https://github.com/hnec-vr/libya-elections/issues/1197
     para_prefix = Paragraph(STRINGS['ed_list_header_prefix'], styles['InnerPageHeader'])
     para_header = Paragraph(header_string, styles['InnerPageHeader'])
-    header = Table([[para_prefix], [para_header]], 15*cm, [16, 24])
+    header = Table([[para_prefix], [para_header]], 15 * cm, [16, 24])
     header.setStyle(getHeaderStyle())
 
     elements.append(header)
@@ -123,14 +121,14 @@ def draw_body(elements, data, registrations_per_page):
     table_header_cell_style = getArabicStyle()['TableCellHeader']
 
     header_row = [Paragraph(cell, table_header_cell_style) for cell in data[0]]
-    data = [[Paragraph(unicode(cell), table_body_cell_style) for cell in row] for row in data[1:]]
+    data = [[Paragraph(str(cell), table_body_cell_style) for cell in row] for row in data[1:]]
     data.insert(0, header_row)
 
     # Table columns must add up to 15 cm
     column_widths = [6, 7, 2]
     assert(sum(column_widths) == 15)
     column_widths = [column_width * cm for column_width in column_widths]
-    table = Table(data, column_widths, row_height*cm)
+    table = Table(data, column_widths, row_height * cm)
     table.setStyle(getTableStyleThreeCol())
     elements.append(table)
 
@@ -173,40 +171,43 @@ def generate_pdf_station_sign(filename, station):
     style = styles['NameRangeTableCell']
     name_range_data = [[Paragraph(cell, style) for cell in row] for row in name_range_data]
     # Table params:          data             column_widths            row_height
-    name_range_table = Table(name_range_data, [11*cm, 2.4*cm, 2.4*cm], 1.1*cm)
+    name_range_table = Table(name_range_data, [11 * cm, 2.4 * cm, 2.4 * cm], 1.1 * cm)
 
     # create landscape docuemnt
-    doc = CountingDocTemplate(filename, pagesize=landscape(A4), topMargin=1*cm, bottomMargin=1*cm)
+    doc = CountingDocTemplate(
+        filename, pagesize=landscape(A4), topMargin=1 * cm, bottomMargin=1 * cm)
 
     # all elements on single page
-    elements = [
-        Table([[Image(cda_logo(), width=1.71*cm, height=1.3*cm), '', Image(hnec_logo(), width=4*cm,
-                height=1.3*cm)]],
-              [4*cm, 10*cm, 4*cm], 2*cm),
-        Spacer(30, 30),
+    with open(get_cda_logo_fname(), 'rb') as cda_f, open(get_hnec_logo_fname(), 'rb') as hnec_f:
+        elements = [
+            Table([[Image(cda_f, width=1.71 * cm, height=1.3 * cm),
+                    '',
+                    Image(hnec_f, width=4 * cm, height=1.3 * cm)]],
+                  [4 * cm, 10 * cm, 4 * cm], 2 * cm),
+            Spacer(30, 30),
 
-        Paragraph(cover_string, styles['Title']),
-        Spacer(12, 12),
-        Paragraph(center_info['name'], styles['Title']),
-        Spacer(12, 12),
-        Paragraph(center_info['number'], styles['Title']),
-        Spacer(12, 12),
-        Paragraph(center_info['copy_info'], styles['TitleCopyInfo']),
-        Spacer(12, 12),
+            Paragraph(cover_string, styles['Title']),
+            Spacer(12, 12),
+            Paragraph(center_info['name'], styles['Title']),
+            Spacer(12, 12),
+            Paragraph(center_info['number'], styles['Title']),
+            Spacer(12, 12),
+            Paragraph(center_info['copy_info'], styles['TitleCopyInfo']),
+            Spacer(12, 12),
 
-        Paragraph(station_info, styles['SignStationNumber']),
-        Spacer(56, 56),
+            Paragraph(station_info, styles['SignStationNumber']),
+            Spacer(56, 56),
 
-        Paragraph(center_info['gender'], styles['Title']),
-        Spacer(10, 10),
+            Paragraph(center_info['gender'], styles['Title']),
+            Spacer(10, 10),
 
-        Paragraph(STRINGS['names_range'], styles['SignNameRange']),
-        name_range_table,
-        PageBreak(),
-    ]
+            Paragraph(STRINGS['names_range'], styles['SignNameRange']),
+            name_range_table,
+            PageBreak(),
+        ]
 
-    with out_of_disk_space_handler_context():
-        doc.build(elements)
+        with out_of_disk_space_handler_context():
+            doc.build(elements)
 
     return doc.n_pages
 
@@ -230,16 +231,16 @@ def generate_pdf_station_book(filename, station):
 
     # cover page
     center_name = reshape(center.name)
-    template = u'%s: %s / %s'
+    template = '%s: %s / %s'
     subconstituency_name = reshape(center.subconstituency.name_arabic)
     params = (STRINGS['subconstituency_name'], center.subconstituency.id, subconstituency_name)
     subconstituency = template % params
 
     center_info = {
-        'gender': u'%s: %s' % (STRINGS['gender'], gender_string),
-        'number': u'%s: %d' % (STRINGS['center_number'], center.center_id),
-        'name': u'%s: %s' % (STRINGS['center_name'], center_name),
-        'name_trunc': u'%s: %s' % (STRINGS['center_name'], truncate_center_name(center_name)),
+        'gender': '%s: %s' % (STRINGS['gender'], gender_string),
+        'number': '%s: %d' % (STRINGS['center_number'], center.center_id),
+        'name': '%s: %s' % (STRINGS['center_name'], center_name),
+        'name_trunc': '%s: %s' % (STRINGS['center_name'], truncate_center_name(center_name)),
         'subconstituency': subconstituency,
         'copy_info': build_copy_info(center),
     }
@@ -251,89 +252,90 @@ def generate_pdf_station_book(filename, station):
     style = styles['NameRangeTableCell']
     name_range_data = [[Paragraph(cell, style) for cell in row] for row in name_range_data]
     # Table params:          data             column_widths            row_height
-    name_range_table = Table(name_range_data, [11*cm, 2.4*cm, 2.4*cm], 1.5*cm)
+    name_range_table = Table(name_range_data, [11 * cm, 2.4 * cm, 2.4 * cm], 1.5 * cm)
 
     # create document
-    doc = CountingDocTemplate(filename, pagesize=A4, topMargin=1*cm, bottomMargin=1*cm,
-                              leftMargin=1.5*cm, rightMargin=2.54*cm)
+    doc = CountingDocTemplate(filename, pagesize=A4, topMargin=1 * cm, bottomMargin=1 * cm,
+                              leftMargin=1.5 * cm, rightMargin=2.54 * cm)
     # elements, cover page first
-    elements = [
-        Image(hnec_logo(), width=10*cm, height=2.55*cm),
-        Spacer(48, 48),
+    with open(get_hnec_logo_fname(), 'rb') as hnec_f:
+        elements = [
+            Image(hnec_f, width=10 * cm, height=2.55 * cm),
+            Spacer(48, 48),
 
-        Paragraph(cover_string, styles['Title']),
-        Spacer(18, 18),
+            Paragraph(cover_string, styles['Title']),
+            Spacer(18, 18),
 
-        Paragraph(center_info['gender'], styles['CoverInfo-Bold']),
-        Paragraph(center_info['number'], styles['CoverInfo']),
-        Paragraph(center_info['name'], styles['CoverInfo']),
-        Paragraph(center_info['copy_info'], styles['CoverInfo']),
-        Paragraph(center_info['subconstituency'], styles['CoverInfo']),
-        Spacer(18, 18),
+            Paragraph(center_info['gender'], styles['CoverInfo-Bold']),
+            Paragraph(center_info['number'], styles['CoverInfo']),
+            Paragraph(center_info['name'], styles['CoverInfo']),
+            Paragraph(center_info['copy_info'], styles['CoverInfo']),
+            Paragraph(center_info['subconstituency'], styles['CoverInfo']),
+            Spacer(18, 18),
 
-        Paragraph(station_info, styles['CoverStationNumber']),
-        Spacer(60, 60),
+            Paragraph(station_info, styles['CoverStationNumber']),
+            Spacer(60, 60),
 
-        Paragraph(STRINGS['names_range'], styles['CoverNameRange']),
-        Spacer(18, 18),
-        name_range_table,
-        PageBreak(),
-    ]
+            Paragraph(STRINGS['names_range'], styles['CoverNameRange']),
+            Spacer(18, 18),
+            name_range_table,
+            PageBreak(),
+        ]
 
-    # skipped_voters holds voters that we need to re-add when we go over a page break
-    skipped_voters = []
-    unisex = False
+        # skipped_voters holds voters that we need to re-add when we go over a page break
+        skipped_voters = []
+        unisex = False
 
-    for page in chunker(station.roll, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK):
-        data = [[STRINGS['voted'], STRINGS['the_names'], STRINGS['number']]]  # table header
+        for page in chunker(station.roll, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK):
+            data = [[STRINGS['voted'], STRINGS['the_names'], STRINGS['number']]]  # table header
 
-        # hacks for simulating page break between genders in unisex stations
-        # last_voter tracks the previous iteration's last voter so we can add a blank line
-        # at the switch
-        voter_count = 0
-        last_voter = None
+            # hacks for simulating page break between genders in unisex stations
+            # last_voter tracks the previous iteration's last voter so we can add a blank line
+            # at the switch
+            voter_count = 0
+            last_voter = None
 
-        for voter in page:
-            # if unisex station, add pagebreak between genders
+            for voter in page:
+                # if unisex station, add pagebreak between genders
 
-            if (station.gender == UNISEX) and last_voter and \
-               (voter.gender != last_voter.gender):
+                if (station.gender == UNISEX) and last_voter and \
+                   (voter.gender != last_voter.gender):
 
-                # simulate a page break by adding n_registrants_per_page - voter_count blank lines
-                logger.debug("voter_count={}".format(voter_count))
-                lines_left = settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK - voter_count
-                logger.debug("lines_left={}".format(lines_left))
+                    # simulate page break by adding n_registrants_per_page - voter_count blank lines
+                    logger.debug("voter_count={}".format(voter_count))
+                    lines_left = settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK - voter_count
+                    logger.debug("lines_left={}".format(lines_left))
+                    if not unisex:
+                        for i in range(0, lines_left):
+                            data.append([])
+                    unisex = True
+                    skipped_voters = page[voter_count:voter_count + lines_left]
+                    log_voters("skipping", skipped_voters)
+                    break
                 if not unisex:
-                    for i in range(0, lines_left):
-                        data.append([])
-                unisex = True
-                skipped_voters = page[voter_count:voter_count+lines_left]
-                log_voters("skipping", skipped_voters)
-                break
-            if not unisex:
-                data.append(['', reshape(format_name(voter)), voter.registrant_number])
-            else:
-                skipped_voters.append(page[voter_count])
-            last_voter = voter
-            voter_count += 1
+                    data.append(['', reshape(format_name(voter)), voter.registrant_number])
+                else:
+                    skipped_voters.append(page[voter_count])
+                last_voter = voter
+                voter_count += 1
 
-        if len(data) > 1:
+            if len(data) > 1:
+                draw_header(elements, header_string, center_info, styles, station, "book")
+                draw_body(elements, data, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK)
+                draw_footer(elements, gender_string, styles)
+
+        if skipped_voters:
+            data = [[STRINGS['voted'], STRINGS['the_names'], STRINGS['number']]]
+
+            for voter in skipped_voters:
+                data.append(['', reshape(format_name(voter)), voter.registrant_number])
+            log_voters("re-adding", skipped_voters)
             draw_header(elements, header_string, center_info, styles, station, "book")
             draw_body(elements, data, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK)
             draw_footer(elements, gender_string, styles)
 
-    if skipped_voters:
-        data = [[STRINGS['voted'], STRINGS['the_names'], STRINGS['number']]]
-
-        for voter in skipped_voters:
-            data.append(['', reshape(format_name(voter)), voter.registrant_number])
-        log_voters("re-adding", skipped_voters)
-        draw_header(elements, header_string, center_info, styles, station, "book")
-        draw_body(elements, data, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_BOOK)
-        draw_footer(elements, gender_string, styles)
-
-    with out_of_disk_space_handler_context():
-        doc.build(elements, canvasmaker=NumberedCanvas, onLaterPages=drawHnecLogo)
+        with out_of_disk_space_handler_context():
+            doc.build(elements, canvasmaker=NumberedCanvas, onLaterPages=drawHnecLogo)
 
     return doc.n_pages
 
@@ -361,100 +363,102 @@ def generate_pdf_center_list(filename, stations, gender):
     # cover page
     center_name = reshape(center.name)
 
-    template = u'%s: %s / %s'
+    template = '%s: %s / %s'
     subconstituency_name = reshape(center.subconstituency.name_arabic)
     params = (STRINGS['subconstituency_name'], center.subconstituency.id, subconstituency_name)
     subconstituency = template % params
     center_info = {
-        'gender': u'%s: %s' % (STRINGS['gender'], gender_string),
-        'number': u'%s: %d' % (STRINGS['center_number'], center_id),
-        'name': u'%s: %s' % (STRINGS['center_name'], center_name),
-        'name_trunc': u'%s: %s' % (STRINGS['center_name'], truncate_center_name(center_name)),
+        'gender': '%s: %s' % (STRINGS['gender'], gender_string),
+        'number': '%s: %d' % (STRINGS['center_number'], center_id),
+        'name': '%s: %s' % (STRINGS['center_name'], center_name),
+        'name_trunc': '%s: %s' % (STRINGS['center_name'], truncate_center_name(center_name)),
         'subconstituency': subconstituency,
         'copy_info': build_copy_info(center),
     }
 
     # create document
-    doc = CountingDocTemplate(filename, pagesize=A4, topMargin=1*cm, bottomMargin=1*cm,
-                              leftMargin=1.5*cm, rightMargin=2.54*cm)
+    doc = CountingDocTemplate(filename, pagesize=A4, topMargin=1 * cm, bottomMargin=1 * cm,
+                              leftMargin=1.5 * cm, rightMargin=2.54 * cm)
 
     # elements, cover page first
-    elements = [
-        Image(hnec_logo(), width=10*cm, height=2.55*cm),
-        Spacer(48, 48),
-        Paragraph(cover_string, styles['Title']),
-        Spacer(18, 18),
-        Paragraph(center_info['gender'], styles['CoverInfo-Bold']),
-        Paragraph(center_info['number'], styles['CoverInfo']),
-        Paragraph(center_info['name'], styles['CoverInfo']),
-        Paragraph(center_info['copy_info'], styles['CoverInfo']),
-        Paragraph(center_info['subconstituency'], styles['CoverInfo']),
-        PageBreak(),
-    ]
+    with open(get_hnec_logo_fname(), 'rb') as hnec_f:
+        elements = [
+            Image(hnec_f, width=10 * cm, height=2.55 * cm),
+            Spacer(48, 48),
+            Paragraph(cover_string, styles['Title']),
+            Spacer(18, 18),
+            Paragraph(center_info['gender'], styles['CoverInfo-Bold']),
+            Paragraph(center_info['number'], styles['CoverInfo']),
+            Paragraph(center_info['name'], styles['CoverInfo']),
+            Paragraph(center_info['copy_info'], styles['CoverInfo']),
+            Paragraph(center_info['subconstituency'], styles['CoverInfo']),
+            PageBreak(),
+        ]
 
-    roll = []
-    for station in stations:
-        if station.gender == gender:
-            roll.extend(station.roll)
-        else:
-            # Coverage can't "see" the next line executed.
-            continue  # pragma: no cover
+        roll = []
+        for station in stations:
+            if station.gender == gender:
+                roll.extend(station.roll)
+            else:
+                # Coverage can't "see" the next line executed.
+                continue  # pragma: no cover
 
-        skipped_voters = []  # to re-add when we go over a page break
-        unisex = False
+            skipped_voters = []  # to re-add when we go over a page break
+            unisex = False
 
-        for page in chunker(station.roll, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST):
-            # table header
-            data = [[STRINGS['station_header'], STRINGS['the_names'], STRINGS['number']]]
+            for page in chunker(station.roll, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST):
+                # table header
+                data = [[STRINGS['station_header'], STRINGS['the_names'], STRINGS['number']]]
 
-            # hacks for simulating page break between genders in unisex stations
-            # last_voter tracks the previous iteration's last voter so we can add a blank line
-            # at the switch
-            last_voter = None
-            voter_count = 0
+                # hacks for simulating page break between genders in unisex stations
+                # last_voter tracks the previous iteration's last voter so we can add a blank line
+                # at the switch
+                last_voter = None
+                voter_count = 0
 
-            for voter in page:
-                # if unisex station, add pagebreak between genders
-                if (station.gender == UNISEX) and last_voter and \
-                   (voter.gender != last_voter.gender):
+                for voter in page:
+                    # if unisex station, add pagebreak between genders
+                    if (station.gender == UNISEX) and last_voter and \
+                       (voter.gender != last_voter.gender):
 
-                    # simulate a page break by adding N blank lines where
-                    # N = ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST - voter_count
-                    logger.debug("voter_count={}".format(voter_count))
-                    lines_left = settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST - voter_count
-                    logger.debug("lines_left={}".format(lines_left))
+                        # simulate a page break by adding N blank lines where
+                        # N = ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST - voter_count
+                        logger.debug("voter_count={}".format(voter_count))
+                        lines_left = (
+                            settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST - voter_count)
+                        logger.debug("lines_left={}".format(lines_left))
+                        if not unisex:
+                            for i in range(0, lines_left):
+                                data.append([])
+                        unisex = True
+                        skipped_voters = page[voter_count: voter_count + lines_left]
+                        log_voters("skipping", skipped_voters)
+                        break
                     if not unisex:
-                        for i in range(0, lines_left):
-                            data.append([])
-                    unisex = True
-                    skipped_voters = page[voter_count: voter_count + lines_left]
-                    log_voters("skipping", skipped_voters)
-                    break
-                if not unisex:
+                        data.append([station.number, reshape(format_name(voter)),
+                                     voter.registrant_number])
+                    else:
+                        skipped_voters.append(page[voter_count])
+                    last_voter = voter
+                    voter_count += 1
+
+                if len(data) > 1:
+                    draw_header(elements, header_string, center_info, styles, station, "list")
+                    draw_body(elements, data, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST)
+                    draw_footer(elements, gender_string, styles)
+
+            if skipped_voters:
+                data = [[STRINGS['station_header'], STRINGS['the_names'], STRINGS['number']]]
+
+                for voter in skipped_voters:
                     data.append([station.number, reshape(format_name(voter)),
                                  voter.registrant_number])
-                else:
-                    skipped_voters.append(page[voter_count])
-                last_voter = voter
-                voter_count += 1
-
-            if len(data) > 1:
+                log_voters("re-adding", skipped_voters)
                 draw_header(elements, header_string, center_info, styles, station, "list")
                 draw_body(elements, data, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST)
                 draw_footer(elements, gender_string, styles)
 
-        if skipped_voters:
-            data = [[STRINGS['station_header'], STRINGS['the_names'], STRINGS['number']]]
-
-            for voter in skipped_voters:
-                data.append([station.number, reshape(format_name(voter)),
-                             voter.registrant_number])
-            log_voters("re-adding", skipped_voters)
-            draw_header(elements, header_string, center_info, styles, station, "list")
-            draw_body(elements, data, settings.ROLLGEN_REGISTRATIONS_PER_PAGE_POLLING_LIST)
-            draw_footer(elements, gender_string, styles)
-
-    with out_of_disk_space_handler_context():
-        doc.build(elements, canvasmaker=NumberedCanvas, onLaterPages=drawHnecLogo)
+        with out_of_disk_space_handler_context():
+            doc.build(elements, canvasmaker=NumberedCanvas, onLaterPages=drawHnecLogo)
 
     return doc.n_pages

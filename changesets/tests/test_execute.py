@@ -1,9 +1,12 @@
-"""Tests for executeing changesets"""
+"""Tests for executing changesets"""
+from unittest.mock import patch
+
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
 from django.test import TestCase
-from mock import patch
+from django.urls import reverse
+from django.utils.timezone import now
+
 from changesets.exceptions import NotAnAllowedStatus, ChangesetException
 from changesets.models import QUEUE_CHANGESET_PERMISSION, Changeset
 from changesets.tasks import execute_changeset
@@ -67,7 +70,7 @@ class QueueChangesetTest(TestCase):
         changeset = ChangesetFactory(status=Changeset.STATUS_APPROVED)
         with patch('changesets.models.Changeset.execute') as mock_execute:
             execute_changeset(changeset.pk)
-        mock_execute.assert_called()
+        assert mock_execute.called
 
     def test_queue_method_bad_status(self):
         changeset = ChangesetFactory(status=Changeset.STATUS_NEW)
@@ -112,7 +115,7 @@ class ExecuteChangesetTest(TestCase):
 
 class ExecuteBlockTest(TestCase):
     """
-    Test executeing blocking changesets.
+    Test executing blocking changesets.
 
     Each test will set up a change in a different way but that ought to have the same
     results. Then we'll try to roll back the change, after changing one voter, and check
@@ -230,7 +233,7 @@ class ExecuteBlockTest(TestCase):
 
 class ExecuteUnblockTest(TestCase):
     """
-    Test executeing unblocking changesets.
+    Test executing unblocking changesets.
 
     Each test will set up a change in a different way but that ought to have the same
     results. Then we'll try to roll back the change, after changing one voter, and check
@@ -346,6 +349,34 @@ class ExecuteUnblockTest(TestCase):
         ChangeRecordFactory(citizen=self.citizen3, changeset=other, changed=True)
         ChangeRecordFactory(citizen=self.citizen4, changeset=other, changed=False)
         self.doit()
+
+
+class MissingCitizenCenterChangeTest(TestCase):
+    def test_missing_citizen_center_change(self):
+        self.from_center = RegistrationCenterFactory()
+        self.to_center = RegistrationCenterFactory()
+        self.reg = RegistrationFactory(registration_center=self.from_center, archive_time=None)
+
+        self.changeset = ChangesetFactory(
+            status=Changeset.STATUS_APPROVED,
+            change=Changeset.CHANGE_CENTER,
+            how_to_select=Changeset.SELECT_CENTERS,
+            target_center=self.to_center
+        )
+        self.changeset.selected_centers.add(self.from_center)
+
+        # Mark the citizen as missing (which will exclude it from Citizen queries per the default
+        # manager)
+        self.reg.citizen.missing = now()
+        self.reg.citizen.save()
+
+        # Make sure the registration is still around, otherwise something in the test
+        # broke and it's no longer valid.
+        Registration.objects.get(pk=self.reg.pk)
+
+        self.changeset.execute()
+        self.changeset.refresh_from_db()
+        self.assertEqual(self.changeset.status, Changeset.STATUS_SUCCESSFUL)
 
 
 class ExecuteCenterChangeTest(TestCase):

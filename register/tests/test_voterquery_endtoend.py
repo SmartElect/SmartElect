@@ -14,9 +14,9 @@ class VoterQueryEndToEndTest(LibyaRapidTest):
         self.bad_nid = get_random_number_string(length=constants.NID_LENGTH)
         self.bad_length_nid = get_random_number_string(length=constants.NID_LENGTH + 1)
         self.nid_without_person = get_random_number_string(length=constants.NID_LENGTH)
-        self.garbage = u"PING"
+        self.garbage = "PING"
         self.citizen = CitizenFactory()
-        self.good_nid = unicode(self.citizen.national_id)
+        self.good_nid = str(self.citizen.national_id)
 
     def test_nlid_does_not_exist(self):
         # NID doesn't exist, return VOTER_QUERY_NOT_FOUND

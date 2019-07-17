@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import datetime
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test.utils import override_settings
-
-from mock import patch
 
 from civil_registry.tests.factories import CitizenFactory
 from libya_elections import constants
@@ -105,20 +104,22 @@ class ResponseTest(TranslationTest, LibyaRapidTest):
         expected = self.translate(constants.RESPONSE_NID_INVALID)  # arabic
         self.assertEqual(self.get_last_response_message(), expected)
 
+    @override_settings(MAX_REGISTRATIONS_PER_PHONE=5)
     def test_good_registration(self, registration_open):
         msg = "{nid}#{center}".format(nid=self.good_nid, center=self.good_center_id)
         self.receive(msg, self.conn, fields=self.fields)
-        context = {'person': unicode(self.citizen), 'centre': self.center.name,
+        context = {'person': str(self.citizen), 'centre': self.center.name,
                    'code': self.center.center_id}
         expected = self.translate(constants.MESSAGE_1, context=context)  # arabic
         self.assertEqual(self.get_last_response_message(), expected)
 
+    @override_settings(MAX_REGISTRATIONS_PER_PHONE=5)
     def test_good_registration_enhanced(self, registration_open):
         msg = "{nid}#{center}".format(nid=self.good_nid, center=self.good_center_id)
         for i in range(1, 5):
             # last iteration should get an enhanced message
             self.receive(msg, self.conn, fields=self.fields)
-        context = {'person': unicode(self.citizen), 'centre': self.center.name,
+        context = {'person': str(self.citizen), 'centre': self.center.name,
                    'code': self.center.center_id}
         expected = self.translate(constants.MESSAGE_1, context=context, enhanced=True)  # arabic
         self.assertEqual(self.get_last_response_code(), constants.MESSAGE_1)
@@ -130,7 +131,7 @@ class ResponseTest(TranslationTest, LibyaRapidTest):
         self.receive(msg, self.conn, fields=self.fields)  # registers
         msg = "{nid}#{center}".format(nid=self.good_nid, center=new_center.center_id)
         self.receive(msg, self.conn, fields=self.fields)  # updates
-        context = {'person': unicode(self.citizen), 'centre': new_center.name,
+        context = {'person': str(self.citizen), 'centre': new_center.name,
                    'code': new_center.center_id}
         # 1st update - message 1
         expected = self.translate(constants.MESSAGE_1, context=context)  # arabic
@@ -139,14 +140,14 @@ class ResponseTest(TranslationTest, LibyaRapidTest):
         # 2nd update - message 4
         msg = "{nid}#{center}".format(nid=self.good_nid, center=self.good_center_id)
         self.receive(msg, self.conn, fields=self.fields)  # updates again
-        context = {'person': unicode(self.citizen), 'centre': new_center.name,
+        context = {'person': str(self.citizen), 'centre': new_center.name,
                    'code': self.good_center_id}
         expected = self.translate(constants.MESSAGE_4, context=context)  # arabic
 
         # 3rd and final update - message 5
         msg = "{nid}#{center}".format(nid=self.good_nid, center=new_center.center_id)
         self.receive(msg, self.conn, fields=self.fields)  # updates
-        context = {'person': unicode(self.citizen), 'centre': new_center.name,
+        context = {'person': str(self.citizen), 'centre': new_center.name,
                    'code': new_center.center_id}
         expected = self.translate(constants.MESSAGE_5, context=context)  # arabic
 
@@ -206,7 +207,7 @@ class ResponseVoterQueryTest(TranslationTest, LibyaRapidTest):
         self.fields = {'to_addr': settings.REGISTRATION_SHORT_CODE}
 
     def test_wrong_length_nid(self):
-        msg = u"{nid}".format(nid=self.short_nid)
+        msg = "{nid}".format(nid=self.short_nid)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.VOTER_QUERY_NID_WRONG_LENGTH)
         expected = self.translate(constants.VOTER_QUERY_NID_WRONG_LENGTH)  # Arabic
@@ -217,10 +218,10 @@ class ResponseVoterQueryTest(TranslationTest, LibyaRapidTest):
         RegistrationFactory(citizen=self.citizen, registration_center=self.center,
                             archive_time=None)
         # let's query for the registration
-        msg = u"{nid}".format(nid=self.good_nid)
+        msg = "{nid}".format(nid=self.good_nid)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.VOTER_QUERY_REGISTERED_AT)
-        context = {"person": unicode(self.citizen), "centre": self.center.name,
+        context = {"person": str(self.citizen), "centre": self.center.name,
                    "code": self.center.center_id}
         expected = self.translate(constants.VOTER_QUERY_REGISTERED_AT, context)  # Arabic
         self.assertEqual(self.get_last_response_message(), expected)
@@ -228,15 +229,15 @@ class ResponseVoterQueryTest(TranslationTest, LibyaRapidTest):
     def test_citizen_not_registered(self):
         # let's query for the registration
         citizen2 = CitizenFactory()  # unregistered
-        msg = u"{nid}".format(nid=citizen2.national_id)
+        msg = "{nid}".format(nid=citizen2.national_id)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.VOTER_QUERY_NOT_REGISTERED)
-        context = {'person': unicode(citizen2)}
+        context = {'person': str(citizen2)}
         expected = self.translate(constants.VOTER_QUERY_NOT_REGISTERED, context)  # Arabic
         self.assertEqual(self.get_last_response_message(), expected)
 
     def test_nlid_does_not_exist(self):
-        msg = u"{nid}".format(nid=self.bad_nid)
+        msg = "{nid}".format(nid=self.bad_nid)
         self.receive(msg, self.conn, fields=self.fields)
         self.assertEqual(self.get_last_response_code(), constants.VOTER_QUERY_NOT_FOUND)
         expected = self.translate(constants.VOTER_QUERY_NOT_FOUND)  # Arabic

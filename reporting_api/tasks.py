@@ -40,11 +40,18 @@ def schedule_reporting_api_tasks(schedule, intervals):
         else:
             logger.error('Task %s won\'t be scheduled -- no interval defined in settings')
             continue
+        # The task will expire if it has not been completed in 75% of the delta (a
+        # task that is set to run every 30 minutes will expire after 1350 seconds).
+        expire_duration = (delta.days * 24 * 60 * 60 + delta.seconds) * 0.75
         schedule.update({'generate-%s' % task_name: {
             'task': 'reporting_api.tasks.%s' % task_name,
-            'schedule': delta
+            'schedule': delta,
+            'options': {
+                'expires': expire_duration
+            }
         }})
 
+
 if settings.REPORT_GENERATION_INTERVALS:
-    schedule_reporting_api_tasks(settings.CELERYBEAT_SCHEDULE,
+    schedule_reporting_api_tasks(settings.CELERY_BEAT_SCHEDULE,
                                  settings.REPORT_GENERATION_INTERVALS)

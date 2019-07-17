@@ -5,6 +5,7 @@ from subscriptions import models
 
 
 class SubscriptionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.Subscription
+    class Meta:
+        model = models.Subscription
 
     user = factory.SubFactory(UserFactory)

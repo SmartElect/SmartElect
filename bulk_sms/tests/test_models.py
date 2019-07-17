@@ -12,8 +12,8 @@ from register.tests.base import LibyaTest
 
 class BatchTest(LibyaTest):
     def test_unicode_method(self):
-        batch = BatchFactory(name=u'foo')
-        self.assertEqual(str(batch), u'foo')
+        batch = BatchFactory(name='foo')
+        self.assertEqual(str(batch), 'foo')
 
     def test_active_batches(self):
         BatchFactory(status=Batch.PENDING, deleted=True)
@@ -90,29 +90,29 @@ class BatchTest(LibyaTest):
 
 class BulkMessageTest(LibyaTest):
     def test_unicode_method(self):
-        msg = BulkMessageFactory(phone_number=u'555-1212')
+        msg = BulkMessageFactory(phone_number='555-1212')
         self.assertIn('555-1212', str(msg))
 
     def test_active(self):
-        msg1 = BulkMessageFactory(phone_number=u'555-1212', deleted=True)
-        msg2 = BulkMessageFactory(phone_number=u'555-1212', batch=msg1.batch)
-        BulkMessageFactory(phone_number=u'555-1212')
+        msg1 = BulkMessageFactory(phone_number='555-1212', deleted=True)
+        msg2 = BulkMessageFactory(phone_number='555-1212', batch=msg1.batch)
+        BulkMessageFactory(phone_number='555-1212')
         # ensure the manager method works
         self.assertEqual(BulkMessage.objects.active().count(), 2)
         # ensure the queryset method works on a filtered queryset
         self.assertEqual(BulkMessage.objects.filter(batch=msg2.batch).active().count(), 1)
 
     def test_sent(self):
-        msg1 = BulkMessageFactory(phone_number=u'555-1212')
-        BulkMessageFactory(phone_number=u'555-1212')
+        msg1 = BulkMessageFactory(phone_number='555-1212')
+        BulkMessageFactory(phone_number='555-1212')
         # ensure the manager method works
         self.assertEqual(BulkMessage.objects.sent().count(), 2)
         # ensure the queryset method works on a filtered queryset
         self.assertEqual(BulkMessage.objects.filter(batch=msg1.batch).sent().count(), 1)
 
     def test_unsent(self):
-        msg1 = BulkMessageFactory(phone_number=u'555-1212', sms=None)
-        BulkMessageFactory(phone_number=u'555-1212', sms=None)
+        msg1 = BulkMessageFactory(phone_number='555-1212', sms=None)
+        BulkMessageFactory(phone_number='555-1212', sms=None)
         # ensure the manager method works
         self.assertEqual(BulkMessage.objects.unsent().count(), 2)
         # ensure the queryset method works on a filtered queryset
@@ -125,5 +125,5 @@ class BulkMessageTest(LibyaTest):
     def test_from_shortcode_validation(self):
         msg = BulkMessageFactory()
         msg.from_shortcode = get_random_number_string(length=5)
-        with self.assertRaisesRegexp(ValidationError, 'Invalid shortcode'):
+        with self.assertRaisesRegex(ValidationError, 'Invalid shortcode'):
             msg.full_clean()

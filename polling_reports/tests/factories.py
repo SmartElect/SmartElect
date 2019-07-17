@@ -15,7 +15,8 @@ def get_or_create_election(stub):
 
 
 class PollingReportFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.PollingReport
+    class Meta:
+        model = models.PollingReport
 
     election = factory.LazyAttribute(get_or_create_election)
     registration_center = factory.SubFactory(RegistrationCenterFactory)
@@ -25,14 +26,16 @@ class PollingReportFactory(factory.DjangoModelFactory):
 
 
 class CenterOpenFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.CenterOpen
+    class Meta:
+        model = models.CenterOpen
 
     election = factory.LazyAttribute(get_or_create_election)
     registration_center = factory.SubFactory(RegistrationCenterFactory)
 
 
 class StaffPhoneFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = models.StaffPhone
+    class Meta:
+        model = models.StaffPhone
 
     registration_center = factory.SubFactory(RegistrationCenterFactory)
     phone_number = factory.Sequence(lambda n: get_random_phone_number())

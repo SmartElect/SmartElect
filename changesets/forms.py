@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -131,7 +129,7 @@ class ChangesetForm(forms.ModelForm):
                 if len(errors) >= MAX_ERRORS:
                     errors.append(_("Stopping after {number} errors.").format(number=len(errors)))
                     break
-                line = line.strip()
+                line = line.decode().strip()
                 if not line:
                     # Allow and ignore blank lines
                     continue

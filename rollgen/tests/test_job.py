@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 import logging
 import os
-
-# 3rd party imports
-from mock import patch
+from unittest.mock import patch
 
 # Django imports
 from django.test import TestCase
@@ -140,7 +136,7 @@ class TestGenerateRollsPolling(TestJobBase):
         for station in stations:
             self.assertEqual(station.center, self.center)
             gender_counts[station.gender] += 1
-        self.assertEqual(gender_counts.values(), [1, 1])
+        self.assertEqual(list(gender_counts.values()), [1, 1])
 
         first_set_of_station_ids = set([station.id for station in stations])
 
@@ -155,7 +151,7 @@ class TestGenerateRollsPolling(TestJobBase):
         for station in stations:
             self.assertEqual(station.center, self.center)
             gender_counts[station.gender] += 1
-        self.assertEqual(gender_counts.values(), [1, 1])
+        self.assertEqual(list(gender_counts.values()), [1, 1])
 
         second_set_of_station_ids = set([station.id for station in stations])
 
@@ -183,7 +179,7 @@ class TestSelectiveStationCreationAndOverwriting(TestJobBase):
         for station in stations:
             self.assertEqual(station.center, self.center)
             gender_counts[station.gender] += 1
-        self.assertEqual(gender_counts.values(), [1, 1])
+        self.assertEqual(list(gender_counts.values()), [1, 1])
 
         first_set_of_station_ids = set([station.id for station in stations])
 
@@ -206,7 +202,7 @@ class TestSelectiveStationCreationAndOverwriting(TestJobBase):
         for station in stations:
             self.assertEqual(station.center, self.center)
             gender_counts[station.gender] += 1
-        self.assertEqual(gender_counts.values(), [1, 1])
+        self.assertEqual(list(gender_counts.values()), [1, 1])
         self.assertEqual(set([station.id for station in stations]), first_set_of_station_ids)
 
         stations = Station.objects.filter(center=center2)
@@ -236,7 +232,7 @@ class TestSelectiveStationCreationAndOverwriting(TestJobBase):
         gender_counts = {MALE: 0, FEMALE: 0}
         for station in stations:
             gender_counts[station.gender] += 1
-        self.assertEqual(gender_counts.values(), [1, 1])
+        self.assertEqual(list(gender_counts.values()), [1, 1])
         self.assertEqual(set([station.id for station in stations]), first_set_of_station_ids)
 
         stations = Station.objects.filter(center=center2)

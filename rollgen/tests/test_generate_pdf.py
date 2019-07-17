@@ -1,8 +1,3 @@
-# Python imports
-from __future__ import unicode_literals
-from __future__ import division
-from unittest import skip
-
 # 3rd party imports
 from bidi.algorithm import get_display as apply_bidi
 
@@ -257,10 +252,9 @@ class TestCopyOfCenter(TestGeneratePdfBase, GeneratePdfContentTestMixin):
         self.center = self.copy_centers[2]
         self.n_pages = generate_pdf(self.filename, self.center, self.voter_roll, FEMALE)
 
-    @skip
     def test_inner_page_content(self):
         # This doesn't need to be re-tested for copy centers; they only affect the cover page.
-        pass
+        self.assertTrue(True)
 
 
 class TestCopiedByCenter(TestGeneratePdfBase, GeneratePdfContentTestMixin):
@@ -277,7 +271,6 @@ class TestCopiedByCenter(TestGeneratePdfBase, GeneratePdfContentTestMixin):
         self.center = self.original_center
         self.n_pages = generate_pdf(self.filename, self.center, self.voter_roll, FEMALE)
 
-    @skip
     def test_inner_page_content(self):
         # This doesn't need to be re-tested for copy centers; they only affect the cover page.
-        pass
+        self.assertTrue(True)

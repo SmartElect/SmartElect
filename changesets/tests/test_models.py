@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.timezone import now
@@ -42,7 +41,7 @@ class ChangesetModelTest(TestCase):
     def test_unicode(self):
         NAME = 'qesüérsdf'
         changeset = Changeset(name=NAME)
-        self.assertEqual(NAME, unicode(changeset))
+        self.assertEqual(NAME, str(changeset))
 
     def test_clean(self):
         other = ChangesetFactory(status=Changeset.STATUS_SUCCESSFUL)
@@ -53,13 +52,20 @@ class ChangesetModelTest(TestCase):
         )
         changeset.full_clean()
         changeset.how_to_select = Changeset.SELECT_UPLOADED_NIDS
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as context:
             changeset.full_clean()
+        errs = context.exception.message_dict
+        self.assertEqual(errs, {'__all__': ['Rollbacks must have how_to_select=OTHER CHANGESET']})
         changeset.how_to_select = Changeset.SELECT_OTHER_CHANGESET
         changeset.full_clean()
         changeset.other_changeset = None
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as context:
             changeset.full_clean()
+        errs = context.exception.message_dict
+        self.assertEqual(errs,
+                         {'__all__': [
+                             'how_to_select is SELECT_OTHER_CHANGESET but you have not '
+                             'selected another changeset.']})
 
     def test_in_editable_state(self):
         for status in [value for value, name in Changeset.STATUS_CHOICES]:

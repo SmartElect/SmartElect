@@ -2,6 +2,8 @@
 import datetime
 import os
 
+from django.utils.translation import ugettext_lazy as _
+
 # PROJECT_PATH is the libya_elections dir that contains the settings dir
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
@@ -10,7 +12,6 @@ PROJECT_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, os.pardir))
 
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -20,15 +21,24 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'smartelect',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {'autocommit': True},
+        'ENGINE': 'django.db.backends.postgresql',
+        'DISABLE_SERVER_SIDE_CURSORS': True,
+        'NAME': os.getenv('DB_NAME', 'open_source_elections'),
+        'USER': os.getenv('DB_USER', ''),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', ''),
     }
 }
+
+SLAVE_DATABASES = []
+
+if int(os.getenv('DB_HAVE_LOCAL_READ_REPLICA', 0)) == 1:
+    replica = DATABASES['default'].copy()
+    replica['NAME'] += '_read_replica'
+    DATABASES['read_replica'] = replica
+    SLAVE_DATABASES = ['read_replica']
+    DATABASE_ROUTERS = ['multidb.PinningMasterSlaveRouter']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -42,7 +52,6 @@ TIME_ZONE = 'Libya'
 # Accepted language codes are limited to 'en' and 'ar'. Django will normalize
 # other language codes to one of these two.
 # See https://github.com/hnec-vr/libya-elections/issues/1351
-from django.utils.translation import ugettext_lazy as _
 LANGUAGES = (
     ('ar', _('Arabic')),
     ('en', _('English')),
@@ -101,32 +110,39 @@ STATICFILES_FINDERS = (
 # Store static files with a name which includes their MD5 hash, to eliminate stale CSS
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    #     'django.template.loaders.eggs.Loader',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(PROJECT_PATH, 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.media',
+                'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.static',
+                'voting.context_processors.current_election',
+                'libya_elections.context_processors.current_timestamp',
+                'libya_elections.context_processors.environment',
+            ],
+        },
+    },
+]
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.media',
-    'django.core.context_processors.request',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.static',
-    'voting.context_processors.current_election',
-    'libya_elections.context_processors.current_timestamp',
-)
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    'multidb.middleware.PinningRouterMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'libya_elections.middleware.GroupExpirationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
@@ -135,15 +151,11 @@ ROOT_URLCONF = 'libya_elections.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'libya_elections.wsgi.application'
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, 'templates'),
-)
-
 FIXTURE_DIRS = (
     os.path.join(PROJECT_PATH, 'fixtures'),
 )
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     # libya_site first, so its templates override django's templates
     'libya_site',
 
@@ -158,9 +170,7 @@ INSTALLED_APPS = (
 
     # External apps
     'captcha',
-    "django_nose",
     "django_tables2",
-    "djcelery",
     'fixture_magic',
     'registration',
     'selectable',
@@ -191,7 +201,7 @@ INSTALLED_APPS = (
     "rapidsms.router.celery",
     "httptester",  # Forked from contrib to add to_addr
     "rapidsms.contrib.handlers",
-)
+]
 
 # This is for local development.  It is completely overridden in
 # testing and production. It logs only to local files, and
@@ -260,8 +270,9 @@ CAPTCHA_CHALLENGE_FUNCT = 'libya_site.utils.random_digit_challenge'
 
 # Application settings
 ACCOUNT_ACTIVATION_DAYS = 3
-LOGIN_URL = 'auth_login'
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 SESSION_COOKIE_AGE = 6 * (60 * 60)  # logout after 6 hours of inactivity
 
 # order matters
@@ -292,8 +303,8 @@ SPLIT_LONG_MESSAGES = False
 MAX_OUTGOING_LENGTH = 70
 MSG_ORDER_NUMBER_LENGTH = 8  # len(' [23/88]')
 OUTGOING_MSG_TRANSFORMATIONS = {
-    u'8)': u'8 )',
-    u'(8': u'( 8',
+    '8)': '8 )',
+    '(8': '( 8',
 }
 
 # SMS language settings
@@ -303,7 +314,7 @@ LOCALE_PATHS = (os.path.join(PROJECT_ROOT, 'locale'), )
 # Incoming numbers might be prefixed by this, not sure.  We'll allow it if so.
 LIBYA_COUNTRY_CODE = "218"
 # Incoming numbers we'll respond to
-# These are for testing. Update to correct values in your production.py
+# These are for testing. Update to correct values in deploy.py
 REGISTRATION_SHORT_CODE = '10020'
 VOTER_QUERY_SHORT_CODE = REGISTRATION_SHORT_CODE
 REPORTS_SHORT_CODE = '10040'
@@ -312,14 +323,14 @@ SHORT_CODES = {REGISTRATION_SHORT_CODE, REPORTS_SHORT_CODE}
 # Regular expression (string) to match valid phone numbers that can be used
 # in white lists, black lists, staff numbers, bulk SMS target lists, etc etc.
 # The formats of phone numbers currently valid in Libya:
-#   218 + 9 digits  (Libyana, Al Madar)
+#   2189 + 8 digits  (Libyana, Al Madar)
 #   88216 + 8 digits  (Thuraya)
 # If this changes, also change libya_elections.constants.PHONE_NUMBER_MSG.
-PHONE_NUMBER_REGEX = '^218\d{9}$|^88216\d{8}$'
+PHONE_NUMBER_REGEX = r'^2189\d{8}$|^88216\d{8}$'
 MAX_PHONE_NUMBER_LENGTH = 13
 
 # This is the maximum number of registrations allowed on a phone
-MAX_REGISTRATIONS_PER_PHONE = 5
+MAX_REGISTRATIONS_PER_PHONE = 2
 
 # Do we want to load test?
 # Setting this to true allows anyone access to a URL which will delete items
@@ -327,22 +338,15 @@ MAX_REGISTRATIONS_PER_PHONE = 5
 # be false on any production site.
 LOAD_TEST = False
 
-import djcelery
-djcelery.setup_loader()
-
-CELERY_ACKS_LATE = True
+CELERY_TASK_ACKS_LATE = True
 # Automatic Celery routing
-CELERY_ROUTES = {
+CELERY_TASK_ROUTES = {
     'rapidsms.router.celery.tasks.send_async': {'queue': 'send_async'},
     'bulk_sms.tasks.upload_bulk_sms_file': {'queue': 'upload_bulksms'},
     'audit.tasks.audit_sms': {'queue': 'audit'},
     'audit.tasks.parse_logs': {'queue': 'audit'},
     'rollgen.tasks.run_roll_generator_job': {'queue': 'rollgen'},
 }
-# Quiet down celery warnings (yes, this is safe,
-# our systems are all behind a firewall and only accessible
-# to each other).
-CELERY_ACCEPT_CONTENT = ['pickle']
 
 # Enable tools based on dates
 ENABLE_ALL_TOOLS = False  # Override dates for everything
@@ -354,11 +358,12 @@ ENABLE_ALL_TOOLS = False  # Override dates for everything
 SUSPICIOUS_TURNOUT_THRESHOLD = 0.90
 
 # production? testing?
-ENVIRONMENT = os.getenv('libya_environment', '(environment not set)')
+ENVIRONMENT = os.getenv('ENVIRONMENT', '(environment not set)')
 
 # site domain
 SITE_DOMAIN = "%s.example.com" % ENVIRONMENT
 DEFAULT_FROM_EMAIL = "no-reply@%s" % SITE_DOMAIN
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Outgoing BulkSMS settings
 BULKSMS_DEFAULT_MESSAGES_PER_SECOND = 50
@@ -375,10 +380,7 @@ LENGTH_OF_REGISTRATION_UNLOCKING = datetime.timedelta(hours=12)
 
 VUMI_LOGS = []
 # Default schedule - importers can add to this
-CELERYBEAT_SCHEDULE = {}
-
-# Number of approvals needed in order to clear voting data from an election
-MINIMUM_CLEARING_APPROVERS = 2
+CELERY_BEAT_SCHEDULE = {}
 
 # Number of approvals needed in order to activate a change set
 MINIMUM_CHANGESET_APPROVALS = 2
@@ -398,20 +400,24 @@ REPORTING_API_PASSWORD = os.getenv('REPORTING_API_PASSWORD', '')
 # the StrictRedis constructor.  See
 # http://redis-py.readthedocs.org/en/latest/index.html#redis.StrictRedis
 REPORTING_REDIS_SETTINGS = {
-    'host': os.getenv('redis_master', 'localhost'),
+    'host': os.getenv('REDIS_MASTER', 'localhost'),
+}
+REPORTING_REDIS_REPLICA_SETTINGS = {
+    # fall back to the master host, if no replica is provided in env.sls
+    'host': os.getenv('REDIS_REPLICA', REPORTING_REDIS_SETTINGS['host']),
 }
 
 # Unique development prefix for Redis keys used by reporting api
 # (must be overridden for staging, prod, and test, to avoid collisions when
 # different instances share a Redis server)
-REPORTING_REDIS_KEY_PREFIX = 'os_rapi_dev_'
+REPORTING_REDIS_KEY_PREFIX = 'os_reporting_api_dev_'
 
 # can be set to None to disable report generation
 REPORT_GENERATION_INTERVALS = {
     # the "default" interval applies to any reports not listed separately
     'default': datetime.timedelta(minutes=30),
     # 'election_day': datetime.timedelta(minutes=10),
-    'registrations': datetime.timedelta(minutes=60)
+    'registrations': datetime.timedelta(minutes=10)
 }
 
 # Begin Roll generator constants
@@ -436,14 +442,10 @@ ROLLGEN_UNISEX_TRIGGER = 25
 ROLLGEN_CENTER_NAME_TRUNCATE_AFTER = 42
 # ROLLGEN_OUTPUT_DIR determines where rollgen writes its files. The value here is an OK but
 # slightly messy choice for developers. You probably want to define something more convenient in
-# local.py. This could also be defined in staging.py
-ROLLGEN_OUTPUT_DIR = '.'
+# local.py. This is also defined in deploy.py
+ROLLGEN_OUTPUT_DIR = './rollgen/'
 # End Roll generator constants
 
-
-VOTER_API_REALM = os.getenv("VOTER_API_REALM", 'voter_api_realm')
-VOTER_API_USER = os.getenv("VOTER_API_USER")
-VOTER_API_PASSWORD = os.getenv("VOTER_API_PASSWORD")
 
 BREAD = {
     'DEFAULT_BASE_TEMPLATE': 'libya_site/staff.html',
@@ -451,3 +453,7 @@ BREAD = {
 
 # Django cache prefix
 KEY_PREFIX = 'ose'
+
+# Should the public dashboard be hidden from the public?
+HIDE_PUBLIC_DASHBOARD = True
+PUBLIC_REDIRECT_URL = 'https://example.com'

@@ -1,7 +1,3 @@
-# Python imports
-from __future__ import division
-from __future__ import unicode_literals
-
 # Django imports
 from django import template
 from django.utils.html import format_html

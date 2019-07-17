@@ -13,5 +13,6 @@ class CitizenAdmin(admin.ModelAdmin):
         'birth_date',
     ]
 
+
 admin_site.register(Citizen, CitizenAdmin)
 admin_site.register(DumpFile)

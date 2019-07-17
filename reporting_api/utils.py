@@ -7,9 +7,9 @@ from pytz import timezone
 
 # Project imports
 from register.models import Office
-from constants import COUNTRY, OFFICE, POLLING_CENTER_CODE, POLLING_CENTER_COPY_OF, \
+from .constants import COUNTRY, OFFICE, POLLING_CENTER_CODE, POLLING_CENTER_COPY_OF, \
     POLLING_CENTER_TYPE, REGION, SUBCONSTITUENCY_ID
-import query
+from . import query
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def dictfetchall(cursor, date_time_columns=DEFAULT_DATE_TIME_COLUMNS):
         date_time_columns = ()
     if result_columns.isdisjoint(set(date_time_columns)):
         return [
-            dict(zip([col[0] for col in desc], row))
+            dict(list(zip([col[0] for col in desc], row)))
             for row in cursor.fetchall()
         ]
 
@@ -53,7 +53,7 @@ def dictfetchall(cursor, date_time_columns=DEFAULT_DATE_TIME_COLUMNS):
                 values.append(t)
             else:
                 values.append(row[i])
-        result.append(dict(zip([col[0] for col in desc], values)))
+        result.append(dict(list(zip([col[0] for col in desc], values))))
     return result
 
 

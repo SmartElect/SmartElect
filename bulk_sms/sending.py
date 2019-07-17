@@ -159,7 +159,7 @@ def send_messages(batch, num_to_send=250, map_=map):
         # no messages, Batch is complete
         Batch.objects.filter(pk=batch.pk).update(status=Batch.COMPLETED)
     if errors:
-        Batch.objects.filter(pk=batch.pk).update(errors=F('errors')+errors)
+        Batch.objects.filter(pk=batch.pk).update(errors=F('errors') + errors)
     return num_sent
 
 
@@ -185,25 +185,52 @@ def send_message_by_id(bmsg_pk):
     except BulkMessage.DoesNotExist:
         bmsg = None
     if bmsg:
-        connection = best_connection_for_phone_number(bmsg.phone_number, settings.BULKSMS_BACKENDS)
-        # create a RapidSMS message object
-        router = get_router()
-        out_msg = router.new_outgoing_message(text=bmsg.message, connections=[connection])
-        # setup the from_number
-        out_msg.fields['endpoint'] = bmsg.from_shortcode
-        # process the RapidSMS outgoing phases
-        continue_sending = router.process_outgoing_phases(out_msg)
-        if continue_sending:
-            try:
-                router.send_to_backend(backend_name=connection.backend.name,
-                                       id_=out_msg.id,
-                                       text=out_msg.text,
-                                       identities=[connection.identity],
-                                       context=out_msg.fields)
-            except MessageSendingError:
-                logger.exception("Error sending bulk_sms message: id %d, batch %s" %
-                                 (bmsg.pk, bmsg.batch))
-            else:
-                BulkMessage.objects.filter(pk=bmsg_pk).update(sms=out_msg.sms)
+        try:
+            out_msg = send_one_message(bmsg.from_shortcode, bmsg.phone_number, bmsg.message)
+        except MessageSendingError:
+            logger.exception("Error sending bulk_sms message: id %d, batch %s" %
+                             (bmsg.pk, bmsg.batch))
+        else:
+            if out_msg:
                 num_sent = 1
+                BulkMessage.objects.filter(pk=bmsg_pk).update(sms=out_msg.sms)
     return num_sent
+
+
+def send_one_message(from_number, to_number, message, message_code=None):
+    """
+    Can raise MessageSendingError.
+
+    Returns the sent message (out_msg) if sent, None if process_outgoing_phases returned False so
+    the message was not sent.
+
+    If message_code is provided, add that to the message, so our SMS object gets populated with it.
+
+    :param from_number:
+    :type from_number: string
+    :param to_number:
+    :type to_number: string
+    :param message:
+    :type message: string
+    :param message_code:
+    :type message_code: integer
+    """
+    connection = best_connection_for_phone_number(to_number, settings.BULKSMS_BACKENDS)
+    # create a RapidSMS message object
+    router = get_router()
+    out_msg = router.new_outgoing_message(text=message, connections=[connection])
+    # setup the from_number
+    out_msg.fields['endpoint'] = from_number
+    # add the message_code if we know it
+    if message_code:
+        out_msg.fields['message_code'] = message_code
+    # process the RapidSMS outgoing phases
+    continue_sending = router.process_outgoing_phases(out_msg)
+    if continue_sending:
+        router.send_to_backend(backend_name=connection.backend.name,
+                               id_=out_msg.id,
+                               text=out_msg.text,
+                               identities=[connection.identity],
+                               context=out_msg.fields)
+        return out_msg
+    return None

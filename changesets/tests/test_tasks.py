@@ -1,6 +1,6 @@
-from django.test import TestCase
+from unittest.mock import patch
 
-from mock import patch
+from django.test import TestCase
 
 from changesets.models import Changeset
 from changesets.tasks import execute_changeset
@@ -13,7 +13,7 @@ class TasksTest(TestCase):
         # should log an error
         with patch('changesets.tasks.logger') as mock_logger:
             execute_changeset(9999)
-        mock_logger.error.assert_called()
+        assert mock_logger.error.called
 
     def test_execute_raises_exception(self):
         # If execute raises exception, it is logged
@@ -22,7 +22,7 @@ class TasksTest(TestCase):
             with patch.object(Changeset, 'execute') as mock_execute:
                 mock_execute.side_effect = ValueError
                 execute_changeset(changeset.pk)
-        mock_logger.exception.assert_called()
+        assert mock_logger.exception.called
 
     def test_task_calls_execute(self):
         # task calls execute
@@ -30,4 +30,4 @@ class TasksTest(TestCase):
         changeset = ChangesetFactory()
         with patch.object(Changeset, 'execute') as mock_execute:
             execute_changeset(changeset.pk)
-        mock_execute.assert_called()
+        assert mock_execute.called

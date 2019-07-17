@@ -1,8 +1,10 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -128,6 +130,7 @@ def all_help_desk_groups():
 # 4. Phone call was harassing.
 # Action: Mark as seen
 
+
 REASONS_TO_MARK = (
     ('complaint', _('Person has complained about the service.')),
     ('accident', _('Accidentally unlocked.')),
@@ -140,7 +143,7 @@ REASONS_TO_MARK = (
 ALLOWED_ACTIONS = {
     'complaint': ['seen'],
     'accident': ['relock', 'ignore'],
-    'changed_mind':  ['relock', 'ignore'],
+    'changed_mind': ['relock', 'ignore'],
     'harassing': ['seen'],
     'other': ['seen'],
 }
@@ -178,8 +181,8 @@ class FieldStaff(FormattedPhoneNumberMixin, AbstractTimestampTrashBinModel):
             ('suspend_fieldstaff', _('Can suspend field staff')),  # Custom
         ]
 
-    def __unicode__(self):   # pragma: no cover
-        return u'%s (%s)' % (self.name, self.formatted_phone_number())
+    def __str__(self):   # pragma: no cover
+        return '%s (%s)' % (self.name, self.formatted_phone_number())
 
     def get_absolute_url(self):
         return reverse('read_fieldstaff', args=[self.pk])
@@ -198,10 +201,19 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
         on_delete=models.SET_NULL,
     )
 
+    # Incoming phone number
+    phone_number = PhoneNumberField(
+        _('phone number'),
+        null=True,
+        default=None,
+        blank=True,  # Older cases didn't collect this information
+    )
+
     # operator handling the call
     operator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                  verbose_name=_('operator'),
-                                 related_name='cases_as_operator')
+                                 related_name='cases_as_operator',
+                                 on_delete=models.CASCADE)
     # field staff making the call
     field_staff = models.ForeignKey('FieldStaff', null=True, blank=True,
                                     verbose_name=_('field staff'),
@@ -258,10 +270,11 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
 
     recommended_action = models.CharField(
         _('recommended action'),
-        choices=CASE_ACTIONS,  max_length=6, default='', blank=True, null=False,
+        choices=CASE_ACTIONS, max_length=6, default='', blank=True, null=False,
     )
 
     # Possible outcomes of a call
+    ABANDONED = 'abandoned'  # operator started a new call without closing this one
     HUNG_UP = 'hungup'
     INVALID_STAFF_ID = 'invalid_staff_id'
     INVALID_STAFF_NAME = 'invalid_staff_name'
@@ -289,6 +302,7 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
         (INCREASED_CHANGES, _('Increased changes')),
         (UNLOCKED, _('Unlocked')),
         (RELOCKED, _('Relocked')),
+        (ABANDONED, _('Abandoned')),
     )
     call_outcome = models.CharField(
         _('call outcome'),
@@ -318,14 +332,14 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
             ('change_staff_password', 'Can set password for help desk staff'),
         )
 
-    def __unicode__(self):   # pragma: no cover
-        x = _(u"Call started %(start_time)s. Operator %(operator)s. ") % \
-            {'start_time': self.formatted_start_time,
+    def __str__(self):   # pragma: no cover
+        x = _("Call started %(start_time)s. Operator %(operator)s. ") % \
+            {'start_time': self.formatted_start_time(),
              'operator': self.operator.get_full_name() or self.operator.username}
         if self.citizen:
-            x += _(u"Citizen is %s. ") % unicode(self.citizen)
+            x += _("Citizen is %s. ") % str(self.citizen)
         if self.end_time:
-            x += _(u"Call ended %s. ") % self.end_time
+            x += _("Call ended %s. ") % self.end_time
         return x
 
     def reset(self):
@@ -375,6 +389,10 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
 
     def end(self):
         self.end_time = now()
+        one_hour = timedelta(hours=1)
+        # if the call lasted more than 1 hour set time to 1 hour
+        if (self.end_time - self.start_time) > one_hour:
+            self.end_time = self.start_time + one_hour
 
     def increase_changes_if_needed(self):
         """
@@ -411,9 +429,9 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
         if self.review_classification in (Case.FOR_REVIEW, Case.RECOMMENDED):
             return self.get_review_classification_display()
         elif self.end_time:
-            return _(u'Complete')
+            return _('Complete')
         else:
-            return _(u'In progress')
+            return _('In progress')
 
     def get_length_in_seconds(self):
         """
@@ -431,9 +449,11 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
         Returns True if the call is being made by a field staffer and their
         identity has been verified.
         """
-        from .screens import CHECK_STAFF_NAME, CHECK_STAFF_PHONE
+        from .screens import CHECK_STAFF_NAME
 
-        # We must have a staff ID and both name and ID have been validated
+        # We must have a staff ID and both name and ID have been validated,
+        # and the phone number too.  If we got past CHECK_STAFF_NAME with
+        # a match, we've successfully checked all that.
         return all([
             self.field_staff is not None,
             ScreenRecord.objects.filter(
@@ -441,11 +461,6 @@ class Case(StartEndTimeFormatterMixin, AbstractTimestampTrashBinModel):
                 name=CHECK_STAFF_NAME,
                 button=BUTTON_MATCH
             ).exists(),
-            ScreenRecord.objects.filter(
-                case=self,
-                name=CHECK_STAFF_PHONE,
-                button=BUTTON_YES
-            ).exists()
         ])
 
     @property
@@ -489,7 +504,7 @@ class ScreenRecord(AbstractTimestampTrashBinModel):
         verbose_name = _("screen record")
         verbose_name_plural = _("screen records")
 
-    def __unicode__(self):   # pragma: no cover
+    def __str__(self):   # pragma: no cover
         return self.name
 
     def end(self, case, button=None, input=None):
@@ -535,7 +550,7 @@ class Update(TimestampFormatterMixin, AbstractTimestampTrashBinModel):
     )
     recommended_action = models.CharField(
         _('recommended action'),
-        choices=CASE_ACTIONS,  max_length=6, default='', blank=True, null=False,
+        choices=CASE_ACTIONS, max_length=6, default='', blank=True, null=False,
     )
     comment = models.TextField(verbose_name=_('comment'), blank=True)
 
@@ -544,5 +559,17 @@ class Update(TimestampFormatterMixin, AbstractTimestampTrashBinModel):
         verbose_name = _("update")
         verbose_name_plural = _("updates")
 
-    def __unicode__(self):
-        return u"%s %s" % (self.get_kind_display(), self.case)
+    def __str__(self):
+        return "%s %s" % (self.get_kind_display(), self.case)
+
+
+class ActiveRange(AbstractTimestampTrashBinModel):
+    "An extension to the User model which allows for dated expiration."
+    end_date = models.DateField(_('end date'), null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_('user'),
+                                related_name='active_range',
+                                on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _("active range")
+        verbose_name_plural = _("active ranges")

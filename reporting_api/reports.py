@@ -1,5 +1,4 @@
 # Python imports
-from __future__ import division
 from collections import defaultdict, Iterable
 from copy import deepcopy
 from datetime import datetime, timedelta
@@ -16,18 +15,18 @@ import redis
 
 # Project imports
 from libya_elections.utils import astz
-from register.utils import registration_in_progress
 from voting.models import Election
 from .encoder import DateTimeEncoder
-import data_pull_common
-import data_pull
-import data_pull_ed
+from . import data_pull_common
+from . import data_pull
+from . import data_pull_ed
 from .models import ElectionReport
 from .utils import get_datetime_from_local_date_and_time
 
 logger = logging.getLogger(__name__)
 
 report_store = redis.StrictRedis(**settings.REPORTING_REDIS_SETTINGS)
+report_store_replica = redis.StrictRedis(**settings.REPORTING_REDIS_REPLICA_SETTINGS)
 
 # Redis keys used for the various reports (prefixed by REPORTING_REDIS_KEY_PREFIX).
 # If/when these key values changed, a migration step of removing the old keys from
@@ -60,11 +59,13 @@ REGISTRATIONS_BY_OFFICE_KEY = 'registrations_by_office'
 REGISTRATIONS_BY_POLLING_CENTER_KEY = 'registrations_by_polling_center'
 REGISTRATIONS_BY_REGION_KEY = 'registrations_by_region'
 REGISTRATIONS_BY_SUBCONSTITUENCY_KEY = 'registrations_by_subconstituency'
+REGISTRATIONS_BY_PHONE_KEY = 'registrations_by_phone'
 REGISTRATIONS_CSV_COUNTRY_STATS_KEY = 'registrations_csv_by_country'
 REGISTRATIONS_CSV_OFFICE_STATS_KEY = 'registrations_csv_by_office'
 REGISTRATIONS_CSV_REGION_STATS_KEY = 'registrations_csv_by_region'
 REGISTRATIONS_CSV_SUBCONSTITUENCY_STATS_KEY = 'registrations_csv_by_subconstituency'
 REGISTRATIONS_DAILY_BY_OFFICE_KEY = 'registrations_daily_by_office'
+REGISTRATIONS_DAILY_BY_SUBCONSTITUENCY_KEY = 'registrations_daily_by_subconstituency'
 REGISTRATIONS_METADATA_KEY = 'registrations_metadata'
 REGISTRATIONS_OFFICE_STATS_KEY = 'registrations_office_stats'
 REGISTRATIONS_REGION_STATS_KEY = 'registrations_region_stats'
@@ -85,7 +86,7 @@ def election_day_polling_center_log_key(election, center_id):
 
 def redis_key(key):
     """ Take a raw key or list of raw keys and add the prefix. """
-    if isinstance(key, basestring):
+    if isinstance(key, str):
         return settings.REPORTING_REDIS_KEY_PREFIX + key
     else:
         return [settings.REPORTING_REDIS_KEY_PREFIX + k for k in key]
@@ -105,7 +106,9 @@ def empty_report_store():
 def retrieve_report(key):
     """
     Retrieve a report from Redis, returning None if it hasn't already been generated.
-    (It won't be available until the report generation task populates Redis.)
+    (It won't be available until the report generation task populates Redis.) We use
+    report_store_replica to retrieve the report from a local replica (if provided in
+    settings) to save time.
 
     If a list of keys is provided, and any of them could not be found, the first result
     will be set to None for easier error checking, whether or not the corresponding key
@@ -116,23 +119,23 @@ def retrieve_report(key):
     If a single key has been provided (as a string) and it could not be found, None will
     be returned.
     """
-    if isinstance(key, basestring):
-        data_out = report_store.get(redis_key(key))
+    if isinstance(key, str):
+        data_out = report_store_replica.get(redis_key(key))
         if data_out is not None:
             logger.debug('returning %s from cache', key)
-            return json.loads(data_out)
+            return json.loads(data_out.decode())
         else:
-            logger.error('%s not available in the cache and won\'t be generated', key)
+            logger.warning('%s not available in the cache and won\'t be generated', key)
             return None
     else:
-        data_out = report_store.mget(redis_key(key))
+        data_out = report_store_replica.mget(redis_key(key))
         if None in data_out:
-            logger.error('Keys %s not available in the cache and won\'t be generated',
-                         [k for i, k in enumerate(key) if data_out[i] is None])
+            logger.warning('Keys %s not available in the cache and won\'t be generated',
+                           [k for i, k in enumerate(key) if data_out[i] is None])
             # Make it easy for caller to check for failure -- 1st element always None on error
             data_out[0] = None
             return data_out
-        return [json.loads(d) for d in data_out]
+        return [json.loads(d.decode()) for d in data_out]
 
 
 def parse_iso_datetime(s):
@@ -179,8 +182,7 @@ def calc_yesterday(dates, dates_d=None):
     and return it in datetime and string form.  Dates are always in order
     on input.  Return "yesterday" in both datetime.date and %Y-%m-%d format.
 
-    "yesterday" is the next to last date with registrations if still in
-    a registration period, or the last date with registrations otherwise.
+    "yesterday" is the most recent date with registrations.
 
     If the dates are already available as date objects, pass that in as dates_d.
 
@@ -191,18 +193,11 @@ def calc_yesterday(dates, dates_d=None):
         return None, None
 
     if dates_d is None:
-        dates_d = parse_dates(dates)
+        # We only need to parse the last date for this function
+        dates_d = parse_dates(dates[-1:])
 
-    today = now().date()
-
-    if len(dates) > 1 and registration_in_progress(as_of=today):
-        # registration ongoing, use day before most recent
-        yesterday_date_str = dates[-2]  # not true if still in signup
-        yesterday_date = dates_d[-2]
-    else:
-        # registration finished, final day of data
-        yesterday_date_str = dates[-1]
-        yesterday_date = dates_d[-1]
+    yesterday_date_str = dates[-1]
+    yesterday_date = dates_d[-1]
 
     return yesterday_date, yesterday_date_str
 
@@ -430,20 +425,25 @@ def add_sum_row(table, dates, dates_d, ages):
     table.append(totals)
 
 
-def office_names(offices, office_id):
-    """ Return English and Arabic names of office with matching office id, or None if not found.
+def group_names(groups, group_id):
     """
-    for o in offices:
-        if o['code'] == office_id:
-            return o['english_name'], o['arabic_name']
+    Return English and Arabic names of group (either Office or Subconstituency) with matching id,
+    or None if not found.
+    """
+    for g in groups:
+        if g['code'] == group_id:
+            return g['english_name'], g['arabic_name']
 
 
-def calc_daily_by_office(by_office, offices, dates, dates_d):
-    """ Summarize registrations by office by day (in decreasing order) and by M/F,
-     returning rows for the daily CSV-formatted report."""
+def calc_daily_by_group(name_of_id_field, data_by_group, groups, dates, dates_d):
+    """
+    Summarize registrations by group (either Office or Subconstituency) by day (in decreasing
+    order) and by M/F, returning rows for the daily CSV-formatted report.
+    """
     result = []
 
-    header = ['office_en', 'office_ar']
+    # This value is overwritten when writing the CSV in the proper language context
+    header = ['EN', 'AR']
     for d in reversed(dates_d):  # columns are in decreasing order by day
         d_str = d.strftime("%d/%m/%Y")
         header.append("%s (M)" % d_str)
@@ -451,11 +451,11 @@ def calc_daily_by_office(by_office, offices, dates, dates_d):
 
     result.append(header)
 
-    for office in by_office:
-        row = list(office_names(offices, office["office_id"]))
+    for group in data_by_group:
+        row = list(group_names(groups, group[name_of_id_field]))
 
         for d in reversed(dates):  # columns are in decreasing order by day
-            m, f = office.get(d, [0, 0])
+            m, f = group.get(d, [0, 0])
             row.append(m)
             row.append(f)
 
@@ -560,8 +560,12 @@ def generate_registrations_reports():
     add_sum_row(csv_subconstituency_stats, dates, dates_d,
                 data_out['demographic_breakdowns']['by_age'])
 
-    daily_by_office = calc_daily_by_office(by_office, data_out['offices'],
-                                           dates, dates_d)
+    daily_by_office = calc_daily_by_group(
+        'office_id', by_office, data_out['offices'],
+        dates, dates_d)
+    daily_by_subconstituency = calc_daily_by_group(
+        'subconstituency_id', by_subconstituency, data_out['subconstituencies'],
+        dates, dates_d)
 
     by_country_cr_points = registration_points(data_out, "country", dates, cumulative=True)
     by_country_nr_points = registration_points(data_out, "country", dates)
@@ -606,10 +610,14 @@ def generate_registrations_reports():
              json.dumps(data_out['by_polling_center_code']))
     pipe.set(redis_key(REGISTRATIONS_DAILY_BY_OFFICE_KEY),
              json.dumps(daily_by_office))
+    pipe.set(redis_key(REGISTRATIONS_DAILY_BY_SUBCONSTITUENCY_KEY),
+             json.dumps(daily_by_subconstituency))
     pipe.set(redis_key(REGISTRATIONS_BY_OFFICE_KEY),
              json.dumps(by_office))
     pipe.set(redis_key(REGISTRATIONS_BY_COUNTRY_KEY),
              json.dumps(data_out['by_country']))
+    pipe.set(redis_key(REGISTRATIONS_BY_PHONE_KEY),
+             json.dumps(data_out['registrations_by_phone']))
     pipe.set(redis_key(REGISTRATION_POINTS_CR_BY_COUNTRY_KEY),
              json.dumps(by_country_cr_points))
     pipe.set(redis_key(REGISTRATION_POINTS_NR_BY_COUNTRY_KEY),

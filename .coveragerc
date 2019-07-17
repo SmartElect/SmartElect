@@ -1,6 +1,6 @@
 [run]
 branch = true
-omit = */tests/*, */*migrations/*, */settings/*, strip_control_chars.py, */wsgi.py
+omit = */tests/*, */*migrations/*, */settings/*, strip_control_chars.py, */wsgi.py, env/*
 source = .
 
 [report]

@@ -19,13 +19,13 @@ from libya_elections.utils import get_random_number_string, strip_nondigits
 
 
 # The formats of phone numbers currently valid in Libya:
-#   218 + 9 digits  (Libyana, Al Madar)
+#   2189 + 8 digits  (Libyana, Al Madar)
 #   88216 + 8 digits  (Thuraya)
 
 class PhoneNumberValidator(RegexValidator):
     """
     This only accepts phone numbers in canonical format - no whitespace
-    or punctuation, just 218xxxxxxxxx or 88216xxxxxxxx.  To clean up
+    or punctuation, just 2189xxxxxxxx or 88216xxxxxxxx.  To clean up
     numbers from human input, call canonicalize_phone_number() on them
     first.
     """
@@ -35,7 +35,7 @@ class PhoneNumberValidator(RegexValidator):
         super(PhoneNumberValidator, self).__init__(regex, message, code, inverse_match, flags)
 
 
-def is_phone_number_valid(number):
+def is_valid_phone_number(number):
     """
     Return True if PhoneNumberValidator considers the number valid,
     meaning it has to be in canonical form already.
@@ -240,13 +240,13 @@ def best_connection_for_phone_number(number, backends=None):
     if connection:
         return connection
 
-    for name, backend in settings.INSTALLED_BACKENDS.iteritems():
+    for name, backend in settings.INSTALLED_BACKENDS.items():
         if 'number_regex' in backend:
             if backend['number_regex'].match(number):
                 return lookup_connections(backend=name, identities=[number])[0]
 
     # Use any old backend
-    backend_names = backends or settings.INSTALLED_BACKENDS.keys()
+    backend_names = backends or list(settings.INSTALLED_BACKENDS.keys())
     backend_name = random.choice(backend_names)
     return lookup_connections(backend_name, identities=[number])[0]
 

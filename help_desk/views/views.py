@@ -1,4 +1,4 @@
-from urllib import urlencode
+from urllib.parse import urlencode
 
 from django.views.generic import TemplateView
 

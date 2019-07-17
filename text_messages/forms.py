@@ -34,8 +34,8 @@ def validate_one_kind_of_placeholder_in_message(msg):
 
 
 def validate_same_kind_of_placeholders_in_two_messages(en, ar):
-    if ((get_braces_placeholders(en) and get_percents_placeholders(ar)) or
-            (get_percents_placeholders(en) and get_braces_placeholders(ar))):
+    if ((get_braces_placeholders(en) and get_percents_placeholders(ar))
+            or (get_percents_placeholders(en) and get_braces_placeholders(ar))):
         raise ValidationError(_("English and Arabic messages must use the same kind of "
                                 "placeholders, either {} or %()s"))
 

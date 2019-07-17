@@ -2,8 +2,8 @@ import os
 import shutil
 import tempfile
 
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from ..models import RegistrationCenter, Office, Constituency, SubConstituency
 from .. import utils
@@ -17,7 +17,8 @@ def get_copy_center_base_csv():
     """Return the base CSV for copy centers as a lists of lists (rows & columns)"""
     current_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = os.path.join(current_dir, 'uploads', 'copy_center_base.csv')
-    lines = open(file_path, 'rb').read().decode('utf-8').split('\n')
+    with open(file_path, 'rb') as f:
+        lines = f.read().decode('utf-8').split('\n')
     return [line.split(',') for line in lines if line]
 
 
@@ -43,13 +44,13 @@ class CenterFileTestMixin(object):
         # generates a simple csv we can use for tests
         current_dir = os.path.dirname(os.path.realpath(__file__))
         file_path = os.path.join(current_dir, 'uploads', filename)
-        self.file = open(file_path, 'r')
+        self.file = open(file_path, 'rb')
         return self.file
 
     @staticmethod
     def get_messages(response):
         messages = response.context['messages']
-        return [unicode(msg) for msg in messages]
+        return [str(msg) for msg in messages]
 
     def upload_csv(self, filename='valid_ecc.csv', follow=True):
         csv_file = self.get_csv_file(filename)
@@ -74,6 +75,7 @@ class CenterFileUpload(CenterFileTestMixin, StaffUserMixin, TestCase):
 
     def setUp(self):
         super(CenterFileUpload, self).setUp()
+        # Create some things
         for id in [1, NO_NAMEDTHING]:
             # create one test instance and one special 'no-named-thing' instance (999)
             if not Office.objects.filter(id=id).exists():
@@ -90,7 +92,8 @@ class CenterFileUpload(CenterFileTestMixin, StaffUserMixin, TestCase):
         """
         fh, filename = tempfile.mkstemp(suffix='.csv', dir=self.temp_dir)
         os.close(fh)
-        open(filename, 'wb').write('\n'.join([','.join(row) for row in rows]).encode('utf-8'))
+        with open(filename, 'wb') as f:
+            f.write('\n'.join([','.join(row) for row in rows]).encode('utf-8'))
         return filename
 
     def test_upload_page_works(self):
@@ -170,6 +173,15 @@ class CenterFileUpload(CenterFileTestMixin, StaffUserMixin, TestCase):
             utils.STATUS_MESSAGE.format(created=2, updated=1, dupes=0, blank=0),
             messages
         )
+
+    def test_non_csv(self):
+        # Non a CSV file should be generate a specific error.
+        response = self.upload_csv(filename='icon_clock.gif')
+        self.assertEqual(response.status_code, 200)
+        centers = RegistrationCenter.objects.all()
+        self.assertEqual(centers.count(), 0)
+        messages = self.get_messages(response)
+        self.assertIn(utils.COULD_NOT_PARSE_ERROR, messages)
 
     def test_bad_formatted_csv(self):
         # CSV files that contain rows with the wrong number of columns are not accepted.

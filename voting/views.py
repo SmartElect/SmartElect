@@ -1,6 +1,3 @@
-# Python imports
-from __future__ import unicode_literals
-
 # 3rd party imports
 from bread.bread import LabelValueReadView
 import django_filters

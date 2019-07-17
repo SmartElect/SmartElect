@@ -1,5 +1,4 @@
 import logging
-import string
 import textwrap
 
 from django.conf import settings
@@ -49,7 +48,7 @@ class PreprocessApp(AppBase):
         short_msgs = textwrap.wrap(msg.raw_text, width=width)
         for i, short_msg in enumerate(short_msgs):
             # format the msg with a paginator syntax at end of msg
-            short_text = u"[%d/%d] %s" % (i + 1, len(short_msgs), short_msg)
+            short_text = "[%d/%d] %s" % (i + 1, len(short_msgs), short_msg)
             # RapidSMS has a 'fields' kwarg for extra metadata
             # Keep track of the fact that this is a split message
             # Keep track of the sequence of this message
@@ -79,8 +78,8 @@ class PreprocessApp(AppBase):
         if not transformation_dict:
             transformation_dict = settings.OUTGOING_MSG_TRANSFORMATIONS
         result = raw_text
-        for old, new in transformation_dict.iteritems():
-            result = string.replace(result, old, new)
+        for old, new in transformation_dict.items():
+            result = result.replace(old, new)
         return result
 
     @sensitive_variables('msg')

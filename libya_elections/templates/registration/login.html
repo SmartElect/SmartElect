@@ -13,7 +13,7 @@
 
 	<div class="spacer"></div>
 
-  <form method="post" action="{% url 'auth_login' %}">
+  <form method="post" action="{% url 'login' %}" novalidate>
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}" />
 
@@ -37,7 +37,7 @@
 
     <button class="success" type="submit">{% trans "Log in" %}</button>
 
-    {% url 'auth_password_reset' as password_reset_url %}
+    {% url 'password_reset' as password_reset_url %}
     <a class="button transparent" href="{{ password_reset_url }}">{% trans 'Forgotten your username or password?' %}</a>
 
     <div class="spacer"></div>

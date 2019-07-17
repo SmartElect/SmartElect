@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
+from unittest import skip
 
 from django.conf import settings
 from django.db import IntegrityError
-from django.test import TestCase, override_settings
+from django.test import TestCase, override_settings, TransactionTestCase
 from django.utils.encoding import force_text
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
@@ -85,6 +86,41 @@ class WhitelistCacheTest(LibyaTest):
         self.assertFalse(is_whitelisted('1'))
 
 
+# We were skipping until https://code.djangoproject.com/ticket/23727 was fixed. That is fixed now,
+# but keepdb is still broken with TransactionTestCase, so keep skipping until
+# https://code.djangoproject.com/ticket/25251 is fixed.
+@skip("until https://code.djangoproject.com/ticket/25251 is fixed")
+class BlackAndWhitelistUniquenessTest(TransactionTestCase):
+    """Ensures that black & whitelist numbers must be unique as long as they're not deleted.
+
+    This has to be a TransactionTestCase because it raises an IntegrityError which breaks
+    the transaction created by the ordinary Django TestCase.
+    """
+
+    # https://docs.djangoproject.com/en/1.8/topics/testing/overview/#test-case-serialized-rollback
+    serialized_rollback = True
+
+    def test_blacklist_uniqueness_is_enforced(self):
+        number = BlacklistFactory(phone_number='99')
+        with self.assertRaises(IntegrityError):
+            BlacklistFactory(phone_number='99')
+        self.assertEqual(Blacklist.objects.filter(phone_number='99').count(), 1)
+        number.deleted = True
+        number.save()
+        BlacklistFactory(phone_number='99')
+        self.assertEqual(Blacklist.objects.filter(phone_number='99').count(), 1)
+
+    def test_whitelist_uniqueness_is_enforced(self):
+        number = WhitelistFactory(phone_number='99')
+        with self.assertRaises(IntegrityError):
+            WhitelistFactory(phone_number='99')
+        self.assertEqual(Whitelist.objects.filter(phone_number='99').count(), 1)
+        number.deleted = True
+        number.save()
+        WhitelistFactory(phone_number='99')
+        self.assertEqual(Whitelist.objects.filter(phone_number='99').count(), 1)
+
+
 class RegistrationTest(TestCase):
     def test_change_period(self):
         reg = Registration()
@@ -134,6 +170,7 @@ class RegistrationArchivingTest(TestCase):
 
 
 class RegistrationCenterTest(TestCase):
+
     def test_copy_of_copy_fails(self):
         """test that a copy center can't be a copy of another copy center"""
         original_center = RegistrationCenterFactory()
@@ -304,14 +341,18 @@ class RegistrationCenterTest(TestCase):
     def test_sort_order(self):
         """test that centers are sorted by center_id"""
         # Explicitly create with out-of-order center ids
-        center_ids = ['9', '4', '7', '2', '1', '8']
+        center_ids = ['4', '7', '2', '1', '8']
+        # Make IDs like 44444, etc.
         center_ids = [int(center_id * CENTER_ID_LENGTH) for center_id in center_ids]
 
         for center_id in center_ids:
             RegistrationCenterFactory(center_id=center_id)
         center_ids.sort()
 
-        actual_center_ids = [center.center_id for center in RegistrationCenter.objects.all()]
+        actual_center_ids = [
+            center.center_id
+            for center in RegistrationCenter.objects.all()
+        ]
         self.assertEqual(center_ids, actual_center_ids)
 
 

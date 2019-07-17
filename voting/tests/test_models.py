@@ -1,13 +1,12 @@
 import datetime
-
-from mock import patch
-from pytz import timezone
+from unittest.mock import patch
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 from django.utils.timezone import now
+from pytz import timezone
 
 from libya_elections.utils import at_midnight
 from .factories import BallotFactory, CandidateFactory, ElectionFactory, RegistrationPeriodFactory
@@ -155,7 +154,7 @@ class ElectionTest(TestCase):
         self.assertFalse(ReminderQueued.objects.all().exists())
         with patch('voting.models.message_reminder_task') as mock_task:
             election.schedule_due_reminders(from_, to)
-        mock_task.delay.assert_called()
+        assert mock_task.delay.called
         self.assertTrue(ReminderQueued.objects.all().exists())
 
 

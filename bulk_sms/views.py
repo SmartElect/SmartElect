@@ -1,12 +1,8 @@
-# Python imports
-from __future__ import unicode_literals
-from __future__ import division
-
 # Django imports
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -155,9 +151,9 @@ class BroadcastApproveRejectView(LoginPermissionRequiredMixin, BreadLabelValueRe
 
 
 class BroadcastFilterSet(FilterSet):
-    status = LibyaChoiceFilter(name='batch__status', label=_('Status'),
+    status = LibyaChoiceFilter(field_name='batch__status', label=_('Status'),
                                choices=Batch.STATUS_CHOICES)
-    audience = LibyaChoiceFilter(name='audience', label=_('Audience'),
+    audience = LibyaChoiceFilter(field_name='audience', label=_('Audience'),
                                  choices=Broadcast.ALL_AUDIENCES)
 
     class Meta:

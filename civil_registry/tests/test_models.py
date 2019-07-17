@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import datetime
 
 from django.test import TestCase
@@ -17,8 +15,8 @@ class CitizenTest(TestCase):
                           grandfather_name="GRANDFATHER",
                           family_name="FAMILY",
                           mother_name="MOTHER")
-        name = unicode(citizen)
-        self.assertEqual(u"FIRST FATHER GRANDFATHER FAMILY", name)
+        name = str(citizen)
+        self.assertEqual("FIRST FATHER GRANDFATHER FAMILY", name)
 
     def test_is_eligible_way_too_young(self):
         TODAY = datetime.datetime(2000, 1, 1)

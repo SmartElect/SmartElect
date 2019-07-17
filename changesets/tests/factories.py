@@ -6,7 +6,8 @@ from ..models import Changeset, ChangeRecord
 
 
 class ChangesetFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Changeset
+    class Meta:
+        model = Changeset
 
     name = factory.Sequence(lambda n: "changeset %d" % n)
     justification = "Just do it"
@@ -14,7 +15,8 @@ class ChangesetFactory(factory.DjangoModelFactory):
 
 
 class ChangeRecordFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ChangeRecord
+    class Meta:
+        model = ChangeRecord
 
     changeset = factory.SubFactory(ChangesetFactory)
     changed = True

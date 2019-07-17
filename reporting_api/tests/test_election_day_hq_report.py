@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import unicode_literals
-from __future__ import division
 from datetime import timedelta
 
 # Django imports
@@ -23,10 +21,12 @@ class TestElectionDayHQReport(TestCase):
     """Exercise generate_election_day_hq_reports()"""
     def setUp(self):
         self.registrations_per_center = 4
+
         self.oil_center_period_1_voters = 1
         self.oil_center_period_2_voters = 2
         self.offices = [OfficeFactory(region=Office.REGION_EAST),
-                        OfficeFactory(region=Office.REGION_WEST)]
+                        OfficeFactory(region=Office.REGION_WEST),
+                        ]
         # Note: An oil center doesn't normally allow registrations, but it does so for
         # this testcase.
         self.oil_center = RegistrationCenterFactory(office=self.offices[0],
@@ -140,7 +140,8 @@ class TestElectionDayHQReport(TestCase):
             PollingReportFactory(election=self.election,
                                  registration_center=copy_center,
                                  period_number=LAST_PERIOD_NUMBER,
-                                 num_voters=1), ]
+                                 num_voters=1),
+        ]
 
         self.result = generate_election_day_hq_reports(self.election)
         # Create an alternate result which reflects that the "oil center" is
@@ -167,8 +168,8 @@ class TestElectionDayHQReport(TestCase):
     def test_report_by_office(self):
         """Exercise generate_election_day_hq_reports() by office"""
         result = self.result['by_office']
-        expected_offices = [str(office.id) for office in sorted(self.offices)]
-        self.assertEqual(sorted(result.keys()), expected_offices)
+        expected_offices = [str(office.id) for office in self.offices]
+        self.assertEqual(sorted(result.keys()), sorted(expected_offices))
 
         self.assertEqual(result[str(self.offices[0].id)]['r']['open'], 8)
         self.assertEqual(result[str(self.offices[0].id)]['r']['active'], 12)
@@ -207,6 +208,8 @@ class TestElectionDayHQReport(TestCase):
         expected_types = [str(center_type) for center_type in expected_types]
         self.assertEqual(sorted(result.keys()), expected_types)
 
+        # either 'v' (for vote count) which is a leaf node, or 'r' (for
+        # registration count) which has leaf nodes 'open' and 'active'.
         for center_type in result:
             center_type = str(center_type)
             if int(center_type) == RegistrationCenter.Types.GENERAL:

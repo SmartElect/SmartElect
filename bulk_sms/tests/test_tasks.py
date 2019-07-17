@@ -1,7 +1,7 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-
-from mock import patch
 
 from bulk_sms.models import Batch
 from bulk_sms.tasks import message_reminder_task, \

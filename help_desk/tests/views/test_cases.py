@@ -2,8 +2,8 @@
 from datetime import timedelta
 
 # Django imports
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils.timezone import now
 
 # This project's imports
@@ -212,3 +212,43 @@ class TestCaseViews(TestCase):
         self.assertEqual(case, update.case)
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(Case.RESOLVED, case.review_classification)
+
+
+class TestReportViews(TestCase):
+
+    def setUp(self):
+        self.url = reverse('report_stats')
+        create_help_desk_groups()
+        self.manager = HelpDeskManagerFactory()
+        assert self.client.login(
+            username=self.manager.username,
+            password=DEFAULT_USER_PASSWORD)
+
+    def test_final_column_in_each_row_is_sum_of_previous_columns(self):
+        today = now()
+        yesterday = today - timedelta(1)
+
+        # create 2 cases in different categories for yesterday
+        CaseFactory(start_time=yesterday, call_outcome='hungup')
+        CaseFactory(start_time=yesterday, call_outcome='invalid_staff_id')
+        # create 1 case for today, in the 'first' category from yesterday
+        CaseFactory(start_time=today, call_outcome='hungup')
+
+        rsp = self.client.get(self.url)
+        self.assertEqual(200, rsp.status_code)
+        rows = rsp.context['object_list']
+        yesterday_row, today_row, totals_row = [row['stats'] for row in rows]
+
+        # Expected (simplified) output would be:
+        #
+        # date      hungup invalid_staff_id TOTAL
+        # ----      ------ ---------------- -----
+        # yesterday 1      1                2
+        # today     1      0                1
+        # TOTAL     2      1                3
+
+        # In each row, the sum of the columns (excluding the last 'TOTAL'
+        # column) should equal the last column
+        self.assertEqual(sum(yesterday_row[:-1]), yesterday_row[-1])
+        self.assertEqual(sum(today_row[:-1]), today_row[-1])
+        self.assertEqual(sum(totals_row[:-1]), totals_row[-1])

@@ -1,19 +1,18 @@
 import datetime
+from unittest.mock import Mock, patch
 
 from django.conf import settings
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.utils.timezone import now
 
-from mock import Mock, patch
 from civil_registry.models import Citizen
 from civil_registry.tests.factories import CitizenFactory
-
 from libya_elections import constants
 from libya_elections.constants import OUTGOING
 from libya_elections.utils import get_random_number_string
 from register.tests.factories import RegistrationFactory, SMSFactory, \
-    RegistrationCenterFactory
+    RegistrationCenterFactory, BackendFactory
 from text_messages.models import MessageText
 from text_messages.utils import get_message
 from voting.tests.factories import RegistrationPeriodFactory
@@ -29,7 +28,10 @@ ONE_SECOND = datetime.timedelta(seconds=1)
 class RegisterProcessorTest(LibyaTest):
 
     def setUp(self):
-        self.sms = SMSFactory()
+        # at this point, SMS is not yet saved, so be sure to mimic the same
+        # behavior here by using FactoryBoy's .build() strategy
+        self.carrier = BackendFactory()  # <- carrier OTOH is saved at this point
+        self.sms = SMSFactory.build(carrier=self.carrier)
         self.citizen = CitizenFactory(national_id=219782058018)
         self.center = RegistrationCenterFactory()
         RegistrationCenterFactory(center_id=self.center.center_id, deleted=True)
@@ -75,11 +77,12 @@ class RegisterProcessorTest(LibyaTest):
         # Inactivate the center
         registration.registration_center.reg_open = False
         registration.registration_center.save()
+        self.sms.from_number = registration.sms.from_number
         # Process a new registration
         result = process_registration_request(
             center_id=self.center.center_id,
             national_id=registration.citizen.national_id,
-            sms=registration.sms
+            sms=self.sms
         )
         # We returned the 'successful center change' message
         self.assertEqual(result.message_code, constants.MESSAGE_1)
@@ -116,6 +119,7 @@ class RegisterProcessorTest(LibyaTest):
         )
         self.assertEqual(result.message_code, constants.RESPONSE_NID_INVALID)
 
+    @override_settings(MAX_REGISTRATIONS_PER_PHONE=5)
     def test_valid_no_conflict_local(self):
         result = process_registration_request(
             sms=self.sms,
@@ -134,24 +138,22 @@ class RegisterProcessorTest(LibyaTest):
     def test_user_already_registered(self):
         """New registration for same user from different phone"""
         # Must be unlocked to update reg from different phone
-        registration = models.Registration(
+        RegistrationFactory(
             citizen=self.citizen,
             registration_center=self.center,
             archive_time=None,
-            sms=self.sms,
             unlocked_until=now() + datetime.timedelta(hours=1),
         )
-        registration.save()
-        new_sms = SMSFactory()
+
         result = process_registration_request(
-            sms=new_sms,
+            sms=self.sms,
             national_id=self.citizen.national_id,
             center_id=self.center.center_id
         )
         # There should be only one registration for this new user
         new_registration = models.Registration.objects.get(citizen=self.citizen)
         # The registering phone number was updated
-        self.assertEqual(new_sms.from_number, new_registration.sms.from_number)
+        self.assertEqual(self.sms.from_number, new_registration.sms.from_number)
         # We tell the user that everything went well
         self.assertEqual(result.message_code, constants.MESSAGE_1)
 
@@ -159,9 +161,9 @@ class RegisterProcessorTest(LibyaTest):
     def test_phone_has_max_registrations(self):
         number = '12345678'
         RegistrationFactory(sms__from_number=number, archive_time=None)
-        new_sms = SMSFactory(from_number=number)
+        self.sms.from_number = number
         result = process_registration_request(
-            sms=new_sms,
+            sms=self.sms,
             national_id=self.citizen.national_id,
             center_id=self.center.center_id
         )
@@ -173,9 +175,9 @@ class RegisterProcessorTest(LibyaTest):
     def test_phone_reaches_max_registrations(self):
         number = '12345678'
         RegistrationFactory(sms__from_number=number, archive_time=None)
-        new_sms = SMSFactory(from_number=number)
+        self.sms.from_number = number
         result = process_registration_request(
-            sms=new_sms,
+            sms=self.sms,
             national_id=self.citizen.national_id,
             center_id=self.center.center_id
         )
@@ -186,9 +188,9 @@ class RegisterProcessorTest(LibyaTest):
     def test_phone_reaches_only_one_more(self):
         number = '12345678'
         RegistrationFactory(sms__from_number=number, archive_time=None)
-        new_sms = SMSFactory(from_number=number)
+        self.sms.from_number = number
         result = process_registration_request(
-            sms=new_sms,
+            sms=self.sms,
             national_id=self.citizen.national_id,
             center_id=self.center.center_id
         )
@@ -196,18 +198,16 @@ class RegisterProcessorTest(LibyaTest):
         models.Registration.objects.get(citizen=self.citizen)
 
     def test_update_registration(self):
-        registration = models.Registration(
+        registration = RegistrationFactory(
             citizen=self.citizen,
             archive_time=None,
-            sms=self.sms,
             registration_center=self.center
         )
-        registration.save()
         # same number sends new sms
-        new_sms = SMSFactory(from_number=self.sms.from_number)
+        self.sms.from_number = registration.sms.from_number
         new_center = RegistrationCenterFactory()
         result = process_registration_request(
-            sms=new_sms,
+            sms=self.sms,
             national_id=self.citizen.national_id,
             center_id=new_center.center_id
         )
@@ -227,7 +227,7 @@ class RegisterProcessorTest(LibyaTest):
         RegistrationFactory(citizen=self.citizen, archive_time=None)
         # Process another registration update
         process_registration_request(
-            sms=SMSFactory(),
+            sms=self.sms,
             national_id=self.citizen.national_id,
             center_id=self.center.center_id
         )
@@ -237,9 +237,7 @@ class RegisterProcessorTest(LibyaTest):
 
     def test_copy_registration_center(self):
         """test that people can't register against a copy center"""
-        copy_center = RegistrationCenterFactory()
-        copy_center.copy_of = self.center
-        copy_center.save()
+        copy_center = RegistrationCenterFactory(copy_of=self.center)
         # try to register
         result = process_registration_request(
             center_id=copy_center.center_id,
@@ -255,6 +253,7 @@ class EndToEndTests(LibyaRapidTest):
         self.conn = self.create_connection()
         self.reg_period = RegistrationPeriodFactory(start_time=PAST_DAY, end_time=FUTURE_DAY)
 
+    @override_settings(MAX_REGISTRATIONS_PER_PHONE=5)
     def test_can_repeat_reg(self):
         # User can send multiple messages from the same phone number for the
         # same voting center.
@@ -280,6 +279,7 @@ class EndToEndTests(LibyaRapidTest):
                      fields=self.fields)
         self.assertEqual(constants.MESSAGE_1, self.get_last_response_code())
 
+    @override_settings(MAX_REGISTRATIONS_PER_PHONE=5)
     def test_can_change_reg(self):
         # User can send multiple messages from the same phone number and change
         # their voting center.
@@ -467,8 +467,8 @@ class TestRegistrationLookUp(TestCase):
     def setUp(self):
         self.citizen = CitizenFactory()
         self.good_nid = self.citizen.national_id
-        self.bad_nid = long(get_random_number_string(length=constants.NID_LENGTH))
-        self.nid_without_citizen = long(get_random_number_string(length=constants.NID_LENGTH))
+        self.bad_nid = int(get_random_number_string(length=constants.NID_LENGTH))
+        self.nid_without_citizen = int(get_random_number_string(length=constants.NID_LENGTH))
         self.sms = SMSFactory()
 
     def test_nlid_does_not_exist(self):

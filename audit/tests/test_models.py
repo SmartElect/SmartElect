@@ -32,7 +32,7 @@ class SMSTrailTest(TestCase):
         self.assertIn(str(trail.sms.id), report)
         expected_regexp = r'^The .+ was sent by the registration system .+ but has not ' +\
                           'been received by the gateway system.$'
-        self.assertRegexpMatches(report, expected_regexp)
+        self.assertRegex(report, expected_regexp)
 
     def test_report_if_only_vumi_found(self):
         trail = SMSTrailFactory(sms=None)
@@ -41,7 +41,7 @@ class SMSTrailTest(TestCase):
         self.assertIn(str(trail.vumi.id), report)
         expected_regexp = r'^The .+ was received by the gateway system .+ but has not ' +\
                           'been received by the registration system.$'
-        self.assertRegexpMatches(report, expected_regexp)
+        self.assertRegex(report, expected_regexp)
 
     def test_cant_save_unpopulated_instance(self):
         """Ensure one of sms or vumi must be populated before saving"""

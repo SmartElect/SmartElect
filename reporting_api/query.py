@@ -54,6 +54,19 @@ DUPLICATE_REGISTRATIONS_QUERY = """SELECT DISTINCT to_number,
             AND direction = 2 /* outgoing */
             AND deleted = false;"""
 
+# number of registrations per phone number, limited to phone numbers with more than 1 registration
+REGISTRATIONS_BY_PHONE_QUERY = """
+    SELECT DISTINCT sms.from_number,
+           COUNT(DISTINCT reg.id) as reg_count
+      FROM register_sms AS sms
+      JOIN register_registration AS reg ON (reg.sms_id = sms.id)
+     WHERE direction = 1 /* incoming */
+       AND sms.deleted = false
+       AND reg.deleted = false
+       AND reg.archive_time IS NULL
+  GROUP BY sms.from_number
+ HAVING COUNT(DISTINCT reg.id) > 1;"""
+
 # datetime of first rollcall per center each day
 CENTER_OPENS = """SELECT center.center_id AS polling_center_code,
                   DATE(rollcall.creation_date) as date,

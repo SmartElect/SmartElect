@@ -1,5 +1,6 @@
 from django.forms import model_to_dict
 from django.test import TestCase
+from django.utils.timezone import now
 
 from civil_registry.models import Citizen, TempCitizen
 from civil_registry.tests.factories import TempCitizenFactory, CitizenFactory
@@ -132,3 +133,33 @@ class DbMirrorTest(TestCase):
         self.assertEqual(1, stats.not_there_anymore_count)
         # NOT deleted
         self.assertTrue(Citizen.objects.filter(pk=cit.pk).exists())
+
+    def test_missing_record_returned_in_from_model(self):
+        """
+        Citizen models have the concept of a 'missing' record, which is a record
+        that was present in the Citizen model, but then absent from a
+        subsequent CRA dump. We keep the record in the database,
+        but mark it 'missing'. Our default manager for the Citizen model then
+        filters out missing records, by default. This can create a problem if
+        the record shows up again in a subsequent dump, because, if we use the
+        default manager, then:
+        * the record will not be present in the default `to_model` queryset
+        * it will be present in the `from_model` queryset, and
+        * when we try to add the record, there will be an IntegrityError.
+
+        This tests to make sure we handle that case by using the special
+        'unfiltered' queryset.
+        """
+        existing_but_missing = CitizenFactory(pk=1, missing=now())
+        temp_citizen = TempCitizenFactory.build(pk=1, **model_to_dict(existing_but_missing))
+        temp_citizen.missing = None
+        temp_citizen.save()
+        stats = mirror_database(
+            from_model=TempCitizen,
+            to_model=Citizen
+        )
+        self.assertEqual(0, stats.unchanged_count)
+        self.assertEqual(1, stats.modified_record_count)
+        self.assertEqual(0, stats.new_record_count)
+        self.assertEqual(0, stats.not_there_anymore_count)
+        self.assertTrue(Citizen.objects.filter(pk=existing_but_missing.pk).exists())

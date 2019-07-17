@@ -1,11 +1,10 @@
 # coding: utf-8
-from __future__ import unicode_literals
 from datetime import date
 
 from django.test import TestCase
 
-from civil_registry.parsing import strip_space_and_quotes, match_line_re, match_line_split, break_line, FIELD_NAMES, \
-    line_to_dictionary, get_records
+from civil_registry.parsing import strip_space_and_quotes, match_line_re, match_line_split, \
+    break_line, FIELD_NAMES, line_to_dictionary, get_records
 
 # INSERT INTO T_PERSONAL_DATA(PERSON_ID,NAME,FATHER_NAME_AR,GRAND_FATHER_NAME_AR,FAM_NAME,
 # MOTHER_NAME_AR,GENDER,DATE_OF_BIRTH,ADDRESS,NATIONAL_ID,REGISTRY_NO,OFFICE_ID,BRANCH_ID,STATE)
@@ -28,7 +27,7 @@ result_with_commas = {
     'birth_date': date(1969, 9, 7),
     'address': 'الاسكندرية',
     'national_id': 119690261935,
-    'fbr_number': 1009332066,
+    'fbr_number': '1009332066',
     'office_id': 35,
     'branch_id': 54,
     'state': 0,

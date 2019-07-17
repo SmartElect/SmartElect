@@ -88,8 +88,8 @@ def process_registration_request(center_id, national_id, sms):
     """
     try:
         logger.debug("Getting registration centre")
-        # Note that registration to a copy center is not allowed
-        center = RegistrationCenter.objects.get(center_id=center_id, reg_open=True, copy_of=None)
+        center = RegistrationCenter.objects\
+            .get(reg_open=True, copy_of=None, center_id=center_id)
     except RegistrationCenter.DoesNotExist:
         return Result(sms.from_number, constants.RESPONSE_CENTER_ID_INVALID)
 
@@ -133,11 +133,13 @@ def process_registration_request(center_id, national_id, sms):
                 return Result(sms.from_number, constants.MESSAGE_6,
                               dict(centre=registration.registration_center.name,
                                    code=registration.registration_center.center_id,
-                                   person=unicode(citizen)))
+                                   person=str(citizen)))
 
             if registration.registration_center == center:
                 # same location - but they could be changing their registered phone
-                if registration.sms.from_number != sms.from_number:
+                if not same_phone:
+                    # Save the SMS object, so we can archive this registration
+                    sms.save()
                     registration.sms = sms
                     logger.debug("Updating phone number")
                     registration.repeat_count = 0
@@ -151,7 +153,7 @@ def process_registration_request(center_id, national_id, sms):
                 return Result(sms.from_number, constants.MESSAGE_1,
                               dict(centre=center.name,
                                    code=center.center_id,
-                                   person=unicode(citizen)))
+                                   person=str(citizen)))
             # different voting center
             logger.debug("registration changing center, count=%d" % registration.change_count)
 
@@ -170,18 +172,18 @@ def process_registration_request(center_id, national_id, sms):
                 return Result(sms.from_number, constants.MESSAGE_5,
                               dict(centre=center.name,
                                    code=center.center_id,
-                                   person=unicode(citizen)))
+                                   person=str(citizen)))
             elif registration.remaining_changes == 1:
                 # one more allowed
                 return Result(sms.from_number, constants.MESSAGE_4,
                               dict(centre=center.name,
                                    code=center.center_id,
-                                   person=unicode(citizen)))
+                                   person=str(citizen)))
             else:
                 return Result(sms.from_number, constants.RESPONSE_VALID_REGISTRATION,
                               dict(centre=center.name,
                                    code=center.center_id,
-                                   person=unicode(citizen)))
+                                   person=str(citizen)))
 
         # Different phone
         if registration.registration_center == center:
@@ -190,6 +192,10 @@ def process_registration_request(center_id, national_id, sms):
                           dict(centre=registration.registration_center.name,
                                number=registration.sms.from_number[-4:]))
         # Cannot change anything from a different phone
+        # Sorry, this NID is already registered at {centre} with a phone
+        # ending in {number}. You must use this phone to re-register. If
+        # you do not have access to this phone or need help, call 1441.
+        # (message number 3)'}
         return Result(sms.from_number, constants.MESSAGE_2,
                       dict(centre=registration.registration_center.name,
                            number=registration.sms.from_number[-4:]))
@@ -222,7 +228,7 @@ def process_registration_request(center_id, national_id, sms):
     return Result(sms.from_number, msg_code,
                   dict(centre=center.name,
                        code=center.center_id,
-                       person=unicode(citizen)))
+                       person=str(citizen)))
 
 
 def process_registration_lookup(national_id, sms):

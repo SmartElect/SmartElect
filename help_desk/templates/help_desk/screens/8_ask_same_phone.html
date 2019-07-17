@@ -12,13 +12,13 @@
 
 <p>{% trans "Say to the caller" %}:
   {% if case.field_staff %}
-    <blockquote>{% trans "Does the citizen want to use that same phone to make the change?" %}</blockquote>
+    <blockquote>{% trans "Does the citizen want to update the phone number associated with their registration?" %}</blockquote>
   {% else %}
-    <blockquote>{% trans "Do you want to use that same phone to make the change?" %}</blockquote>
+    <blockquote>{% trans "Do you want to update the phone number associated with your registration?" %}</blockquote>
   {% endif %}
 </p>
 
-<p>{% trans "(also select no if they wish to update the phone number associated with their registration)" %}</p>
+<p>{% trans "(also select no if they wish to use the same phone)" %}</p>
 
 {% if case.registration.phone_has_maximum_registrations %}
   <p>

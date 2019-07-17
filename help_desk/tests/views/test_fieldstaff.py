@@ -1,11 +1,10 @@
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from help_desk.models import FieldStaff, HELP_DESK_MANAGERS_GROUP
 from help_desk.tests.factories import HelpDeskManagerFactory, FieldStaffFactory
 from help_desk.utils import create_help_desk_groups
-
 from libya_elections.utils import permission_names_to_objects
 from libya_site.tests.factories import DEFAULT_USER_PASSWORD
 from libya_elections.phone_numbers import get_random_phone_number

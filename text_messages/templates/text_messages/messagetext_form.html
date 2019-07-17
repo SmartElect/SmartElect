@@ -12,7 +12,7 @@
     <div class="page-width cushion">
       <h3>{{ form.instance.number }} {{ form.instance.label }}</h3>
 
-      <form class="two-thirds" method="post">
+      <form class="two-thirds" method="post" novalidate>
         {% csrf_token %}
 
         {% if form.non_field_errors %}

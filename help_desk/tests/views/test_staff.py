@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
+
 from help_desk.models import HELP_DESK_OPERATORS_GROUP, HELP_DESK_SUPERVISORS_GROUP
 from help_desk.tests.factories import HelpDeskManagerFactory
 from help_desk.utils import create_help_desk_groups

@@ -1,6 +1,4 @@
 # Python imports
-from __future__ import division
-from __future__ import unicode_literals
 import re
 
 # Django imports
@@ -39,7 +37,7 @@ class CommaDelimitedCenterIdFormField(forms.CharField):
 
         if value:
             validate_comma_delimited_ids(value, True)
-            return map(int, value.split(','))
+            return list(map(int, value.split(',')))
         else:
             return []
 
@@ -60,7 +58,7 @@ class NewJobForm(forms.Form):
                            help_text=_('There are no restrictions on job names except that they '
                                        'may not begin with a period and may not '
                                        'contain back nor forward slashes.'))
-    phase_choices = [(None, '------'), ] + [(k, v) for k, v in PHASES.iteritems()]
+    phase_choices = [(None, '------'), ] + [(k, v) for k, v in PHASES.items()]
     phase = forms.ChoiceField(choices=phase_choices, required=True)
     forgive_no_office = forms.BooleanField(required=False,
                                            label=_("Accept centres with no office"))
